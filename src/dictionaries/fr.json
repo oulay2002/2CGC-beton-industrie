@@ -1,0 +1,287 @@
+{
+  "locale": "fr",
+  "meta": {
+    "title": "2CGC - Cheickna Construction et Génie Civil | Daloa",
+    "description": "Leader des préfabriqués béton, calculateurs de chantier, devis proforma et suivi des commandes à Daloa et en Côte d'Ivoire."
+  },
+  "nav": {
+    "entreprise": "L'ENTREPRISE",
+    "catalogue": "Catalogue",
+    "devis": "Devis",
+    "outils": "Outils",
+    "contact": "Contact",
+    "cataloguePdf": "Catalogue PDF",
+    "espaceClient": "Espace Client",
+    "accesEquipe": "Accès Équipe",
+    "monEspace": "Mon espace",
+    "deconnexion": "Déconnexion",
+    "ouvrirMenu": "Ouvrir le menu",
+    "fermerMenu": "Fermer le menu",
+    "telechargerCatalogue": "Télécharger Catalogue PDF",
+    "accesCollaborateurs": "Accès Collaborateurs 2CGC",
+    "espaceClientDedie": "Espace Client Dédié",
+    "langSwitcher": "EN"
+  },
+  "entrepriseLinks": {
+    "quiSommesNous": { "label": "Qui sommes-nous ?", "desc": "Notre histoire et nos valeurs" },
+    "pourquoiNousChoisir": { "label": "Pourquoi nous choisir ?", "desc": "Nos engagements qualité" },
+    "partenaires": { "label": "Nos partenaires", "desc": "Entreprises et certifications" },
+    "faq": { "label": "FAQ", "desc": "Questions fréquentes" }
+  },
+  "home": {
+    "heroSlides": [
+      {
+        "tag": "🏭 Usine Industrielle Daloa",
+        "title": "Parc de Préfabrication & Presse Hydraulique",
+        "badge": "Capacité +50 000 blocs / mois"
+      },
+      {
+        "tag": "🚚 Livraison Chantier Clé en Main",
+        "title": "Flotte Camion-Grue & Déchargement sur Chantier",
+        "badge": "Livraison express Daloa & Côte d'Ivoire"
+      }
+    ],
+    "heroStats": [
+      { "val": "15+", "label": "Ans d'expérience" },
+      { "val": "500+", "label": "Chantiers livrés" },
+      { "val": "98%", "label": "Clients satisfaits" }
+    ],
+    "heroH1Line1": "Votre partenaire",
+    "heroH1Line2": "BTP de confiance",
+    "heroH1Line3": "Briques · Hourdis · Pavés · Électrification · Forage",
+    "heroDesc": "Depuis 15 ans, 2CGC fabrique et livre des matériaux de construction de haute qualité pour les chantiers de Daloa et de toute la Côte d'Ivoire.",
+    "heroCTA1": "🧮 Obtenir mon devis",
+    "heroCTA2": "📦 Voir le catalogue",
+    "heroCTA3": "📥 Télécharger PDF (8p)",
+    "heroScrollLabel": "Défiler",
+    "heroSlide0Label": "🏭 Usine Daloa",
+    "heroSlide1Label": "🚚 Livraison Agglos",
+    "heroPrevSlide": "Diapositive précédente",
+    "heroNextSlide": "Diapositive suivante",
+    "ticker": [
+      { "label": "ISO 9001", "sub": "Certifié" },
+      { "label": "Normes NF", "sub": "Construction" },
+      { "label": "Conformité CE", "sub": "Européenne" },
+      { "label": "Résistance B60", "sub": "Certifiée" },
+      { "label": "Livraison 48h", "sub": "Daloa & environs" },
+      { "label": "Support client", "sub": "Lun–Sam" }
+    ],
+    "engagementsBadge": "Nos engagements",
+    "engagementsTitle": "Pourquoi choisir 2CGC ?",
+    "engagementsDesc": "Une expertise reconnue au service de vos chantiers les plus exigeants",
+    "engagements": [
+      {
+        "icon": "🚚",
+        "title": "Livraison Chantier",
+        "desc": "Tracking GPS en temps réel, signature électronique, respect des délais de livraison garantis.",
+        "cta": "En savoir plus"
+      },
+      {
+        "icon": "⚡",
+        "title": "Devis Instantané",
+        "desc": "Configurateur intelligent avec calcul automatique des surfaces, palettes et TVA incluse.",
+        "cta": "En savoir plus"
+      },
+      {
+        "icon": "✅",
+        "title": "Qualité Certifiée",
+        "desc": "Blocs conformes aux normes, fiches techniques disponibles en téléchargement, traçabilité complète.",
+        "cta": "En savoir plus"
+      }
+    ],
+    "produitsBadge": "Notre gamme",
+    "produitsTitle": "Produits Phares",
+    "voirCatalogue": "Voir tout le catalogue",
+    "produits": [
+      {
+        "title": "Briques & Agglomérés",
+        "desc": "Briques pleines et creuses pour murs porteurs et cloisons. Formats 10, 12, 15 et 20.",
+        "prix": "260",
+        "unite": "FCFA / unité",
+        "tag": "Best-seller"
+      },
+      {
+        "title": "Hourdis",
+        "desc": "Éléments de plancher en béton, modèles français et américains. Formats 12, 15, 16 et 20.",
+        "prix": "380",
+        "unite": "FCFA / unité",
+        "tag": "Nouveau"
+      },
+      {
+        "title": "Pavés Autobloquants",
+        "desc": "Pavés en Z colorés pour voiries et aménagements. Modèles Z-7, Z-13, Z-14 et Z-6-s.",
+        "prix": "6 500",
+        "unite": "FCFA / m²",
+        "tag": "Premium"
+      }
+    ],
+    "aPartirDe": "À partir de",
+    "enStock": "En stock",
+    "voirProduits": "Voir les produits →",
+    "cataloguePdfBadge": "Brochure & Fiches Techniques",
+    "cataloguePdfTitle": "Téléchargez le Catalogue Officiel 2CGC (PDF)",
+    "cataloguePdfDesc": "Retrouvez les 24 produits avec dimensions exactes, poids réels, modèles d'hourdis et pavés, et tarifs officiels HT de l'entreprise.",
+    "telechargerPdf": "📥 Télécharger le PDF (1.1 Mo)",
+    "ouvrirPdf": "Ouvrir en plein écran ↗",
+    "statsTitle": "2CGC en chiffres",
+    "statsDesc": "Des résultats qui parlent d'eux-mêmes",
+    "stats": [
+      { "label": "Années d'expérience", "icon": "🏆" },
+      { "label": "Chantiers livrés", "icon": "🏗️" },
+      { "label": "Unités / mois", "icon": "🏭" },
+      { "label": "Clients satisfaits", "icon": "⭐" }
+    ],
+    "calcBadge": "Outils gratuits",
+    "calcTitle": "Calculateurs Intelligents",
+    "calcDesc": "Estimez vos besoins et planifiez votre chantier en quelques clics, gratuitement.",
+    "outils": [
+      {
+        "icon": "📐",
+        "title": "Calculateur de Blocs / m²",
+        "desc": "Estimez le nombre exact de parpaings ou pavés nécessaires pour votre surface, avec marge de casse incluse.",
+        "cta": "Utiliser l'outil"
+      },
+      {
+        "icon": "⏱️",
+        "title": "Estimateur de Temps de Chantier",
+        "desc": "Évaluez la durée de votre projet en fonction de la surface, du type de pose et du nombre d'ouvriers.",
+        "cta": "Utiliser l'outil"
+      }
+    ],
+    "b2bBadge": "Réservé aux professionnels",
+    "b2bTitle1": "Espace Client",
+    "b2bTitle2": "B2B Exclusif",
+    "b2bDesc": "Accédez à votre portail dédié avec des avantages exclusifs pour les professionnels du BTP.",
+    "b2bFeatures": [
+      "Tarifs négociés et remises personnalisées",
+      "Réassort en 1 clic basé sur votre historique",
+      "Suivi de commandes en temps réel",
+      "Programme de fidélité avec points cumulables"
+    ],
+    "b2bCTA": "🔐 Accéder à l'espace client →",
+    "dashboardLabel": "Dashboard",
+    "pointsFidelite": "Points fidélité",
+    "pointsAvant": "550 points avant la prochaine récompense",
+    "remise": "Remise",
+    "commandes": "Commandes",
+    "livraisons": "Livraisons",
+    "derniereCommande": "Dernière commande",
+    "livreIlYA": "Il y a 3 jours",
+    "livre": "Livré",
+    "temoignagesBadge": "Témoignages",
+    "temoignagesTitle": "Ils nous font confiance",
+    "temoignages": [
+      { "nom": "M. Koné", "role": "Directeur, BTP Afrique", "initiale": "K", "couleur": "from-blue-500 to-blue-700", "text": "Livraison toujours à l'heure, qualité constante. Notre fournisseur principal depuis 3 ans." },
+      { "nom": "Mme. Traoré", "role": "Architecte indépendante", "initiale": "T", "couleur": "from-emerald-500 to-emerald-700", "text": "Les fiches techniques sont complètes et le configurateur de devis nous fait gagner un temps précieux." },
+      { "nom": "M. Diallo", "role": "Chef de chantier", "initiale": "D", "couleur": "from-purple-500 to-purple-700", "text": "Le programme de fidélité est un vrai plus. Les remises s'accumulent vite sur les gros volumes." }
+    ],
+    "ctaBadge": "🚀 Commencez maintenant",
+    "ctaTitle": "Prêt à démarrer votre chantier ?",
+    "ctaDesc": "Obtenez votre devis personnalisé en quelques minutes, directement en ligne.",
+    "ctaDevis": "🧮 Créer mon devis maintenant",
+    "ctaCatalogue": "Parcourir le catalogue"
+  },
+  "catalogue": {
+    "heroBadge": "📦 Usine de Daloa • Préfabriqués Béton",
+    "heroSub": "Gamme certifiée 2CGC CHEICKNA",
+    "title": "Catalogue",
+    "desc24": "références certifiées avec dimensions et poids conformes.",
+    "telechargerPdf": "📥 Télécharger PDF (1.1 Mo)",
+    "ouvrirPdf": "Ouvrir ↗",
+    "toutesCategories": "Tout",
+    "categories": {
+      "agglos": "Briques & Agglomérés",
+      "hourdis": "Hourdis",
+      "paves": "Pavés"
+    },
+    "categoriesDesc": {
+      "agglos": "Blocs de béton pleins et creux",
+      "hourdis": "Éléments de plancher en béton",
+      "paves": "Pavés autobloquants et décoratifs"
+    },
+    "aPartirDe": "À partir de",
+    "enStock": "En stock",
+    "unites": "unités",
+    "demanderDevis": "Demander un devis",
+    "specsTechniques": "Specs techniques",
+    "dimensions": "Dimensions",
+    "poids": "Poids",
+    "stockDisponible": "Stock disponible",
+    "impactCo2": "Impact CO₂",
+    "affichageGrille": "Grille",
+    "affichageListe": "Liste",
+    "filtres": "Filtres",
+    "rechercherProduit": "Rechercher un produit...",
+    "trierPar": "Trier par",
+    "prixCroissant": "Prix croissant",
+    "prixDecroissant": "Prix décroissant",
+    "nomAz": "Nom A-Z",
+    "produitsTrouves": "produit(s) trouvé(s)",
+    "ctaBadge": "🏭 Depuis l'usine de Daloa",
+    "ctaTitle": "Un projet ? Obtenez votre devis en 2 minutes",
+    "ctaDesc": "Nos équipes calculent automatiquement la quantité, le prix HT/TTC et les délais de livraison.",
+    "ctaButton": "🧮 Devis Express",
+    "ctaPdf": "📥 Catalogue PDF (1.1 Mo)"
+  },
+  "contact": {
+    "heroBadge": "📍 Daloa, Côte d'Ivoire",
+    "heroTitle": "Contactez-nous",
+    "heroDesc": "Notre équipe est disponible du lundi au samedi pour répondre à toutes vos questions.",
+    "formTitle": "Envoyez-nous un message",
+    "nom": "Nom complet",
+    "email": "Email",
+    "telephone": "Téléphone",
+    "entreprise": "Entreprise / Organisation",
+    "entreprisePlaceholder": "Facultatif",
+    "sujet": "Sujet",
+    "sujetOptions": ["Demande de devis", "Informations produits", "Livraison", "Partenariat", "Autre"],
+    "message": "Votre message",
+    "envoyer": "Envoyer le message",
+    "envoyerLoading": "Envoi en cours...",
+    "successTitle": "Message envoyé !",
+    "successDesc": "Nous vous répondrons dans les meilleurs délais (généralement sous 24h).",
+    "erreurEmail": "Erreur lors de l'envoi de l'email.",
+    "infosTitle": "Informations de contact",
+    "adresse": "Quartier Commerce (Réf. Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoire)",
+    "horaires": "Lun–Sam : 7h–18h",
+    "whatsapp": "WhatsApp",
+    "mapTitle": "Nous trouver"
+  },
+  "footer": {
+    "tagline": "Leader industriel de la préfabrication béton, briques vibrées, hourdis de plancher et pavés autobloquants en Côte d'Ivoire. Usine moderne implantée à Daloa (Quartier Commerce).",
+    "materiaux": "Matériaux",
+    "briquesPleines": "Briques Pleines",
+    "briquesCreuses": "Briques Creuses",
+    "hourdis": "Hourdis Planchers",
+    "paves": "Pavés Autobloquants",
+    "cataloguePdf": "Catalogue PDF",
+    "outilsEspaces": "Outils & Espaces",
+    "devisExpress": "Devis Express",
+    "calcBlocs": "Calculateur Blocs/m²",
+    "estimateur": "Estimateur Cadence",
+    "espaceClient": "👤 Espace Client Dédié",
+    "accesEquipe": "🏢 Accès Équipe 2CGC",
+    "lEntreprise": "L'Entreprise",
+    "notreHistoire": "Notre Histoire",
+    "engagements": "Engagements Qualité",
+    "partenaires": "Partenaires",
+    "rendezvous": "Prendre Rendez-vous",
+    "conditions": "Conditions Générales",
+    "contactDirect": "Contact Direct",
+    "standardDirection": "Standard & Direction :",
+    "heures": "Lun–Sam : 7h–18h",
+    "cgu": "CGU / CGV",
+    "rgpd": "Protection des Données (RGPD)",
+    "siteMap": "Plan du site (XML)",
+    "robots": "Robots.txt",
+    "copyright": "© 2026 2CGC — SARL Unipersonnel au capital de 1.000.000 FCFA • RCCM : CI DAL 2013 B. 20779 • CC N° : 8104005 C",
+    "normes": "Normes B60 / NF",
+    "normesDesc": "Contrôle qualité laboratoire",
+    "livraison48h": "Livraison 48h Chantiers",
+    "livraison48hDesc": "Flotte camion-grue intégrée",
+    "facturation": "Facturation HT / TTC",
+    "facturationDesc": "Proforma & TVA certifiée",
+    "accompagnement": "Accompagnement Pro",
+    "accompagnementDesc": "Conseillers BTP à votre écoute"
+  }
+}
