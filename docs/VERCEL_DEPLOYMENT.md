@@ -56,7 +56,7 @@ Lorsque la commande `npx vercel` vous pose des questions, suivez **scrupuleuseme
 3. `Link to existing project?` ➔ **`n`** (appuyez sur `n` puis `Entrée`)
 4. `What’s your project’s name?` ➔ **`beton-industrie`** ou **`beton-2cgc`** 
    > ⚠️ **ATTENTION (CRUCIAL)** : Le nom du projet Vercel doit **OBLIGATOIREMENT être 100% en minuscules** (pas de majuscules comme `2CGC`, sinon l'erreur `400` s'affiche).
-5. `In which directory is your code located?` ➔ Appuyez directement sur **`Entrée`** (pour `./`)
+5. `In which directory is your code located?` ➔ Appuyez **DIRECTEMENT sur `Entrée`** (⚠️ **NE PAS taper `./` ni `.`, laissez le champ totalement vide**).
 6. `Want to modify these settings?` ➔ **`n`** (appuyez sur `n` puis `Entrée`)
 7. `Which settings would you like to overwrite (select multiple)?` ➔ **Appuyez DIRECTEMENT sur `Entrée`** (sans rien cocher, les paramètres Next.js sont détectés automatiquement).
 
