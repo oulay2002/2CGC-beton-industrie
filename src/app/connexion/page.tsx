@@ -5,43 +5,29 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, ROUTES_PAR_ROLE } from '@/lib/auth-context';
 import Link from 'next/link';
 
-const DEMO_ACCOUNTS = [
-  { label: 'Client BTP', email: 'client@btp-afrique.com', pass: 'client123', icon: '👤', desc: 'Espace Client' },
-  { label: 'Direction Générale', email: 'directeur@2cgc.ci', pass: 'directeur123', icon: '👔', desc: 'Direction' },
-  { label: "Chef d'Usine", email: 'usine@beton-industrie.com', pass: 'usine123', icon: '🏭', desc: 'Usine' },
-  { label: 'Chauffeur / Logistique', email: 'chauffeur@beton-industrie.com', pass: 'chauffeur123', icon: '🚚', desc: 'Logistique' },
-];
-
 function ConnexionPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState('client@btp-afrique.com');
-  const [password, setPassword] = useState('client123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<'email' | 'password' | null>(null);
-  const [showDemoChips, setShowDemoChips] = useState(false);
 
   useEffect(() => {
     const param = searchParams.get('mode');
     if (param === 'equipe') {
-      setEmail('directeur@2cgc.ci');
-      setPassword('directeur123');
+      setEmail('');
+      setPassword('');
     } else if (param === 'client') {
-      setEmail('client@btp-afrique.com');
-      setPassword('client123');
+      setEmail('');
+      setPassword('');
     }
   }, [searchParams]);
-
-  const appliquerDemo = (acc: typeof DEMO_ACCOUNTS[0]) => {
-    setEmail(acc.email);
-    setPassword(acc.pass);
-    setError('');
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -323,38 +309,7 @@ function ConnexionPageInner() {
             </div>
           </div>
 
-          {/* Discret & Élégant Module Accès Rapide Démo (Sous le formulaire, pour faciliter vos tests) */}
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setShowDemoChips(!showDemoChips)}
-              className="text-xs text-gray-400 hover:text-[#002B5B] font-bold transition-colors inline-flex items-center gap-1.5 bg-gray-100/70 hover:bg-gray-200/80 px-3.5 py-1.5 rounded-full"
-            >
-              <span>⚡</span>
-              <span>Remplissage rapide Démo ({showDemoChips ? 'Masquer' : 'Afficher'})</span>
-            </button>
 
-            {showDemoChips && (
-              <div className="mt-3 grid grid-cols-2 gap-2 bg-white border border-gray-200 p-3 rounded-2xl shadow-sm text-left animate-fade-in-up">
-                {DEMO_ACCOUNTS.map(acc => (
-                  <button
-                    key={acc.email}
-                    type="button"
-                    onClick={() => appliquerDemo(acc)}
-                    className="p-2.5 rounded-xl bg-gray-50 hover:bg-[#002B5B]/5 border border-gray-100 hover:border-[#002B5B]/30 transition-all text-left group"
-                  >
-                    <div className="flex items-center justify-between text-xs font-bold text-[#002B5B]">
-                      <span>{acc.icon} {acc.label}</span>
-                      <span className="text-[9px] bg-gray-200 group-hover:bg-[#002B5B] group-hover:text-white px-1.5 py-0.5 rounded font-extrabold">
-                        Remplir
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-gray-400 truncate mt-0.5">{acc.email}</div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
         </div>
 
