@@ -9,6 +9,7 @@ import { genererBonLivraison as genererBonLivraisonPDF } from '@/lib/generer-bon
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import { subscribeToRealtimeChanges, updateStockMatiereSupabase } from '@/lib/supabase/services';
+import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 
 type Commande = CommandeStore;
 
@@ -79,6 +80,7 @@ export default function UsineDashboard() {
   const [modalReappro, setModalReappro] = useState<string | null>(null);
   const [quantiteAjout, setQuantiteAjout] = useState<number>(20);
   const [alertStockMessage, setAlertStockMessage] = useState<string | null>(null);
+  const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
 
   useEffect(() => {
     setCommandes(getCommandes());
@@ -249,6 +251,14 @@ export default function UsineDashboard() {
             <span className="text-white/80 text-sm">Espace Chef d&apos;Usine</span>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setModalWhatsAppSimulateur(true)}
+              className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-black transition-colors shadow flex items-center gap-1.5 cursor-pointer border border-emerald-400/30"
+              title="Tester les commandes et demandes de devis WhatsApp"
+            >
+              <span>💬</span>
+              <span>Simulateur WhatsApp Live</span>
+            </button>
             {user.role === 'dirigeant' && (
               <Link 
                 href="/dirigeant" 
@@ -500,7 +510,14 @@ export default function UsineDashboard() {
                       <div className="p-6">
                         <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                           <div>
-                            <div className="font-bold text-lg text-[#002B5B]">{cmd.id}</div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-lg text-[#002B5B]">{cmd.id}</span>
+                              {(cmd.client.email?.includes('@whatsapp.2cgc.ci') || cmd.notes?.includes('WhatsApp')) && (
+                                <span className="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
+                                  💬 WhatsApp Live
+                                </span>
+                              )}
+                            </div>
                             <div className="text-sm text-gray-600">{cmd.client.entreprise} - {new Date(cmd.date).toLocaleDateString('fr-FR')}</div>
                           </div>
                           <div className="text-right">
@@ -740,6 +757,13 @@ export default function UsineDashboard() {
           </div>
         )}
       </div>
+
+      {/* Modal Simulateur WhatsApp Live */}
+      <SimulateurWhatsAppModal
+        isOpen={modalWhatsAppSimulateur}
+        onClose={() => setModalWhatsAppSimulateur(false)}
+        onRefreshData={() => setCommandes(getCommandes())}
+      />
     </main>
   );
 }

@@ -601,3 +601,56 @@ export function importerLeadsScrapes(prospects: Partial<CRMLead>[]): CRMLead[] {
   }
   return ajoutes;
 }
+
+// =============================================
+// ENREGISTREMENT OU MISE À JOUR LEAD WHATSAPP
+// =============================================
+export function ajouterLeadDepuisWhatsApp(params: {
+  nom?: string;
+  telephone: string;
+  entreprise?: string;
+  email?: string;
+  action: string;
+  produit?: string;
+  valeurEstimee?: number;
+  statut?: 'nouveau' | 'contacte' | 'devis_envoye' | 'negociation' | 'gagne' | 'perdu';
+}): CRMLead {
+  const leads = getLeads();
+  const dateAuj = new Date().toISOString().split('T')[0];
+  const telClean = params.telephone.replace(/\D/g, '');
+
+  let lead = leads.find(l => l.telephone && l.telephone.replace(/\D/g, '') === telClean);
+
+  if (!lead) {
+    const id = `LEAD-WA-${Date.now().toString().slice(-4)}`;
+    lead = {
+      id,
+      nom: params.nom || `Client WA (${params.telephone.slice(-4)})`,
+      entreprise: params.entreprise || 'Chantier BTP (WhatsApp)',
+      email: params.email || '',
+      telephone: params.telephone,
+      statut: params.statut || 'devis_envoye',
+      valeurEstimee: params.valeurEstimee || 500000,
+      source: 'whatsapp',
+      produitInteresse: params.produit || 'Préfabriqués Béton 2CGC',
+      dateCreation: dateAuj,
+      activites: [],
+      sequences: [],
+    };
+    leads.unshift(lead);
+  } else {
+    if (params.statut) lead.statut = params.statut;
+    if (params.valeurEstimee) lead.valeurEstimee = (lead.valeurEstimee || 0) + params.valeurEstimee;
+    if (params.produit) lead.produitInteresse = params.produit;
+  }
+
+  lead.activites.unshift({
+    date: dateAuj,
+    action: params.action,
+    automatique: true,
+    canal: 'whatsapp',
+  });
+
+  saveLeads(leads);
+  return lead;
+}

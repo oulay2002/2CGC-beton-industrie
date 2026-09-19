@@ -26,6 +26,7 @@ export interface Commande {
   articles: CommandeArticle[];
   dateLivraisonEffective?: string;
   signature?: string | null;
+  notes?: string;
 }
 
 const STORAGE_COMMANDES_KEY = 'beton_commandes_2cgc';
@@ -129,5 +130,39 @@ export function updateStatutCommande(id: string, updates: Partial<Commande>): Co
   commandes[idx] = { ...commandes[idx], ...updates };
   saveCommandes(commandes);
   return commandes[idx];
+}
+
+export function ajouterCommandeDepuisWhatsApp(params: {
+  clientNom?: string;
+  telephone: string;
+  adresse?: string;
+  total: number;
+  articles: CommandeArticle[];
+}): Commande {
+  const commandes = getCommandes();
+  const dateAuj = new Date().toISOString().split('T')[0];
+  const ref = `CMD-WA-${Date.now().toString().slice(-4)}`;
+
+  const nouvelleCommande: Commande = {
+    id: ref,
+    date: dateAuj,
+    statut: 'nouvelle',
+    statutProduction: 'a_preparer',
+    total: params.total,
+    client: {
+      nom: params.clientNom || `Client WA (${params.telephone.slice(-4)})`,
+      entreprise: 'Commande Directe WhatsApp',
+      email: `${params.telephone.replace(/\D/g, '')}@whatsapp.2cgc.ci`,
+      telephone: params.telephone,
+      adresse: params.adresse || 'Livraison Daloa & Région',
+    },
+    chauffeur: null,
+    articles: params.articles,
+    notes: 'Commande passée en direct via WhatsApp Business',
+  };
+
+  commandes.unshift(nouvelleCommande);
+  saveCommandes(commandes);
+  return nouvelleCommande;
 }
 

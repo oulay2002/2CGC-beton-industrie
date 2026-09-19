@@ -13,6 +13,7 @@ import { envoyerEmail, getMetriquesBotCommercial, MetriquesBotCommercial } from 
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import { subscribeToRealtimeChanges } from '@/lib/supabase/services';
+import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 
 const COLONNES: { id: CRMLead['statut']; label: string; couleur: string; bg: string; dot: string }[] = [
   { id: 'nouveau', label: 'Nouveau', couleur: 'border-blue-400', bg: 'bg-blue-50', dot: 'bg-blue-500' },
@@ -51,6 +52,7 @@ export default function CRMDashboard() {
   const [envoiAutoEnCours, setEnvoiAutoEnCours] = useState(false);
   const [modalWhatsAppQueue, setModalWhatsAppQueue] = useState(false);
   const [indexWhatsAppQueue, setIndexWhatsAppQueue] = useState(0);
+  const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
 
   // Nouveau lead form
   const [formNouveauLead, setFormNouveauLead] = useState({
@@ -367,6 +369,14 @@ export default function CRMDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setModalWhatsAppSimulateur(true)}
+              className="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-400/30"
+              title="Tester et simuler en direct les demandes de devis et commandes WhatsApp"
+            >
+              <span>💬</span>
+              <span>Simulateur WhatsApp Live</span>
+            </button>
             <button
               onClick={handleLancerAutomationsManuelles}
               className="bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer"
@@ -1361,6 +1371,13 @@ export default function CRMDashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal Simulateur WhatsApp Live */}
+      <SimulateurWhatsAppModal
+        isOpen={modalWhatsAppSimulateur}
+        onClose={() => setModalWhatsAppSimulateur(false)}
+        onRefreshData={chargerDonnees}
+      />
     </main>
   );
 }
