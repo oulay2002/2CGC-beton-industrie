@@ -125,17 +125,17 @@ export default function Navigation({ lang, dict, entrepriseLinks }: NavigationPr
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
           {/* Logo & Identité */}
           <Link href={`/${lang}`} className="flex items-center gap-3 group flex-shrink-0">
-            <div className="h-10 sm:h-11 w-auto flex items-center justify-center transition-all duration-300 group-hover:scale-105 opacity-95 group-hover:opacity-100">
+            <div className="h-10 sm:h-11 px-2.5 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-white/15 group-hover:border-[#FFD700]/40">
               <img
                 src="/logo-2cgc.png"
                 alt="Logo officiel 2CGC BTP Daloa"
-                className="h-10 sm:h-11 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(255,215,0,0.35)]"
+                className="h-8 sm:h-9 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(255,215,0,0.4)]"
               />
             </div>
             <div className="hidden sm:block">
               <div className="font-black text-lg text-white tracking-tight leading-none flex items-center gap-1.5">
                 <span>2CGC</span>
-                <span className="text-[10px] bg-[#FFD700]/20 text-[#FFD700] px-1.5 py-0.5 rounded font-mono font-bold tracking-normal border border-[#FFD700]/30">
+                <span className="text-[10px] bg-[#FFD700]/20 text-[#FFD700] px-1.5 py-0.5 rounded font-mono font-bold tracking-normal border border-[#FFD700]/30 backdrop-blur-sm">
                   BTP
                 </span>
               </div>
@@ -327,11 +327,11 @@ export default function Navigation({ lang, dict, entrepriseLinks }: NavigationPr
             {/* Header du drawer */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#002B5B]/50">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-auto flex items-center justify-center opacity-90">
+                <div className="h-9 w-auto px-2 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center">
                   <img
                     src="/logo-2cgc.png"
                     alt="Logo 2CGC"
-                    className="h-9 w-auto object-contain"
+                    className="h-7 w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(255,215,0,0.35)]"
                   />
                 </div>
                 <div>
