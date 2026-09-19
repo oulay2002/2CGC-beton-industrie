@@ -345,7 +345,7 @@ export default function GestionUtilisateurs() {
           { label: 'Nouveaux (7j)', val: stats.recents, icon: '🆕', color: 'border-green-400' },
         ].map((k, i) => (
           <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border-l-4 ${k.color}`}>
-            <div className="text-xl mb-1">{k.icon}</div>
+            <div className="w-9 h-9 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-lg mb-2">{k.icon}</div>
             <div className="text-xs text-gray-400">{k.label}</div>
             <div className="text-2xl font-black text-[#002B5B]">{k.val}</div>
           </div>

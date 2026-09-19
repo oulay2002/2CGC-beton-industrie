@@ -187,8 +187,8 @@ export default function FaqClient({ lang }: FaqClientProps) {
                     {item.q}
                   </span>
                   <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0 transition-transform duration-300 ${
-                      isOpen ? "bg-[#FFD700] text-[#002B5B] rotate-180" : "bg-[#F5F5F0] text-gray-500"
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0 transition-all duration-300 ${
+                      isOpen ? "bg-[#FFD700]/25 border border-[#FFD700]/50 text-[#002B5B] rotate-180 backdrop-blur-sm" : "bg-[#002B5B]/10 border border-[#002B5B]/15 text-[#002B5B] backdrop-blur-sm"
                     }`}
                   >
                     ▼

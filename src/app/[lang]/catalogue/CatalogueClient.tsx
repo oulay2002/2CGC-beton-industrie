@@ -284,7 +284,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
               <span>{t.tout}</span>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
-                  filtre === "tous" ? "bg-[#FFD700] text-[#002B5B]" : "bg-gray-200 text-gray-700"
+                  filtre === "tous" ? "bg-[#FFD700] text-[#002B5B]" : "bg-[#002B5B]/10 text-[#002B5B]"
                 }`}
               >
                 {produits.length}
@@ -308,7 +308,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
                   <span>{cat.nom}</span>
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
-                      filtre === cat.id ? "bg-[#FFD700] text-[#002B5B]" : "bg-gray-200 text-gray-700"
+                      filtre === cat.id ? "bg-[#FFD700] text-[#002B5B]" : "bg-[#002B5B]/10 text-[#002B5B]"
                     }`}
                   >
                     {count}

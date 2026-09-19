@@ -28,7 +28,7 @@ export default function Footer({ lang, dict }: FooterProps) {
       <div className="border-b border-white/10 bg-[#002B5B]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 footer-quality-grid text-left">
           <div className="flex items-center gap-3.5 group">
-            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700] group-hover:text-[#002B5B] transition-all duration-300">
+            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-all duration-300 backdrop-blur-md">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -40,7 +40,7 @@ export default function Footer({ lang, dict }: FooterProps) {
           </div>
 
           <div className="flex items-center gap-3.5 group">
-            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700] group-hover:text-[#002B5B] transition-all duration-300">
+            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-all duration-300 backdrop-blur-md">
               <Truck className="w-5 h-5" />
             </div>
             <div>
@@ -52,7 +52,7 @@ export default function Footer({ lang, dict }: FooterProps) {
           </div>
 
           <div className="flex items-center gap-3.5 group">
-            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700] group-hover:text-[#002B5B] transition-all duration-300">
+            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-all duration-300 backdrop-blur-md">
               <FileCheck className="w-5 h-5" />
             </div>
             <div>
@@ -64,7 +64,7 @@ export default function Footer({ lang, dict }: FooterProps) {
           </div>
 
           <div className="flex items-center gap-3.5 group">
-            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700] group-hover:text-[#002B5B] transition-all duration-300">
+            <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#FFD700] flex-shrink-0 shadow-md group-hover:scale-110 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-all duration-300 backdrop-blur-md">
               <Handshake className="w-5 h-5" />
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function Footer({ lang, dict }: FooterProps) {
                 href="https://wa.me/2250707621799?text=Bonjour%202CGC%2C%20je%20souhaite%20obtenir%20un%20devis%20rapide"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-white/10 hover:bg-[#25D366] text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
+                className="w-8 h-8 bg-white/10 hover:bg-[#25D366]/30 border border-white/15 hover:border-[#25D366]/50 backdrop-blur-md text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
                 title="WhatsApp 2CGC"
                 aria-label="WhatsApp"
               >
@@ -135,7 +135,7 @@ export default function Footer({ lang, dict }: FooterProps) {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-white/10 hover:bg-[#1877F2] text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
+                className="w-8 h-8 bg-white/10 hover:bg-[#1877F2]/30 border border-white/15 hover:border-[#1877F2]/50 backdrop-blur-md text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
                 title="Facebook 2CGC"
                 aria-label="Facebook"
               >
@@ -147,7 +147,7 @@ export default function Footer({ lang, dict }: FooterProps) {
                 href="https://tiktok.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-white/10 hover:bg-black text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
+                className="w-8 h-8 bg-white/10 hover:bg-white/25 border border-white/15 hover:border-white/40 backdrop-blur-md text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
                 title="TikTok 2CGC"
                 aria-label="TikTok"
               >

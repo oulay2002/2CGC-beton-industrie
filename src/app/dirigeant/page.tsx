@@ -228,22 +228,22 @@ export default function DirigeantDashboard() {
         {/* Accès rapide aux autres espaces */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
           <Link href="/usine" className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-            <div className="text-4xl mb-3">🏭</div>
+            <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🏭</div>
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">Vue Usine</h3>
             <p className="text-sm text-gray-600">Superviser la production</p>
           </Link>
 
           <Link href="/chauffeur" className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-            <div className="text-4xl mb-3">🚚</div>
+            <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🚚</div>
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">Vue Logistique</h3>
             <p className="text-sm text-gray-600">Suivi des livraisons</p>
           </Link>
 
           <Link href="/client" className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block group">
-            <div className="text-4xl mb-3">👤</div>
+            <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">👤</div>
             <h3 className="font-bold text-lg text-[#002B5B] mb-1 group-hover:text-[#002B5B]">Vue Client</h3>
             <p className="text-sm text-gray-600">Expérience client</p>
-            <span className="inline-block mt-2 text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+            <span className="inline-block mt-2 text-[11px] font-bold text-blue-700 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-200 backdrop-blur-sm">
               👁️ Sélecteur multi-clients
             </span>
           </Link>
@@ -251,15 +251,15 @@ export default function DirigeantDashboard() {
 
         <div className="grid sm:grid-cols-2 gap-4 mb-8">
           <Link href="/dirigeant/crm" className="bg-white rounded-xl p-6 border-2 border-[#FFD700] hover:shadow-lg hover:border-[#002B5B] transition-all block">
-            <div className="text-4xl mb-3">🤖</div>
+            <div className="w-12 h-12 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/40 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🤖</div>
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">CRM Automatisé</h3>
             <p className="text-sm text-gray-600">Pipeline, leads et actions automatiques</p>
           </Link>
 
           <Link href="/dirigeant/utilisateurs" className="bg-white rounded-xl p-6 border-2 border-emerald-300 hover:border-[#002B5B] hover:shadow-lg transition-all block">
             <div className="flex items-center justify-between mb-3">
-              <div className="text-4xl">👥</div>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
+              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-400/20 backdrop-blur-sm flex items-center justify-center text-2xl">👥</div>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-800 border border-emerald-400/20 px-2 py-0.5 rounded-md backdrop-blur-sm">
                 Import & Impression
               </span>
             </div>

@@ -142,10 +142,10 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-[#002B5B]/5 group-hover:bg-[#FFD700] flex items-center justify-center text-4xl transition-colors">
+                  <div className="w-16 h-16 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 flex items-center justify-center text-4xl transition-all backdrop-blur-sm">
                     {calc.icone}
                   </div>
-                  <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#002B5B]/5 text-[#002B5B]">
+                  <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#002B5B]/10 border border-[#002B5B]/15 text-[#002B5B] backdrop-blur-sm">
                     {calc.badge}
                   </span>
                 </div>

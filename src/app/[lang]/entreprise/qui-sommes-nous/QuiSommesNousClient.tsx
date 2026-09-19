@@ -246,7 +246,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                 key={i}
                 className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/5 group-hover:bg-[#FFD700] flex items-center justify-center text-3xl mb-5 transition-colors">
+                <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 backdrop-blur-sm flex items-center justify-center text-3xl mb-5 transition-all">
                   {p.icone}
                 </div>
                 <h3 className="text-xl font-black text-[#002B5B] mb-2">{p.titre}</h3>
@@ -276,7 +276,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
             {/* Dirigeant 1 : KEITA BOUBACAR */}
             <div className="bg-gradient-to-br from-[#002B5B] to-[#003d80] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl">
               <div className="flex items-start gap-5">
-                <div className="w-16 h-16 rounded-2xl bg-[#FFD700] text-[#002B5B] font-black text-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                <div className="w-16 h-16 rounded-2xl bg-[#FFD700]/20 border border-[#FFD700]/40 backdrop-blur-md text-[#FFD700] font-black text-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   KB
                 </div>
                 <div>
@@ -313,7 +313,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
             {/* Dirigeant 2 : Keita Dambou */}
             <div className="bg-[#F5F5F0] rounded-3xl p-8 border-2 border-gray-200 text-[#002B5B] relative overflow-hidden">
               <div className="flex items-start gap-5">
-                <div className="w-16 h-16 rounded-2xl bg-[#002B5B] text-white font-black text-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                <div className="w-16 h-16 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/20 backdrop-blur-sm text-[#002B5B] font-black text-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   KD
                 </div>
                 <div>

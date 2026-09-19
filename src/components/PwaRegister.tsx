@@ -113,8 +113,8 @@ export default function PwaRegister() {
       {/* Bannière PWA Flottante (en bas à gauche sur desktop, bas d'écran au-dessus de la nav sur mobile) */}
       <div className="fixed bottom-20 md:bottom-6 left-4 right-4 md:right-auto md:max-w-md z-40 bg-[#002B5B] text-white p-4 rounded-2xl shadow-2xl border border-[#FFD700]/30 backdrop-blur-xl animate-fade-in-up">
         <div className="flex items-start gap-3">
-          <div className="w-12 h-12 bg-white rounded-xl flex-shrink-0 flex items-center justify-center p-1.5 shadow-md">
-            <img src="/icon-192.png" alt="2CGC App" className="w-full h-full object-contain" />
+          <div className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex-shrink-0 flex items-center justify-center p-1.5 shadow-md">
+            <img src="/icon-192.png" alt="2CGC App" className="w-full h-full object-contain filter drop-shadow-[0_2px_6px_rgba(255,215,0,0.3)]" />
           </div>
 
           <div className="flex-1 min-w-0">

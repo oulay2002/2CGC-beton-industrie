@@ -312,7 +312,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                   href={ENGAGEMENTS_HREFS[i]}
                   className="card-hover bg-white rounded-3xl p-8 relative overflow-hidden group border border-slate-200/80 block transition-all duration-300 hover:-translate-y-1 cursor-pointer shadow-sm hover:shadow-xl"
                 >
-                  <div className="w-13 h-13 rounded-2xl bg-[#002B5B]/5 group-hover:bg-[#002B5B] text-[#002B5B] group-hover:text-[#FFD700] flex items-center justify-center p-3 mb-6 transition-all duration-300 shadow-sm">
+                  <div className="w-13 h-13 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#002B5B]/20 group-hover:border-[#002B5B]/30 backdrop-blur-sm text-[#002B5B] flex items-center justify-center p-3 mb-6 transition-all duration-300 shadow-sm">
                     <IconComponent className="w-6 h-6" />
                   </div>
 
@@ -329,7 +329,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                       <span>{item.cta}</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <span className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-[#FFD700] group-hover:text-[#002B5B] flex items-center justify-center text-xs transition-colors">
+                    <span className="w-7 h-7 rounded-full bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 text-[#002B5B] flex items-center justify-center text-xs transition-colors backdrop-blur-sm">
                       &rarr;
                     </span>
                   </div>

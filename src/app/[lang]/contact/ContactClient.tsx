@@ -214,7 +214,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
                 {/* Email */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📧</span>
                   </div>
                   <div className="min-w-0 flex-1">
@@ -233,7 +233,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
                 {/* Adresse */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📍</span>
                   </div>
                   <div>
@@ -254,7 +254,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
                 {/* Horaires */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">🕐</span>
                   </div>
                   <div>

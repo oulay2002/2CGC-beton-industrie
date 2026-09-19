@@ -163,10 +163,10 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-14 h-14 bg-[#002B5B]/5 group-hover:bg-[#FFD700] rounded-2xl flex items-center justify-center text-3xl transition-colors">
+                    <div className="w-14 h-14 bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 rounded-2xl flex items-center justify-center text-3xl transition-all backdrop-blur-sm">
                       {atout.icone}
                     </div>
-                    <span className="text-[11px] font-bold text-[#002B5B] bg-[#002B5B]/5 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <span className="text-[11px] font-bold text-[#002B5B] bg-[#002B5B]/10 border border-[#002B5B]/15 px-2.5 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
                       {atout.tag}
                     </span>
                   </div>

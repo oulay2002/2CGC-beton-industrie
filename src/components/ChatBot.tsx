@@ -241,7 +241,7 @@ export default function ChatBot() {
     <div className="bg-gradient-to-r from-[#002B5B] to-[#003d80] text-white p-3.5 flex items-center justify-between flex-shrink-0">
       <div className="flex items-center gap-3">
         <div className="relative">
-          <div className="w-11 h-11 bg-[#001D3D] rounded-xl flex items-center justify-center p-1 shadow-lg border border-[#FFD700] overflow-hidden flex-shrink-0">
+          <div className="w-11 h-11 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center p-1 shadow-lg border border-[#FFD700]/50 overflow-hidden flex-shrink-0">
             <svg className="w-8 h-8" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="24" y1="9" x2="24" y2="4" stroke="#FFD700" strokeWidth="2.5" strokeLinecap="round" />
               <circle cx="24" cy="3" r="2.5" fill="#FFD700" className="animate-pulse" />

@@ -158,7 +158,7 @@ function ConnexionPageInner() {
           <div className="ml-auto">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#002B5B] transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-200/80"
+              className="inline-flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#002B5B] transition-colors bg-white/70 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-200/80 hover:bg-white"
             >
               <span>←</span>
               <span>Retour au site principal</span>

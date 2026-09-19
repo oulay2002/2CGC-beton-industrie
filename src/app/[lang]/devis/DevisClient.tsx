@@ -401,7 +401,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                             : "border-gray-100 hover:border-[#FFD700] hover:shadow-md cursor-pointer bg-[#F5F5F0] hover:bg-white"
                         }`}
                       >
-                        <div className="w-12 h-12 rounded-xl overflow-hidden bg-white flex-shrink-0 border border-gray-100">
+                        <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/40 backdrop-blur-sm flex-shrink-0 border border-gray-200/60">
                           <img src={p.image} alt={nomAffiche} className="w-full h-full object-contain" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -442,7 +442,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F5F5F0] rounded-2xl p-3.5 sm:p-4 border-2 border-[#FFD700]/30"
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white flex-shrink-0">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/40 backdrop-blur-sm flex-shrink-0 border border-gray-200/60">
                             <img src={ligne.image} alt={nomAffiche} className="w-full h-full object-contain" />
                           </div>
                           <div className="min-w-0">

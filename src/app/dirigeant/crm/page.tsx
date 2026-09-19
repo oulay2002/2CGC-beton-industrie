@@ -430,7 +430,7 @@ export default function CRMDashboard() {
           { label: 'Actions bot', val: metriques?.sequencesEnAttente ?? '...', color: 'border-red-400', icon: '🤖' },
         ].map((k, i) => (
           <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border-l-4 ${k.color}`}>
-            <div className="text-xl mb-1">{k.icon}</div>
+            <div className="w-9 h-9 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-lg mb-2">{k.icon}</div>
             <div className="text-xs text-gray-500 font-medium">{k.label}</div>
             <div className="text-lg font-black text-[#002B5B] mt-0.5">{k.val}</div>
           </div>

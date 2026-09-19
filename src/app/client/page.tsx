@@ -312,25 +312,25 @@ function ClientDashboardInner() {
         {user.role !== 'dirigeant' && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <Link href="/devis" className="bg-[#002B5B] text-white rounded-2xl p-4 sm:p-6 hover:bg-[#001d3d] transition-all hover:shadow-lg block">
-              <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">📝</div>
+              <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-xl mb-3">📝</div>
               <h3 className="font-bold text-sm sm:text-lg mb-0.5 sm:mb-1">Nouveau devis</h3>
               <p className="text-xs sm:text-sm text-white/70">Créer une demande</p>
             </Link>
 
             <Link href="/client/reassort-rapide" className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-[#FFD700] hover:shadow-lg hover:border-[#002B5B] transition-all block">
-              <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">🛒</div>
+              <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-xl mb-3">🛒</div>
               <h3 className="font-bold text-sm sm:text-lg text-[#002B5B] mb-0.5 sm:mb-1">Réassort rapide</h3>
               <p className="text-xs sm:text-sm text-gray-600">Commander en 1 clic</p>
             </Link>
 
             <Link href="/client/bons-commande" className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-              <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">📋</div>
+              <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-xl mb-3">📋</div>
               <h3 className="font-bold text-sm sm:text-lg text-[#002B5B] mb-0.5 sm:mb-1">Bons de commande</h3>
               <p className="text-xs sm:text-sm text-gray-600">Télécharger les BC</p>
             </Link>
 
             <Link href="/client/bons-livraison" className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-              <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">🚚</div>
+              <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-xl mb-3">🚚</div>
               <h3 className="font-bold text-sm sm:text-lg text-[#002B5B] mb-0.5 sm:mb-1">Bons de livraison</h3>
               <p className="text-xs sm:text-sm text-gray-600">Suivi et réception</p>
             </Link>

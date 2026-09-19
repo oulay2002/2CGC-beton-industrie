@@ -170,7 +170,7 @@ export default function Navigation({ lang, dict, entrepriseLinks }: NavigationPr
                         href={link.href}
                         className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F5F5F0] transition-colors group/item"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-[#002B5B]/5 text-[#002B5B] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#002B5B] group-hover/item:text-[#FFD700] transition-colors mt-0.5">
+                        <div className="w-8 h-8 rounded-lg bg-[#002B5B]/10 border border-[#002B5B]/15 text-[#002B5B] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#002B5B]/20 group-hover/item:border-[#002B5B]/30 group-hover/item:text-[#002B5B] transition-colors mt-0.5 backdrop-blur-sm">
                           <IconComponent className="w-4 h-4" />
                         </div>
                         <div>

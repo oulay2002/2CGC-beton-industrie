@@ -206,7 +206,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
                 className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/5 flex items-center justify-center text-3xl">
+                  <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 flex items-center justify-center text-3xl backdrop-blur-sm">
                     {cat.icone}
                   </div>
                   <div>
