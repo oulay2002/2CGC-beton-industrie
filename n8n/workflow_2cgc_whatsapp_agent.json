@@ -1,0 +1,180 @@
+{
+  "name": "2CGC - Agent IA WhatsApp Conversational Relay & CRM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-incoming",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "id": "node-webhook-whatsapp",
+      "name": "Webhook WhatsApp Incoming (Hostinger)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-has-text",
+              "leftValue": "={{ $json.body.entry[0].changes[0].value.messages[0].text.body }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ],
+      "id": "node-filter-text-message",
+      "name": "Est-ce un message Texte ?"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {
+          "systemInstruction": "Tu es l'Agent IA officiel de 2CGC Cheickna & Frères à Daloa, Côte d'Ivoire. Ton rôle est de dialoguer chaleureusement sur WhatsApp avec les clients, de leur fournir des devis, des factures proforma et de valider leurs commandes.\n\nTARIFS EN VIGUEUR (HT) :\n- Brique de 15 Creuse (15x20x50) : 300 FCFA / unité\n- Brique de 20 Creuse (20x20x50) : 400 FCFA / unité\n- Brique de 12 Creuse (12x20x50) : 260 FCFA / unité\n- Brique de 10 Creuse (10x20x50) : 240 FCFA / unité\n- Hourdis de 15 Français : 450 FCFA / unité\n- Hourdis de 12 Français : 380 FCFA / unité\n- Pavés Autobloquants Z-7 : 7 000 FCFA / m²\n- Pavés Autobloquants Z-13 : 6 000 FCFA / m²\n- Bordure T2 Routière : 3 500 FCFA / unité\n\nREGLES STRICTES :\n1. TVA 18% sur le total HT.\n2. Calcule le Montant HT, la TVA 18% et le NET A PAYER TTC.\n3. Identifie l'intention : 'devis', 'proforma' ou 'commande'.\n4. Tu dois obligatoirement formater la réponse JSON suivante pour le relais API :\n{\n  \"action\": \"devis\" | \"proforma\" | \"commande\",\n  \"replyText\": \"Message structuré à renvoyer au client sur WhatsApp\",\n  \"totalHT\": 12345,\n  \"tva\": 2222,\n  \"totalTTC\": 14567,\n  \"articles\": [{\"nom\": \"Nom de l'article\", \"quantite\": 1000, \"prix\": 300}]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        680,
+        280
+      ],
+      "id": "node-gemini-ai-agent",
+      "name": "Agent IA Conversationnel (Gemini)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://votre-domaine-2cgc.com/api/whatsapp/n8n-relay",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-2cgc-api-key",
+              "value": "2cgc_n8n_secret_key_2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"{{ $json.output.action }}\",\n  \"client\": {\n    \"nom\": \"{{ $('Webhook WhatsApp Incoming (Hostinger)').item.json.body.entry[0].changes[0].value.contacts[0].profile.name }}\",\n    \"telephone\": \"{{ $('Webhook WhatsApp Incoming (Hostinger)').item.json.body.entry[0].changes[0].value.messages[0].from }}\"\n  },\n  \"articles\": {{ JSON.stringify($json.output.articles) }},\n  \"totalHT\": {{ $json.output.totalHT }},\n  \"tva\": {{ $json.output.tva }},\n  \"totalTTC\": {{ $json.output.totalTTC }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        280
+      ],
+      "id": "node-http-relay-2cgc",
+      "name": "Relais API 2CGC (CRM & Usine)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $env.WHATSAPP_PHONE_NUMBER_ID }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.WHATSAPP_META_ACCESS_TOKEN }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $('Webhook WhatsApp Incoming (Hostinger)').item.json.body.entry[0].changes[0].value.messages[0].from }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"{{ $('Agent IA Conversationnel (Gemini)').item.json.output.replyText }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1180,
+        280
+      ],
+      "id": "node-send-whatsapp-response",
+      "name": "Envoyer Réponse Client (WhatsApp Meta)"
+    }
+  ],
+  "connections": {
+    "Webhook WhatsApp Incoming (Hostinger)": {
+      "main": [
+        [
+          {
+            "node": "Est-ce un message Texte ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Est-ce un message Texte ?": {
+      "main": [
+        [
+          {
+            "node": "Agent IA Conversationnel (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent IA Conversationnel (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Relais API 2CGC (CRM & Usine)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Relais API 2CGC (CRM & Usine)": {
+      "main": [
+        [
+          {
+            "node": "Envoyer Réponse Client (WhatsApp Meta)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
