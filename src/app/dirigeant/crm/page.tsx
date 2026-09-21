@@ -14,6 +14,9 @@ import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import { subscribeToRealtimeChanges } from '@/lib/supabase/services';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
+import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
+import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
+import { scoreLead, triggerAutonomousRelance, sendLeadToFactory } from '@/lib/crm-agent-engine';
 
 const COLONNES: { id: CRMLead['statut']; label: string; couleur: string; bg: string; dot: string }[] = [
   { id: 'nouveau', label: 'Nouveau', couleur: 'border-blue-400', bg: 'bg-blue-50', dot: 'bg-blue-500' },
@@ -58,6 +61,31 @@ export default function CRMDashboard() {
   const [formNouveauLead, setFormNouveauLead] = useState({
     nom: '', entreprise: '', email: '', telephone: '', produitInteresse: '', valeurEstimee: '', notes: '',
   });
+
+  // État Agentique IA
+  const [modalAgentLogsOpen, setModalAgentLogsOpen] = useState(false);
+
+  const handleAgentRelance = async (lead: CRMLead) => {
+    setEnvoyant(`${lead.id}-agent`);
+    const res = await triggerAutonomousRelance(lead.id, lead.telephone ? 'whatsapp' : 'email');
+    setEnvoyant(null);
+    if (res.success) {
+      chargerDonnees();
+      afficherNotif(`🤖 Agent IA : ${res.message}`, 'success');
+    } else {
+      afficherNotif(`⚠️ ${res.message}`, 'error');
+    }
+  };
+
+  const handleAgentUsine = (lead: CRMLead) => {
+    const res = sendLeadToFactory(lead.id);
+    if (res.success) {
+      chargerDonnees();
+      afficherNotif(`🏭 Agent Usine : ${res.message}`, 'success');
+    } else {
+      afficherNotif(`⚠️ ${res.message}`, 'error');
+    }
+  };
 
   const chargerDonnees = useCallback(() => {
     const l = getLeads();
@@ -370,6 +398,14 @@ export default function CRMDashboard() {
           </div>
           <div className="flex items-center gap-3">
             <button
+              onClick={() => setModalAgentLogsOpen(true)}
+              className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer border border-amber-400/40"
+              title="Consulter le journal d'audit des actions exécutées par l'Agent IA"
+            >
+              <span>📜</span>
+              <span>Audit Agentique IA</span>
+            </button>
+            <button
               onClick={() => setModalWhatsAppSimulateur(true)}
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-400/30"
               title="Tester et simuler en direct les demandes de devis et commandes WhatsApp"
@@ -501,6 +537,24 @@ export default function CRMDashboard() {
                           {formatFCFA(lead.valeurEstimee)}
                         </div>
 
+                        {/* Badge Score IA */}
+                        {(() => {
+                          const aiScore = scoreLead(lead);
+                          return (
+                            <div className="mb-2 flex items-center justify-between text-[10px] bg-slate-900 text-slate-100 px-2 py-1 rounded-lg border border-slate-700">
+                              <span className="flex items-center gap-1 font-bold">
+                                <span>⚡ Score IA:</span>
+                                <span className={aiScore.score >= 75 ? 'text-emerald-400 font-extrabold' : aiScore.score >= 50 ? 'text-amber-400 font-extrabold' : 'text-rose-400 font-extrabold'}>
+                                  {aiScore.score}%
+                                </span>
+                              </span>
+                              <span className="text-[9px] text-slate-300 truncate max-w-[110px]" title={aiScore.recommandation}>
+                                {aiScore.priorite === 'haute' ? '🔥 Haute' : aiScore.priorite === 'moyenne' ? '⚡ Moyenne' : '💤 Faible'}
+                              </span>
+                            </div>
+                          );
+                        })()}
+
                         {/* Dernière activité */}
                         {lead.activites[0] && (
                           <div className="text-[10px] text-gray-500 bg-gray-50 rounded-lg p-2 mb-2 leading-tight">
@@ -520,6 +574,13 @@ export default function CRMDashboard() {
                         {/* Actions rapides */}
                         <div className="flex gap-1.5 pt-2 border-t border-gray-50">
                           <button
+                            onClick={(e) => { e.stopPropagation(); handleAgentRelance(lead); }}
+                            className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/60 text-[10px] font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1"
+                            title="Laisser l'Agent IA relancer ce prospect"
+                          >
+                            🤖 Relance IA
+                          </button>
+                          <button
                             onClick={(e) => { e.stopPropagation(); handleEnvoyerEmail(lead, 'relance_j2'); }}
                             disabled={envoyant === `${lead.id}-relance_j2`}
                             className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-bold py-1.5 rounded-lg transition-colors disabled:opacity-50"
@@ -531,7 +592,7 @@ export default function CRMDashboard() {
                               onClick={(e) => { e.stopPropagation(); handleEnvoyerWhatsApp(lead, 'relance'); }}
                               className="flex-1 bg-green-50 hover:bg-green-100 text-green-700 text-[10px] font-bold py-1.5 rounded-lg transition-colors"
                             >
-                              💬 WhatsApp
+                              💬 WA
                             </button>
                           )}
                         </div>
@@ -577,6 +638,38 @@ export default function CRMDashboard() {
                 </div>
 
                 <div className="p-6 space-y-5">
+                  {/* IA Recommendation Box */}
+                  {(() => {
+                    const scoreData = scoreLead(leadSelectionne);
+                    return (
+                      <div className="bg-slate-900 text-slate-100 rounded-2xl p-4 border border-amber-500/30 shadow-md space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
+                            <span>🧠 Analyse Agentique IA Gemini</span>
+                          </div>
+                          <span className="bg-amber-400/20 text-amber-300 font-black px-2.5 py-0.5 rounded-full text-xs border border-amber-400/30">
+                            Score : {scoreData.score}% ({scoreData.priorite.toUpperCase()})
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-300 italic">{scoreData.recommandation}</p>
+                        <div className="flex gap-2 pt-2 border-t border-slate-800">
+                          <button
+                            onClick={() => handleAgentRelance(leadSelectionne)}
+                            className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black py-2 rounded-xl transition shadow"
+                          >
+                            ⚡ Lancer Relance Autonome IA
+                          </button>
+                          <button
+                            onClick={() => handleAgentUsine(leadSelectionne)}
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black py-2 rounded-xl transition shadow"
+                          >
+                            🏭 Transférer Usine Daloa
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {/* Infos */}
                   <div className="grid grid-cols-2 gap-3">
                     {[
@@ -1377,6 +1470,17 @@ export default function CRMDashboard() {
         isOpen={modalWhatsAppSimulateur}
         onClose={() => setModalWhatsAppSimulateur(false)}
         onRefreshData={chargerDonnees}
+      />
+
+      {/* Copilot Agentique IA & Modal Audit */}
+      <CRMAgenticCopilot
+        onRefreshLeads={chargerDonnees}
+        onOpenLogsModal={() => setModalAgentLogsOpen(true)}
+      />
+
+      <CRMAgenticLogsModal
+        isOpen={modalAgentLogsOpen}
+        onClose={() => setModalAgentLogsOpen(false)}
       />
     </main>
   );
