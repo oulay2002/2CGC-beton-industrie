@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface Message {
   id: number;
@@ -104,6 +105,12 @@ function formaterTexte(texte: string): string {
 }
 
 export default function ChatBot() {
+  const pathname = usePathname();
+
+  // Afficher l'Assistant IA (BetoBot) uniquement sur la page d'accueil (/, /fr, /en)
+  const isHomePage = pathname === '/' || pathname === '/fr' || pathname === '/en';
+  if (!isHomePage) return null;
+
   const [isOpen, setIsOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const [showDirigeantsPanel, setShowDirigeantsPanel] = useState(false);
