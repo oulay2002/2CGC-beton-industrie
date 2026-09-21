@@ -113,10 +113,10 @@ export default function Navigation({ lang, dict, entrepriseLinks }: NavigationPr
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-2xl backdrop-blur-xl border-b border-white/15 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-2xl backdrop-blur-xl border-b border-white/20 ${
           scrolled
-            ? "py-2 bg-[#001D3D]/95"
-            : "py-3 bg-[#002B5B]/95"
+            ? "py-2 bg-[#001D3D]/75"
+            : "py-3 bg-[#002B5B]/70"
         }`}
       >
         {/* Ligne d'accent or supérieure */}
