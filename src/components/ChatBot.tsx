@@ -98,9 +98,26 @@ function trouverReponse(message: string): string {
 }
 
 function formaterTexte(texte: string): string {
-  return texte
+  if (!texte) return '';
+
+  // 1. Échappement strict des caractères HTML dangereux pour neutraliser les injections XSS
+  const escaped = texte
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+  // 2. Transformation sécurisée du Markdown en HTML (en interdisant les schémas javascript: et data:)
+  return escaped
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-[#FFD700] underline font-bold hover:text-yellow-300">$1</a>')
+    .replace(/\[(.*?)\]\((.*?)\)/g, (_match, label, url) => {
+      const cleanUrl = url.trim();
+      if (/^(javascript|data|vbscript):/i.test(cleanUrl)) {
+        return label; // Rejeter l'URL malveillante
+      }
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="text-[#FFD700] underline font-bold hover:text-yellow-300">${label}</a>`;
+    })
     .replace(/\n/g, '<br/>');
 }
 

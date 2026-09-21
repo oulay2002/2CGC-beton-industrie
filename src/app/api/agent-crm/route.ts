@@ -44,7 +44,17 @@ export async function POST(req: NextRequest) {
 
     // Traitement d'un prompt conversationnel Copilot
     if (prompt) {
-      const result = await processCopilotPrompt(prompt);
+      if (typeof prompt !== 'string') {
+        return NextResponse.json({ error: 'Format du prompt invalide.' }, { status: 400 });
+      }
+
+      // Limiter la taille du prompt (max 2000 car.) pour prévenir la surconsommation de ressources (DoS)
+      const cleanPrompt = prompt.slice(0, 2000).trim();
+      if (!cleanPrompt) {
+        return NextResponse.json({ error: 'Le prompt ne peut pas être vide.' }, { status: 400 });
+      }
+
+      const result = await processCopilotPrompt(cleanPrompt);
       return NextResponse.json({
         success: true,
         actionProcessed: result.actionTaken || 'copilot_response',

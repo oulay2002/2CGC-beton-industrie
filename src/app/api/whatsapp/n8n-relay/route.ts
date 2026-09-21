@@ -1,9 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { ajouterLeadDepuisWhatsApp } from '@/lib/crm-data';
 import { ajouterCommandeDepuisWhatsApp, CommandeArticle } from '@/lib/commandes-store';
 
 // Clé d'API partagée entre le Workflow n8n (Hostinger) et la plateforme 2CGC
 const API_KEY_AUTORISEE = process.env.N8N_RELAY_API_KEY || '2cgc_n8n_secret_key_2026';
+
+/**
+ * Comparaison sécurisée à temps constant pour prévenir les attaques temporelles
+ */
+function isKeyValid(providedKey: string | null): boolean {
+  if (!providedKey) return false;
+  try {
+    const a = Buffer.from(providedKey);
+    const b = Buffer.from(API_KEY_AUTORISEE);
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
 
 export interface N8NRelayPayload {
   action: 'devis' | 'proforma' | 'commande' | 'information';
@@ -26,10 +42,10 @@ export interface N8NRelayPayload {
  */
 export async function POST(req: NextRequest) {
   try {
-    // 1. Vérification de la clé d'API
-    const apiKey = req.headers.get('x-2cgc-api-key') || req.headers.get('authorization')?.replace('Bearer ', '');
+    // 1. Vérification sécurisée à temps constant de la clé d'API
+    const apiKey = req.headers.get('x-2cgc-api-key') || req.headers.get('authorization')?.replace('Bearer ', '') || null;
     
-    if (apiKey !== API_KEY_AUTORISEE) {
+    if (!isKeyValid(apiKey)) {
       console.warn('⚠️ Tentative d\'accès non autorisée à /api/whatsapp/n8n-relay');
       return NextResponse.json({ error: 'Accès non autorisé. Clé API invalide.' }, { status: 401 });
     }
