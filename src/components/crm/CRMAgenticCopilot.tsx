@@ -101,7 +101,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-3 bg-slate-900 hover:bg-slate-800 text-amber-400 font-semibold px-5 py-3.5 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-105 border border-amber-500/30 group"
+          className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold px-5 py-3.5 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 transform hover:scale-105 border-2 border-amber-500/50 cursor-pointer"
         >
           <div className="relative">
             <Bot className="w-6 h-6 text-amber-400 animate-pulse" />
@@ -110,8 +110,8 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
               <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
             </span>
           </div>
-          <span className="text-white text-sm">Copilot Agentique IA</span>
-          <span className="bg-amber-400/20 text-amber-300 text-xs px-2 py-0.5 rounded-full border border-amber-400/30">
+          <span className="text-white text-sm font-black">Copilot Agentique IA</span>
+          <span className="bg-amber-400/20 text-amber-300 text-xs px-2 py-0.5 rounded-full border border-amber-400/40">
             2CGC
           </span>
         </button>
@@ -119,7 +119,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
 
       {/* Slide-over Panneau Copilot */}
       {isOpen && (
-        <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[450px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transition-all duration-300 text-slate-100">
+        <div className="fixed inset-y-0 right-0 z-[9999] w-full sm:w-[450px] bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transition-all duration-300 text-slate-100">
           
           {/* Header Panneau */}
           <div className="p-4 border-b border-slate-800 bg-slate-950/80 flex items-center justify-between">

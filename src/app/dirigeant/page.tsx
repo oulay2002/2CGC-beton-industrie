@@ -6,6 +6,8 @@ import { useAuth } from '@/lib/auth-context';
 import { getCommandes, Commande } from '@/lib/commandes-store';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
+import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
+import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
 
 export default function DirigeantDashboard() {
   const { user, logout, creerUtilisateur, getUtilisateurs, isLoading } = useAuth();
@@ -27,6 +29,7 @@ export default function DirigeantDashboard() {
   const [vehiculeRapide, setVehiculeRapide] = useState('');
   const [immatriculationRapide, setImmatriculationRapide] = useState('');
   const [notifRapide, setNotifRapide] = useState<string | null>(null);
+  const [modalLogsOpen, setModalLogsOpen] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
@@ -525,6 +528,17 @@ export default function DirigeantDashboard() {
           </div>
         </div>
       )}
+
+      {/* Copilot Agentique IA & Modal Audit */}
+      <CRMAgenticCopilot
+        onRefreshLeads={() => setCommandes(getCommandes())}
+        onOpenLogsModal={() => setModalLogsOpen(true)}
+      />
+
+      <CRMAgenticLogsModal
+        isOpen={modalLogsOpen}
+        onClose={() => setModalLogsOpen(false)}
+      />
     </main>
   );
 }
