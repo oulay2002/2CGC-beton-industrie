@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Dictionary, Locale } from "@/lib/dictionaries";
 import { ZONES } from "@/lib/zones-data";
+import ENTREPRISE_INFO from "@/lib/entreprise-info";
 import {
   ShieldCheck,
   Truck,
@@ -376,7 +377,7 @@ export default function Footer({ lang, dict }: FooterProps) {
               <span>{lang === "fr" ? "Zones & Villes Desservies" : "Delivery Destinations & Zones"}</span>
             </div>
             <a
-              href="https://search.google.com/local/writereview?placeid=ChIJxxxxxxxxx"
+              href={ENTREPRISE_INFO.googleReviewUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] hover:underline font-semibold"

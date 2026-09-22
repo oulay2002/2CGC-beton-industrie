@@ -46,6 +46,14 @@ export const ENTREPRISE_INFO = {
 
   // Horaires
   horaires: 'Lun–Sam : 7h–18h',
+
+  // Google Business & Avis
+  googleReviewUrl:
+    process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
+    'https://www.google.com/search?q=2CGC+Cheickna+Construction+Daloa+avis',
+  googleBusinessUrl:
+    process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_URL ||
+    'https://maps.google.com/?q=2CGC+Cheickna+Construction+Daloa',
 };
 
 export default ENTREPRISE_INFO;

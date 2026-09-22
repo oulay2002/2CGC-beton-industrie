@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Star, X, ExternalLink } from "lucide-react";
+import ENTREPRISE_INFO from "@/lib/entreprise-info";
 
 interface ReviewPromptProps {
   /** Délai avant apparition (ms). Défaut : 60 secondes */
@@ -39,9 +40,7 @@ export default function ReviewPrompt({
 
   if (!visible) return null;
 
-  // URL de dépôt d'avis Google — À personnaliser avec l'ID de la fiche GBP
-  const googleReviewUrl =
-    "https://search.google.com/local/writereview?placeid=ChIJxxxxxxxxx";
+  const googleReviewUrl = ENTREPRISE_INFO.googleReviewUrl;
 
   return (
     <div className="fixed bottom-20 md:bottom-6 right-4 z-50 animate-in slide-in-from-bottom-4 fade-in duration-500">
