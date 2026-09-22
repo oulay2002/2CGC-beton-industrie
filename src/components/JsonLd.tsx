@@ -149,6 +149,61 @@ export default function JsonLd({ lang }: JsonLdProps) {
           "bestRating": "5",
           "worstRating": "1"
         }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://2cgc.ci/#website",
+        "url": "https://2cgc.ci",
+        "name": "2CGC - Cheickna Construction et Génie Civil",
+        "description": isFr
+          ? "Site officiel de 2CGC : préfabriqués béton, devis en ligne, calculateurs de chantier et suivi de commandes."
+          : "Official 2CGC website: precast concrete, online quotes, construction calculators and order tracking.",
+        "publisher": { "@id": "https://2cgc.ci/#organization" },
+        "inLanguage": [
+          { "@type": "Language", "name": "French", "alternateName": "fr" },
+          { "@type": "Language", "name": "English", "alternateName": "en" }
+        ],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://2cgc.ci/{lang}/catalogue?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://2cgc.ci/#organization",
+        "name": "2CGC - Cheickna Construction et Génie Civil",
+        "url": "https://2cgc.ci",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://2cgc.ci/logo-2cgc.png",
+          "width": 800,
+          "height": 600
+        },
+        "sameAs": [
+          "https://wa.me/2250707621799",
+          "https://facebook.com",
+          "https://tiktok.com"
+        ],
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "telephone": "+2250707621799",
+            "contactType": "customer service",
+            "areaServed": "CI",
+            "availableLanguage": ["French", "English"]
+          },
+          {
+            "@type": "ContactPoint",
+            "telephone": "+2250707857629",
+            "contactType": "sales",
+            "areaServed": "CI",
+            "availableLanguage": ["French"]
+          }
+        ]
       }
     ]
   };

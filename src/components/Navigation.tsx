@@ -90,6 +90,12 @@ export default function Navigation({ lang, dict, entrepriseLinks }: NavigationPr
       ...entrepriseLinks.faq,
       icon: HelpCircle,
     },
+    {
+      href: `/${lang}#zones`,
+      label: isFr ? "Zones de Livraison" : "Delivery Zones",
+      desc: isFr ? "Villes & régions desservies" : "Cities & regions served",
+      icon: Truck,
+    },
   ];
 
   useEffect(() => {

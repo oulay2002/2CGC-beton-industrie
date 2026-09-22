@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary, Locale } from "@/lib/dictionaries";
+import { ZONES } from "@/lib/zones-data";
 import {
   ShieldCheck,
   Truck,
@@ -299,6 +300,14 @@ export default function Footer({ lang, dict }: FooterProps) {
               </li>
               <li>
                 <Link
+                  href={`/${lang}/entreprise/faq`}
+                  className="hover:text-white transition-colors hover:translate-x-0.5 inline-block"
+                >
+                  {lang === "fr" ? "Foire Aux Questions (FAQ)" : "FAQ & Assistance"}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={`/${lang}/cgu`}
                   className="hover:text-white transition-colors hover:translate-x-0.5 inline-block"
                 >
@@ -356,6 +365,36 @@ export default function Footer({ lang, dict }: FooterProps) {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Maillage SEO Local : Zones de livraison */}
+        <div className="mt-10 pt-6 border-t border-white/10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
+            <div className="text-xs font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>{lang === "fr" ? "Zones & Villes Desservies" : "Delivery Destinations & Zones"}</span>
+            </div>
+            <a
+              href="https://search.google.com/local/writereview?placeid=ChIJxxxxxxxxx"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] hover:underline font-semibold"
+            >
+              <span>⭐ {lang === "fr" ? "Laisser un avis Google (4.9/5)" : "Leave a Google Review (4.9/5)"}</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-white/60">
+            {ZONES.map((zone) => (
+              <Link
+                key={zone.slug}
+                href={`/${lang}/zones/${zone.slug}`}
+                className="hover:text-white transition-colors hover:underline"
+              >
+                Préfabriqués Béton {zone.name}
+              </Link>
+            ))}
           </div>
         </div>
 

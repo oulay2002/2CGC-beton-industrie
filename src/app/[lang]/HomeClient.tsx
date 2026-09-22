@@ -24,7 +24,9 @@ import {
   PhoneCall,
   ChevronRight,
   TrendingUp,
+  MapPin,
 } from "lucide-react";
+import { ZONES } from "@/lib/zones-data";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -716,6 +718,69 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== ZONES DESSERVIES & MAILLAGE LOCAL ========== */}
+      <section id="zones" className="py-20 md:py-28 px-4 md:px-6 bg-[#F5F5F0] border-t border-slate-200/80">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="inline-flex items-center gap-1.5 bg-[#002B5B]/8 text-[#002B5B] px-4 py-1.5 rounded-full text-xs font-bold mb-4 uppercase tracking-widest border border-[#002B5B]/10">
+              <MapPin className="w-3.5 h-3.5 text-[#002B5B]" />
+              <span>{lang === "fr" ? "Couverture Régionale & Logistique" : "Regional Coverage & Logistics"}</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#002B5B] tracking-tight mb-4">
+              {lang === "fr" ? "Zones & Villes Desservies en Côte d'Ivoire" : "Cities & Delivery Zones in Ivory Coast"}
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+              {lang === "fr"
+                ? "Depuis notre usine de Daloa, notre flotte camion-grue assure l'approvisionnement rapide de vos chantiers avec déchargement sécurisé."
+                : "From our Daloa factory, our crane-truck fleet ensures rapid jobsite supply with safe on-site unloading."}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {ZONES.map((zone) => (
+              <Link
+                key={zone.slug}
+                href={`/${lang}/zones/${zone.slug}`}
+                className="group bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#002B5B]/20 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#002B5B]/10 text-[#002B5B]">
+                      {zone.region}
+                    </span>
+                    <span className="text-xs font-black text-[#002B5B]/50 font-mono">
+                      {zone.distanceFromDaloa === 0
+                        ? lang === "fr"
+                          ? "Siège"
+                          : "HQ"
+                        : `${zone.distanceFromDaloa} km`}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-black text-[#002B5B] group-hover:text-[#001D3D] flex items-center gap-1.5 mb-2">
+                    <span>{zone.name}</span>
+                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#FFD700]" />
+                  </h3>
+
+                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">
+                    {zone.description[lang]}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-gray-50 flex items-center justify-between text-xs font-semibold text-[#002B5B]/70">
+                  <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
+                    {zone.deliveryDelay[lang]}
+                  </span>
+                  <span className="text-[11px] font-bold text-[#002B5B] group-hover:underline">
+                    {lang === "fr" ? "Découvrir →" : "Explore →"}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

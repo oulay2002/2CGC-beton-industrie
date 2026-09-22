@@ -9,6 +9,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import SyncLang from "@/components/SyncLang";
 import JsonLd from "@/components/JsonLd";
 import IntroSplash from "@/components/IntroSplash";
+import ReviewPrompt from "@/components/ReviewPrompt";
 import { locales, type Locale, getDictionary, hasLocale } from "@/lib/dictionaries";
 
 export async function generateMetadata({
@@ -133,6 +134,7 @@ export default async function LangLayout({
         <Footer lang={locale} dict={dict.footer} />
       </div>
       <ChatBot />
+      <ReviewPrompt delayMs={45000} />
       <MobileBottomNav />
       <PwaRegister />
       <AnalyticsScripts />
