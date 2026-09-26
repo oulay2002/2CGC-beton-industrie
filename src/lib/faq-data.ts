@@ -66,8 +66,8 @@ export const FAQ_ITEMS: FaqItem[] = [
       en: "Do you deliver outside Daloa and nationwide across Ivory Coast?",
     },
     a: {
-      fr: "Oui, notre flotte approvisionne l'ensemble de la région du Haut-Sassandra (Issia, Vavoua, Zoukougbeu) ainsi que les grands axes vers Yamoussoukro, Bouaké, San Pedro et Abidjan. Les frais de transport sont calculés au plus juste selon la distance kilométrique et le cubage.",
-      en: "Yes, our dedicated fleet supplies the entire Haut-Sassandra region (Issia, Vavoua, Zoukougbeu) as well as major axes towards Yamoussoukro, Bouaké, San Pedro and Abidjan. Transport costs are calculated accurately based on distance and volume.",
+      fr: "Oui, notre flotte approvisionne l'ensemble de la région du Haut-Sassandra (Issia, Vavoua, Gonaté, Bédiala), la Marahoué (Bouaflé, Bonon, Zuénoula), le Grand Ouest (Duékoué, Guiglo, Man, Danané, Bloléquin, Zouan-Hounien, Toulépleu), le Worodougou (Séguéla, Kani) ainsi que les grands axes vers Yamoussoukro, Bouaké, San Pedro et Abidjan. Les frais de transport sont calculés au plus juste selon la distance kilométrique et le cubage.",
+      en: "Yes, our dedicated fleet supplies the entire Haut-Sassandra region (Issia, Vavoua, Gonaté, Bédiala), Marahoué (Bouaflé, Bonon, Zuénoula), the Grand West (Duékoué, Guiglo, Man, Danané, Bloléquin, Zouan-Hounien, Toulépleu), Worodougou (Séguéla, Kani) as well as major axes towards Yamoussoukro, Bouaké, San Pedro and Abidjan. Transport costs are calculated accurately based on distance and volume.",
     },
   },
   {

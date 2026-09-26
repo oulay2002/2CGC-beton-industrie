@@ -1,4 +1,5 @@
 import { Locale } from "@/lib/dictionaries";
+import { ZONES } from "@/lib/zones-data";
 
 interface JsonLdProps {
   lang: Locale;
@@ -55,13 +56,9 @@ export default function JsonLd({ lang }: JsonLdProps) {
         "currenciesAccepted": "XOF",
         "paymentAccepted": "Cash, Bank Transfer, Mobile Money",
         "areaServed": [
-          { "@type": "City", "name": "Daloa" },
+          { "@type": "AdministrativeArea", "name": "Côte d'Ivoire" },
           { "@type": "AdministrativeArea", "name": "Haut-Sassandra" },
-          { "@type": "City", "name": "Bouaflé" },
-          { "@type": "City", "name": "Issia" },
-          { "@type": "City", "name": "Vavoua" },
-          { "@type": "City", "name": "Yamoussoukro" },
-          { "@type": "City", "name": "Abidjan" }
+          ...ZONES.map((z) => ({ "@type": "City", "name": z.name })),
         ],
         "hasOfferCatalog": {
           "@type": "OfferCatalog",

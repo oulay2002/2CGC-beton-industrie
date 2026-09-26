@@ -8,6 +8,7 @@ import { genererPDF, DevisData } from "@/lib/generer-pdf";
 import { creerLeadDepuisDevis } from "@/lib/crm-data";
 import { ajouterCommandeDepuisDevis } from "@/lib/commandes-store";
 import { TVA_RATE } from "@/lib/utils";
+import posthog from "posthog-js";
 
 interface DevisClientProps {
   lang: Locale;
@@ -70,24 +71,24 @@ function DevisInner({ lang }: { lang: Locale }) {
     },
     {
       id: "zone_proche",
-      label: "Issia / Vavoua / Zoukougbeu / Bédiala",
+      label: "Issia / Vavoua / Gonaté / Bonon / Bédiala",
       distanceKm: 55,
       tarifParCamion: 65000,
-      description: isEn ? "Radius 20-60 km (Haut-Sassandra)" : "Rayon 20-60 km (Haut-Sassandra)",
+      description: isEn ? "Radius 20-60 km (Haut-Sassandra & Marahoué)" : "Rayon 20-60 km (Haut-Sassandra & Marahoué)",
     },
     {
       id: "zone_moyenne",
-      label: "Bouaflé / Duékoué / Gagnoa / Sinfra",
-      distanceKm: 95,
+      label: "Bouaflé / Duékoué / Guiglo / Zuénoula / Séguéla",
+      distanceKm: 110,
       tarifParCamion: 120000,
-      description: isEn ? "Radius 61-120 km (Centre-West)" : "Rayon 61-120 km (Centre-Ouest)",
+      description: isEn ? "Radius 61-140 km (Centre-West & Worodougou)" : "Rayon 61-140 km (Centre-Ouest & Worodougou)",
     },
     {
       id: "zone_eloignee",
-      label: "Yamoussoukro / Man / San Pedro",
+      label: "Man / Danané / Kani / Bloléquin / Toulépleu / San Pedro",
       distanceKm: 210,
       tarifParCamion: 220000,
-      description: isEn ? "West & Central regions" : "Grand Ouest & Centre",
+      description: isEn ? "Grand West, North-West & Bas-Sassandra" : "Grand Ouest, Nord-Ouest & Bas-Sassandra",
     },
     {
       id: "abidjan",
@@ -256,6 +257,16 @@ function DevisInner({ lang }: { lang: Locale }) {
         : []),
     ].join(", ");
     creerLeadDepuisDevis(clientInfo.nom, clientInfo.email, totalTTC, produitsStr, clientInfo.telephone);
+
+    if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+      posthog.capture("quote_generated", {
+        product_count: lignes.length,
+        delivery_method: optionLivraison ? "delivery" : "factory_pickup",
+        delivery_zone: optionLivraison ? zoneLivraisonId : "retrait_usine",
+        total_amount: Math.round(totalTTC),
+        currency: "XOF",
+      });
+    }
 
     setMessage({
       text: isEn
@@ -834,6 +845,16 @@ function DevisInner({ lang }: { lang: Locale }) {
 
                       <a
                         href={genererLienWhatsAppDevis()}
+                        onClick={() => {
+                          if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+                            posthog.capture("quote_whatsapp_opened", {
+                              product_count: lignes.length,
+                              delivery_method: optionLivraison ? "delivery" : "factory_pickup",
+                              total_amount: Math.round(totalTTC),
+                              currency: "XOF",
+                            });
+                          }
+                        }}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-3.5 rounded-2xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"

@@ -349,7 +349,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
                     ? isEn
                       ? "Direct factory"
                       : "Direct usine"
-                    : `${z.distanceFromDaloa} km · ${z.deliveryDelay[lang].split(" ")[isEn ? 2 : 1] || "48h"}`}
+                    : `${z.distanceFromDaloa} km · ${z.deliveryDelay[lang].replace(/^(Livraison\s+|Delivery\s+)/i, "")}`}
                 </div>
               </Link>
             ))}
