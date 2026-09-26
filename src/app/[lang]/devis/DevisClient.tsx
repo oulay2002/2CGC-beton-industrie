@@ -8,11 +8,20 @@ import { genererPDF, DevisData } from "@/lib/generer-pdf";
 import { creerLeadDepuisDevis } from "@/lib/crm-data";
 import { ajouterCommandeDepuisDevis } from "@/lib/commandes-store";
 import { TVA_RATE } from "@/lib/utils";
-import posthog from "posthog-js";
 
 interface DevisClientProps {
   lang: Locale;
 }
+
+const captureAnalytics = (event: string, properties: Record<string, unknown>) => {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+    import("posthog-js")
+      .then(({ default: ph }) => {
+        ph.capture(event, properties);
+      })
+      .catch(() => {});
+  }
+};
 
 const PRODUITS = [
   // Briques
@@ -258,15 +267,13 @@ function DevisInner({ lang }: { lang: Locale }) {
     ].join(", ");
     creerLeadDepuisDevis(clientInfo.nom, clientInfo.email, totalTTC, produitsStr, clientInfo.telephone);
 
-    if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
-      posthog.capture("quote_generated", {
-        product_count: lignes.length,
-        delivery_method: optionLivraison ? "delivery" : "factory_pickup",
-        delivery_zone: optionLivraison ? zoneLivraisonId : "retrait_usine",
-        total_amount: Math.round(totalTTC),
-        currency: "XOF",
-      });
-    }
+    captureAnalytics("quote_generated", {
+      product_count: lignes.length,
+      delivery_method: optionLivraison ? "delivery" : "factory_pickup",
+      delivery_zone: optionLivraison ? zoneLivraisonId : "retrait_usine",
+      total_amount: Math.round(totalTTC),
+      currency: "XOF",
+    });
 
     setMessage({
       text: isEn
@@ -846,14 +853,12 @@ function DevisInner({ lang }: { lang: Locale }) {
                       <a
                         href={genererLienWhatsAppDevis()}
                         onClick={() => {
-                          if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
-                            posthog.capture("quote_whatsapp_opened", {
-                              product_count: lignes.length,
-                              delivery_method: optionLivraison ? "delivery" : "factory_pickup",
-                              total_amount: Math.round(totalTTC),
-                              currency: "XOF",
-                            });
-                          }
+                          captureAnalytics("quote_whatsapp_opened", {
+                            product_count: lignes.length,
+                            delivery_method: optionLivraison ? "delivery" : "factory_pickup",
+                            total_amount: Math.round(totalTTC),
+                            currency: "XOF",
+                          });
                         }}
                         target="_blank"
                         rel="noopener noreferrer"
