@@ -593,11 +593,15 @@ export default function DirigeantDashboard() {
               <div className="bg-white rounded-xl p-3 border border-gray-200 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-bold text-gray-400 uppercase">Identifiant (Email)</span>
-                  <p className="text-sm font-mono font-bold text-[#002B5B]">{identifiantGenere.email}</p>
+                  <p className="text-sm font-mono font-bold text-[#002B5B]">
+                    {identifiantGenere.email.replace(/@2cgc\.ci$/i, '@2cgc-industrie.com').replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com')}
+                  </p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => navigator.clipboard.writeText(identifiantGenere.email)}
+                  onClick={() => navigator.clipboard.writeText(
+                    identifiantGenere.email.replace(/@2cgc\.ci$/i, '@2cgc-industrie.com').replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com')
+                  )}
                   className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition-colors"
                 >
                   Copier
@@ -627,7 +631,7 @@ export default function DirigeantDashboard() {
               {identifiantGenere.telephone && (
                 <a
                   href={`https://wa.me/${identifiantGenere.telephone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                    `Bonjour ${identifiantGenere.nom},\nVoici vos identifiants d'accès 2CGC BÉTON INDUSTRIE :\n\nLien : https://2cgc-industrie.com/connexion\nIdentifiant : ${identifiantGenere.email}\nMot de passe : ${identifiantGenere.password}\n\nDirection 2CGC`
+                    `Bonjour ${identifiantGenere.nom},\nVoici vos identifiants d'accès 2CGC BÉTON INDUSTRIE :\n\nLien : https://2cgc-industrie.com/connexion\nIdentifiant : ${identifiantGenere.email.replace(/@2cgc\.ci$/i, '@2cgc-industrie.com').replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com')}\nMot de passe : ${identifiantGenere.password}\n\nDirection 2CGC`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

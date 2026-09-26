@@ -228,26 +228,46 @@ function getUtilisateurs(): CompteUtilisateur[] {
   if (typeof window === 'undefined') return UTILISATEURS_MOCK as CompteUtilisateur[];
   const saved = localStorage.getItem(STORAGE_KEY);
   let dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-  // Migration automatique des anciens identifiants Direction et Collaborateurs vers @2cgc-industrie.com
+  let aModifie = false;
+
+  // Migration automatique globale : TOUS les comptes avec suffixe @2cgc.ci ou @beton-industrie.com
+  // deviennent immédiatement @2cgc-industrie.com (y compris alfredkouassi@2cgc-industrie.com, etc.)
   dynamiques = dynamiques.map(u => {
-    if (u.email === 'directeur@2cgc.ci') return { ...u, email: 'directeur@2cgc-industrie.com' };
-    if (u.email === 'keita.dambou@2cgc.ci') return { ...u, email: 'keita.dambou@2cgc-industrie.com' };
-    if (u.email === 'usine@beton-industrie.com') return { ...u, email: 'usine@2cgc-industrie.com' };
-    if (u.email === 'chauffeur@beton-industrie.com') return { ...u, email: 'chauffeur@2cgc-industrie.com' };
-    return u;
+    let email = u.email;
+    if (u.role !== 'client' || email.endsWith('@2cgc.ci') || email.endsWith('@beton-industrie.com')) {
+      if (email.endsWith('@2cgc.ci')) {
+        email = email.replace(/@2cgc\.ci$/i, '@2cgc-industrie.com');
+        aModifie = true;
+      } else if (email.endsWith('@beton-industrie.com')) {
+        email = email.replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
+        aModifie = true;
+      }
+    }
+    return email !== u.email ? { ...u, email } : u;
   });
+
+  if (aModifie) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dynamiques));
+  }
+
   // Fusionner les comptes mock statiques + les comptes créés dynamiquement
-  const emailsDynamiques = new Set(dynamiques.map(u => u.email));
-  const statiques = (UTILISATEURS_MOCK as CompteUtilisateur[]).filter(u => !emailsDynamiques.has(u.email));
+  const emailsDynamiques = new Set(dynamiques.map(u => u.email.toLowerCase()));
+  const statiques = (UTILISATEURS_MOCK as CompteUtilisateur[]).filter(u => !emailsDynamiques.has(u.email.toLowerCase()));
   return [...statiques, ...dynamiques];
 }
 
 function sauvegarderUtilisateur(compte: CompteUtilisateur) {
   if (typeof window === 'undefined') return;
+  // S'assurer que les collaborateurs internes ont toujours le suffixe officiel @2cgc-industrie.com
+  if (compte.role !== 'client') {
+    compte.email = compte.email
+      .replace(/@2cgc\.ci$/i, '@2cgc-industrie.com')
+      .replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
+  }
   const saved = localStorage.getItem(STORAGE_KEY);
   const dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
   // Ne pas dupliquer
-  const filtres = dynamiques.filter(u => u.email !== compte.email);
+  const filtres = dynamiques.filter(u => u.email.toLowerCase() !== compte.email.toLowerCase());
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...filtres, compte]));
 
   const client = isSupabaseConfigured() ? supabase : null;
@@ -471,12 +491,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true, role: 'chauffeur' };
     }
 
-    // 3. Recherche générale pour tous les autres comptes
+    // 3. Recherche générale pour tous les autres comptes (avec tolérance suffixe @2cgc.ci <-> @2cgc-industrie.com)
+    const normalizedCleanEmail = cleanEmail
+      .replace(/@2cgc\.ci$/i, '@2cgc-industrie.com')
+      .replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
+
     const utilisateur = tous.find(u => {
       const uEmail = u.email.toLowerCase().trim();
-      const matchEmail = (uEmail === cleanEmail) ||
-        (cleanEmail === 'usine@beton-industrie.com' && uEmail === 'usine@2cgc-industrie.com') ||
-        (cleanEmail === 'chauffeur@beton-industrie.com' && uEmail === 'chauffeur@2cgc-industrie.com');
+      const normalizedUEmail = uEmail
+        .replace(/@2cgc\.ci$/i, '@2cgc-industrie.com')
+        .replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
+      const matchEmail = (uEmail === cleanEmail) || (normalizedUEmail === normalizedCleanEmail);
       return matchEmail && (u.password.trim() === cleanPass || u.password === password);
     });
     if (utilisateur) {
