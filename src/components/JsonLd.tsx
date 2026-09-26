@@ -72,34 +72,43 @@ export default function JsonLd({ lang }: JsonLdProps) {
                 {
                   "@type": "Product",
                   "name": "Brique 20 Pleine",
+                  "image": `${siteUrl}/images/products/brique-20-pleine.jpg`,
+                  "brand": { "@type": "Brand", "name": "2CGC" },
                   "description": "Brique pleine 450x200x200mm pour murs porteurs et fondations",
                   "offers": {
                     "@type": "Offer",
                     "price": "570",
                     "priceCurrency": "XOF",
-                    "availability": "https://schema.org/InStock"
+                    "availability": "https://schema.org/InStock",
+                    "priceValidUntil": "2027-12-31"
                   }
                 },
                 {
                   "@type": "Product",
                   "name": "Brique 20 Creuse",
+                  "image": `${siteUrl}/images/products/brique-20-creuse.jpg`,
+                  "brand": { "@type": "Brand", "name": "2CGC" },
                   "description": "Brique creuse 450x200x200mm pour élévations standards",
                   "offers": {
                     "@type": "Offer",
                     "price": "470",
                     "priceCurrency": "XOF",
-                    "availability": "https://schema.org/InStock"
+                    "availability": "https://schema.org/InStock",
+                    "priceValidUntil": "2027-12-31"
                   }
                 },
                 {
                   "@type": "Product",
                   "name": "Brique 15 Creuse",
+                  "image": `${siteUrl}/images/products/brique-15-creuse.jpg`,
+                  "brand": { "@type": "Brand", "name": "2CGC" },
                   "description": "Brique creuse 450x150x200mm légère",
                   "offers": {
                     "@type": "Offer",
                     "price": "330",
                     "priceCurrency": "XOF",
-                    "availability": "https://schema.org/InStock"
+                    "availability": "https://schema.org/InStock",
+                    "priceValidUntil": "2027-12-31"
                   }
                 }
               ]
@@ -111,12 +120,15 @@ export default function JsonLd({ lang }: JsonLdProps) {
                 {
                   "@type": "Product",
                   "name": "Hourdis 15 Français",
+                  "image": `${siteUrl}/images/products/hourdis-15.jpg`,
+                  "brand": { "@type": "Brand", "name": "2CGC" },
                   "description": "Hourdis 500x150x200mm pour planchers hourdis",
                   "offers": {
                     "@type": "Offer",
                     "price": "430",
                     "priceCurrency": "XOF",
-                    "availability": "https://schema.org/InStock"
+                    "availability": "https://schema.org/InStock",
+                    "priceValidUntil": "2027-12-31"
                   }
                 }
               ]
@@ -128,12 +140,15 @@ export default function JsonLd({ lang }: JsonLdProps) {
                 {
                   "@type": "Product",
                   "name": "Pavé Z-7 Rouge / Gris / Jaune",
+                  "image": `${siteUrl}/images/products/pave-z7.jpg`,
+                  "brand": { "@type": "Brand", "name": "2CGC" },
                   "description": "Pavé autobloquant 240x240x60mm carrossable",
                   "offers": {
                     "@type": "Offer",
                     "price": "6500",
                     "priceCurrency": "XOF",
-                    "availability": "https://schema.org/InStock"
+                    "availability": "https://schema.org/InStock",
+                    "priceValidUntil": "2027-12-31"
                   }
                 }
               ]

@@ -26,6 +26,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com"),
   title: "2CGC - Cheickna Construction et Génie Civil | Daloa",
   description:
     "Leader des préfabriqués béton, calculateurs de chantier, devis proforma et suivi des commandes à Daloa et en Côte d'Ivoire.",
