@@ -10,7 +10,7 @@ function ConnexionPageInner() {
   const searchParams = useSearchParams();
   const { login } = useAuth();
 
-  const [mode, setMode] = useState<'client' | 'equipe'>('client');
+  const mode = searchParams.get('mode') === 'equipe' ? 'equipe' : 'client';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,26 +19,11 @@ function ConnexionPageInner() {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<'email' | 'password' | null>(null);
 
-  // Synchronisation avec l'URL param (?mode=equipe ou ?mode=client)
   useEffect(() => {
-    const param = searchParams.get('mode');
-    if (param === 'equipe') {
-      setMode('equipe');
-    } else if (param === 'client') {
-      setMode('client');
-    }
-  }, [searchParams]);
-
-  const handleSwitchMode = (newMode: 'client' | 'equipe') => {
-    if (newMode === mode) return;
-    setMode(newMode);
     setEmail('');
     setPassword('');
     setError('');
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('mode', newMode);
-    router.replace(`/connexion?${params.toString()}`, { scroll: false });
-  };
+  }, [mode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,34 +203,6 @@ function ConnexionPageInner() {
 
         {/* Conteneur Formulaire */}
         <div className="max-w-md w-full mx-auto px-6 py-4">
-          
-          {/* SÉLECTEUR D'ONGLETS CLAIR ET ÉLÉGANT */}
-          <div className="bg-gray-200/70 p-1.5 rounded-2xl mb-6 border border-gray-300/40 flex items-center shadow-inner">
-            <button
-              type="button"
-              onClick={() => handleSwitchMode('client')}
-              className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
-                mode === 'client'
-                  ? 'bg-white text-[#002B5B] shadow-md shadow-black/5'
-                  : 'text-gray-500 hover:text-gray-800'
-              }`}
-            >
-              <span>👤</span>
-              <span>Espace Client</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSwitchMode('equipe')}
-              className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
-                mode === 'equipe'
-                  ? 'bg-[#002B5B] text-white shadow-md shadow-[#002B5B]/20'
-                  : 'text-gray-500 hover:text-gray-800'
-              }`}
-            >
-              <span>🏢</span>
-              <span>Accès Équipe</span>
-            </button>
-          </div>
 
           {/* En-tête principal dynamique */}
           <div className="text-center mb-6">
