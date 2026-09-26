@@ -303,65 +303,6 @@ function ConnexionPageInner() {
               </button>
             </form>
 
-            {/* Remplissage Rapide 1-Clic */}
-            <div className="mt-5 pt-4 border-t border-gray-100">
-              <div className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 text-center mb-2.5">
-                Remplissage automatique (1-Clic)
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('directeur@2cgc-industrie.com');
-                    setPassword('directeur123');
-                    setError('');
-                  }}
-                  className="bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
-                  title="Directeur Général — KEITA BOUBACAR"
-                >
-                  <span>👔</span>
-                  <span className="truncate">DG (Boubacar)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('keita.dambou@2cgc-industrie.com');
-                    setPassword('directeur123');
-                    setError('');
-                  }}
-                  className="bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
-                  title="Directeur Adjoint — Keita Dambou"
-                >
-                  <span>👔</span>
-                  <span className="truncate">DGA (Keita Dambou)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('usine@2cgc-industrie.com');
-                    setPassword('usine123');
-                    setError('');
-                  }}
-                  className="bg-blue-50 hover:bg-blue-100/80 border border-blue-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span>🏭</span>
-                  <span className="truncate">Chef d'Usine</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('chauffeur@2cgc-industrie.com');
-                    setPassword('chauffeur123');
-                    setError('');
-                  }}
-                  className="bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span>🚚</span>
-                  <span className="truncate">Chauffeur</span>
-                </button>
-              </div>
-            </div>
-
             {/* Inscription B2B */}
             <div className="mt-4 pt-4 border-t border-gray-100 text-center">
               <p className="text-xs text-gray-500 font-medium">
