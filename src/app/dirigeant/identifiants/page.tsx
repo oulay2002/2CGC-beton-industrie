@@ -183,11 +183,11 @@ export default function EspaceIdentifiantsCollaborateurs() {
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]/g, '.');
     const rolePrefix = role === 'chef_usine' ? 'usine.' : role === 'chauffeur' ? 'flotte.' : 'direction.';
-    const emailSuggere = clean.length > 2 ? `${rolePrefix}${clean}@2cgc.ci` : '';
+    const emailSuggere = clean.length > 2 ? `${rolePrefix}${clean}@2cgc-industrie.com` : '';
     setNouveauCollab(prev => ({
       ...prev,
       nom,
-      email: prev.email.includes('@') && !prev.email.includes('@2cgc.ci') ? prev.email : emailSuggere,
+      email: prev.email.includes('@') && !prev.email.includes('@2cgc-industrie.com') && !prev.email.includes('@2cgc.ci') ? prev.email : emailSuggere,
     }));
   };
 
@@ -736,7 +736,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                     required
                     value={nouveauCollab.email}
                     onChange={e => setNouveauCollab(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="collaborateur@2cgc.ci"
+                    placeholder="collaborateur@2cgc-industrie.com"
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm font-mono focus:border-[#002B5B] focus:outline-none bg-gray-50/50"
                   />
                 </div>

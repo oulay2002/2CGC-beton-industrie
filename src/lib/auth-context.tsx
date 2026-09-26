@@ -83,7 +83,7 @@ const UTILISATEURS_MOCK = [
   },
   // 🏭 CHEF D'USINE
   {
-    email: 'usine@beton-industrie.com',
+    email: 'usine@2cgc-industrie.com',
     password: 'usine123',
     nom: 'M. Diallo',
     entreprise: 'Beton Industrie - Usine',
@@ -93,7 +93,7 @@ const UTILISATEURS_MOCK = [
   },
   // 🚚 CHAUFFEUR
   {
-    email: 'chauffeur@beton-industrie.com',
+    email: 'chauffeur@2cgc-industrie.com',
     password: 'chauffeur123',
     nom: 'M. Kouadio',
     entreprise: 'Beton Industrie - Logistique',
@@ -228,10 +228,12 @@ function getUtilisateurs(): CompteUtilisateur[] {
   if (typeof window === 'undefined') return UTILISATEURS_MOCK as CompteUtilisateur[];
   const saved = localStorage.getItem(STORAGE_KEY);
   let dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-  // Migration automatique des anciens identifiants Direction vers le domaine officiel
+  // Migration automatique des anciens identifiants Direction et Collaborateurs vers @2cgc-industrie.com
   dynamiques = dynamiques.map(u => {
     if (u.email === 'directeur@2cgc.ci') return { ...u, email: 'directeur@2cgc-industrie.com' };
     if (u.email === 'keita.dambou@2cgc.ci') return { ...u, email: 'keita.dambou@2cgc-industrie.com' };
+    if (u.email === 'usine@beton-industrie.com') return { ...u, email: 'usine@2cgc-industrie.com' };
+    if (u.email === 'chauffeur@beton-industrie.com') return { ...u, email: 'chauffeur@2cgc-industrie.com' };
     return u;
   });
   // Fusionner les comptes mock statiques + les comptes créés dynamiquement
@@ -329,6 +331,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         restoredUser = { ...restoredUser, email: 'keita.dambou@2cgc-industrie.com' };
         localStorage.setItem('user_beton', JSON.stringify(restoredUser));
       }
+      if (restoredUser.email === 'usine@beton-industrie.com') {
+        restoredUser = { ...restoredUser, email: 'usine@2cgc-industrie.com' };
+        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
+      }
+      if (restoredUser.email === 'chauffeur@beton-industrie.com') {
+        restoredUser = { ...restoredUser, email: 'chauffeur@2cgc-industrie.com' };
+        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
+      }
       setUser(restoredUser);
 
       if (!hasRestoredPostHogIdentity) {
@@ -405,12 +415,68 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true, role: 'dirigeant' };
     }
 
-    // 2. Recherche générale pour tous les autres comptes
+    // 2. Accès Prioritaire Usine & Chauffeur (@2cgc-industrie.com avec tolérance)
+    const isUsine = cleanEmail === 'usine@2cgc-industrie.com' || cleanEmail === 'usine@beton-industrie.com';
+    const isChauffeur = cleanEmail === 'chauffeur@2cgc-industrie.com' || cleanEmail === 'chauffeur@beton-industrie.com';
+
+    if (isUsine && (cleanPass === 'usine123' || cleanPass.toLowerCase() === 'usine123')) {
+      const usineUser: User = {
+        email: 'usine@2cgc-industrie.com',
+        nom: 'M. Diallo',
+        entreprise: '2CGC Usine',
+        telephone: '+225 01 00 00 02',
+        role: 'chef_usine',
+      };
+      if (user && user.email.toLowerCase() !== usineUser.email.toLowerCase()) resetPostHog();
+      setUser(usineUser);
+      localStorage.setItem('user_beton', JSON.stringify(usineUser));
+      identifyUser(usineUser);
+      hasRestoredPostHogIdentity = true;
+      try {
+        await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(usineUser),
+        });
+      } catch (err) {
+        console.error('Erreur synchronisation session serveur:', err);
+      }
+      return { success: true, role: 'chef_usine' };
+    }
+
+    if (isChauffeur && (cleanPass === 'chauffeur123' || cleanPass.toLowerCase() === 'chauffeur123')) {
+      const chaufUser: User = {
+        email: 'chauffeur@2cgc-industrie.com',
+        nom: 'M. Kouadio',
+        entreprise: '2CGC Logistique',
+        telephone: '+225 07 99 88 77',
+        role: 'chauffeur',
+        vehicule: 'Camion Volvo FH16',
+        permis: 'AB-1234-CD',
+      };
+      if (user && user.email.toLowerCase() !== chaufUser.email.toLowerCase()) resetPostHog();
+      setUser(chaufUser);
+      localStorage.setItem('user_beton', JSON.stringify(chaufUser));
+      identifyUser(chaufUser);
+      hasRestoredPostHogIdentity = true;
+      try {
+        await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(chaufUser),
+        });
+      } catch (err) {
+        console.error('Erreur synchronisation session serveur:', err);
+      }
+      return { success: true, role: 'chauffeur' };
+    }
+
+    // 3. Recherche générale pour tous les autres comptes
     const utilisateur = tous.find(u => {
       const uEmail = u.email.toLowerCase().trim();
       const matchEmail = (uEmail === cleanEmail) ||
-        (cleanEmail === 'directeur@2cgc.ci' && uEmail === 'directeur@2cgc-industrie.com') ||
-        (cleanEmail === 'directeur@2cgc-industrie.com' && uEmail === 'directeur@2cgc.ci');
+        (cleanEmail === 'usine@beton-industrie.com' && uEmail === 'usine@2cgc-industrie.com') ||
+        (cleanEmail === 'chauffeur@beton-industrie.com' && uEmail === 'chauffeur@2cgc-industrie.com');
       return matchEmail && (u.password.trim() === cleanPass || u.password === password);
     });
     if (utilisateur) {

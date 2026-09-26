@@ -226,7 +226,7 @@ export default function GestionUtilisateurs() {
   const handleSupprimerUtilisateur = (email: string, nom: string) => {
     if (!confirm(`Supprimer le compte de ${nom} (${email}) ?`)) return;
     // Ne pas supprimer les comptes fixes (mock)
-    const comptesDynamiques = ['directeur@2cgc-industrie.com', 'usine@beton-industrie.com', 'chauffeur@beton-industrie.com', 'client@btp-afrique.com', 'keita.dambou@2cgc-industrie.com'];
+    const comptesDynamiques = ['directeur@2cgc-industrie.com', 'usine@2cgc-industrie.com', 'chauffeur@2cgc-industrie.com', 'client@btp-afrique.com', 'keita.dambou@2cgc-industrie.com'];
     if (comptesDynamiques.includes(email)) {
       afficherNotif('Impossible de supprimer un compte système.', 'error');
       return;
@@ -547,7 +547,7 @@ export default function GestionUtilisateurs() {
               {[
                 { field: 'nom', label: 'Nom complet *', placeholder: 'M. Traoré Seydou', icon: '👤', required: true },
                 { field: 'entreprise', label: 'Entreprise', placeholder: form.role === 'client' ? 'BTP Horizon SARL' : '2CGC', icon: '🏢', required: false },
-                { field: 'email', label: 'Email *', placeholder: `prenom@${form.role === 'client' ? 'email.com' : '2cgc.ci'}`, icon: '📧', required: true },
+                { field: 'email', label: 'Email *', placeholder: `prenom@${form.role === 'client' ? 'email.com' : '2cgc-industrie.com'}`, icon: '📧', required: true },
                 { field: 'telephone', label: 'Téléphone WhatsApp', placeholder: '+225 07 XX XX XX XX', icon: '📞', required: false },
               ].map(({ field, label, placeholder, icon, required }) => (
                 <div key={field}>

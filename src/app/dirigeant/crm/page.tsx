@@ -941,7 +941,7 @@ export default function CRMDashboard() {
               </div>
               <div className="glass rounded-2xl p-4">
                 <div className="text-[#FFD700] font-bold text-xs uppercase tracking-wider mb-2">Expéditeur</div>
-                <div className="font-bold text-sm">noreply@2cgc.ci</div>
+                <div className="font-bold text-sm">noreply@2cgc-industrie.com</div>
                 <div className="text-white/60 text-xs mt-1">Nom : 2CGC Commercial</div>
               </div>
             </div>

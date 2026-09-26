@@ -338,7 +338,7 @@ function ConnexionPageInner() {
                 <button
                   type="button"
                   onClick={() => {
-                    setEmail('usine@beton-industrie.com');
+                    setEmail('usine@2cgc-industrie.com');
                     setPassword('usine123');
                     setError('');
                   }}
@@ -350,7 +350,7 @@ function ConnexionPageInner() {
                 <button
                   type="button"
                   onClick={() => {
-                    setEmail('chauffeur@beton-industrie.com');
+                    setEmail('chauffeur@2cgc-industrie.com');
                     setPassword('chauffeur123');
                     setError('');
                   }}

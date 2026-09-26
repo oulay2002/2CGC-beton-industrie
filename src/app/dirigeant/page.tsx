@@ -58,7 +58,7 @@ export default function DirigeantDashboard() {
     e.preventDefault();
     if (!nomRapide) return;
 
-    const emailGenere = `${nomRapide.toLowerCase().replace(/[^a-z0-9]/g, '') || 'personnel'}@2cgc.ci`;
+    const emailGenere = `${nomRapide.toLowerCase().replace(/[^a-z0-9]/g, '') || 'personnel'}@2cgc-industrie.com`;
     const mdpGenere = `${roleRapide === 'chauffeur' ? 'Chauffeur' : 'Usine'}2026!`;
 
     const res = creerUtilisateur({
