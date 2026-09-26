@@ -39,6 +39,31 @@ export interface CRMSequence {
 // TEMPLATES DE MESSAGES
 // =============================================
 export const TEMPLATES_EMAIL: Record<string, { sujet: string; corps: string }> = {
+  proforma: {
+    sujet: '📄 Votre Facture Proforma Officielle — 2CGC Béton Industrie Daloa',
+    corps: `Bonjour {nom},
+
+Nous vous remercions de votre confiance en 2CGC (Cheickna Construction & Génie Civil).
+Votre facture proforma a été générée avec succès pour votre projet : {produit}.
+
+💰 Montant Net à Payer TTC : {montant} FCFA
+⏱️ Validité de l'offre : 30 jours calendaires
+🚚 Livraison : Flotte 2CGC avec déchargement grue (Livraison intra-muros Daloa offerte)
+
+💳 Modalités de règlement :
+• Acompte de 50% à la commande (réservation des stocks d'usine)
+• Solde avant déchargement de la marchandise
+• Banque : BSIC Daloa — RIB : CI154 08521 029041500015 04
+• Mobile Money (Wave / Orange / Moov / MTN) : +225 07 07 62 17 99
+
+📞 Vos contacts directs :
+Tél Direction Générale : +225 07 07 62 17 99 / +225 07 07 85 76 29
+Email : cheicknaconstruction@gmail.com
+Usine & Siège : Quartier Commerce (Réf. Pharmacie Appaul), BP 129 Daloa
+
+Cordialement,
+L'équipe commerciale 2CGC`,
+  },
   bienvenue: {
     sujet: 'Bienvenue chez 2CGC — Vos préfabriqués béton de qualité',
     corps: `Bonjour {nom},
@@ -415,28 +440,21 @@ export function creerLeadDepuisDevis(nom: string, email: string, valeur: number,
     dateCreation: dateAuj,
     prochainContact: dateRelance,
     sequences: [
-      { id: `${id}-S1`, nom: 'Email bienvenue & devis J+0', statut: 'en_attente', datePrevu: dateAuj, canal: 'email', template: 'bienvenue' },
+      { id: `${id}-S1`, nom: 'Email proforma J+0', statut: 'envoyee', datePrevu: dateAuj, canal: 'email', template: 'proforma' },
       { id: `${id}-S2`, nom: 'Relance email J+2', statut: 'en_attente', datePrevu: dateRelance, canal: 'email', template: 'relance_j2' },
       { id: `${id}-S3`, nom: 'Relance WhatsApp J+5', statut: 'en_attente', datePrevu: dateWhatsapp, canal: 'whatsapp', template: 'relance' },
     ],
     activites: [
-      { date: dateAuj, action: `📄 Devis généré — lead créé en "Devis Envoyé" (${telephone ? `Tél/WhatsApp : ${telephone}` : 'sans tél'})`, automatique: true, canal: 'systeme' },
-      { date: dateAuj, action: '📧 Séquence email J+0 (bienvenue & devis) programmée', automatique: true, canal: 'systeme' },
+      { date: dateAuj, action: `📄 Facture Proforma générée (${valeur.toLocaleString('fr-FR')} FCFA) — statut "Devis Envoyé"`, automatique: true, canal: 'systeme' },
+      { date: dateAuj, action: `📧 Facture proforma envoyée automatiquement par Email à ${email}`, automatique: true, canal: 'email' },
+      ...(telephone && telephone !== 'Non renseigné'
+        ? [{ date: dateAuj, action: `💬 Notification automatique WhatsApp transmise au ${telephone}`, automatique: true, canal: 'whatsapp' as const }]
+        : []),
+      { date: dateAuj, action: '🤖 Séquences de relances automatiques CRM activées (J+2 Email · J+5 WhatsApp)', automatique: true, canal: 'systeme' },
     ],
   };
   leads.unshift(nouveauLead);
   saveLeads(leads);
-
-  // Envoi automatique de l'email de bienvenue / devis si l'adresse est valide
-  if (typeof window !== 'undefined' && email && email !== 'Non renseigné' && email.includes('@')) {
-    import('./bot-commercial').then(({ envoyerEmail }) => {
-      envoyerEmail(nouveauLead, 'bienvenue').then(ok => {
-        if (ok) {
-          marquerSequenceEnvoyee(nouveauLead.id, `${id}-S1`, 'email');
-        }
-      });
-    });
-  }
 
   return nouveauLead;
 }

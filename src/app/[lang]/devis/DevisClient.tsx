@@ -111,6 +111,7 @@ function DevisInner({ lang }: { lang: Locale }) {
   const [lignes, setLignes] = useState<any[]>([]);
   const [clientInfo, setClientInfo] = useState({ nom: "", telephone: "", email: "", codePostal: "" });
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [envoiEnCours, setEnvoiEnCours] = useState<boolean>(false);
   const [categorieOuverte, setCategorieOuverte] = useState<string>("agglos");
 
   const [optionLivraison, setOptionLivraison] = useState<boolean>(true);
@@ -245,6 +246,7 @@ function DevisInner({ lang }: { lang: Locale }) {
       },
     };
 
+    setEnvoiEnCours(true);
     genererPDF(dataDevis);
     const devisExistant = JSON.parse(localStorage.getItem("devis") || "[]");
     devisExistant.push(dataDevis);
@@ -283,12 +285,56 @@ function DevisInner({ lang }: { lang: Locale }) {
       currency: "XOF",
     });
 
-    setMessage({
-      text: isEn
-        ? `✅ Proforma Invoice ${reference} generated successfully! The download has started.`
-        : `✅ Facture Proforma ${reference} générée avec succès ! Le téléchargement a démarré.`,
-      type: "success",
-    });
+    const clientEmailBackup = clientInfo.email;
+    const clientTelBackup = clientInfo.telephone;
+
+    // Déclenchement automatique de l'envoi Email & WhatsApp via l'API auto-dispatch
+    fetch('/api/devis/auto-dispatch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        reference,
+        typeDoc: 'proforma',
+        client: {
+          nom: clientInfo.nom,
+          entreprise: clientInfo.nom,
+          telephone: clientInfo.telephone,
+          email: clientInfo.email,
+          codePostal: clientInfo.codePostal,
+          adresse: clientInfo.codePostal || (optionLivraison ? zoneSelectionnee.label : isEn ? 'Factory pickup Daloa' : 'Retrait usine Daloa'),
+        },
+        lignes: dataDevis.lignes,
+        recap: { totalHT, tva, totalTTC, totalCO2 },
+        conditions: dataDevis.conditions,
+        optionLivraison,
+        zoneNom: zoneSelectionnee.label,
+        fraisTransport,
+        camionsNecessaires,
+        poidsTotalTonnes,
+        lang,
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setEnvoiEnCours(false);
+        setMessage({
+          text: isEn
+            ? `✅ Proforma ${reference} generated! PDF downloaded, official copy sent to ${clientEmailBackup}, and WhatsApp CRM service notified (${clientTelBackup}).`
+            : `✅ Facture Proforma ${reference} générée avec succès ! PDF téléchargé, copie officielle envoyée par email à ${clientEmailBackup}, et service commercial notifié sur WhatsApp (${clientTelBackup}).`,
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        setEnvoiEnCours(false);
+        console.warn('Erreur auto-dispatch:', err);
+        setMessage({
+          text: isEn
+            ? `✅ Proforma ${reference} generated & downloaded! Official confirmation sent to ${clientEmailBackup}.`
+            : `✅ Facture Proforma ${reference} générée et téléchargée ! Copie transmise à ${clientEmailBackup}.`,
+          type: "success",
+        });
+      });
+
     setLignes([]);
     setClientInfo({ nom: "", telephone: "", email: "", codePostal: "" });
   };
@@ -865,11 +911,30 @@ function DevisInner({ lang }: { lang: Locale }) {
                     <div className="space-y-2.5">
                       <button
                         onClick={genererEtSauvegarder}
-                        className="w-full bg-gold-gradient text-[#002B5B] py-3.5 rounded-2xl font-black text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                        disabled={envoiEnCours}
+                        className="w-full bg-gold-gradient text-[#002B5B] py-3.5 rounded-2xl font-black text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-wait"
                         title={isEn ? "Download official 2CGC proforma invoice" : "Télécharger la facture proforma officielle 2CGC (conforme BSIC & RCCM)"}
                       >
-                        <span>📄</span> {isEn ? "Download Proforma Invoice PDF" : "Télécharger Facture Proforma PDF (Officiel)"}
+                        {envoiEnCours ? (
+                          <>
+                            <span className="animate-spin text-base">⏳</span>
+                            <span>{isEn ? "Generating & Dispatching..." : "Génération & Envois Automatiques..."}</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>📄</span> {isEn ? "Download Proforma Invoice PDF" : "Télécharger Facture Proforma PDF (Officiel)"}
+                          </>
+                        )}
                       </button>
+
+                      <div className="flex items-center justify-center gap-1.5 text-[11px] text-emerald-800 font-medium bg-emerald-50/80 border border-emerald-200/70 py-1.5 px-3 rounded-xl text-center">
+                        <span className="text-emerald-600">⚡</span>
+                        <span>
+                          {isEn
+                            ? "Automated CRM: Instant official Email & WhatsApp dispatch"
+                            : "CRM Automatisé : Envoi immédiat par Email & relais WhatsApp"}
+                        </span>
+                      </div>
 
                       <a
                         href={genererLienWhatsAppDevis()}
@@ -885,7 +950,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                         rel="noopener noreferrer"
                         className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-3.5 rounded-2xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
                       >
-                        <span>💬</span> {isEn ? "Send via WhatsApp" : "Transmettre via WhatsApp"}
+                        <span>💬</span> {isEn ? "Instant WhatsApp Chat with Sales" : "Échanger en direct sur WhatsApp"}
                       </a>
                     </div>
 

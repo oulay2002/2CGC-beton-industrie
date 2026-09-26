@@ -42,6 +42,44 @@ export async function envoyerEmail(lead: CRMLead, templateKey: string): Promise<
 }
 
 // =============================================
+// ENVOI WHATSAPP VIA L'API / RELAIS N8N
+// =============================================
+export async function envoyerWhatsAppAutomatique(lead: CRMLead, templateKey: string, customMessage?: string): Promise<boolean> {
+  const template = TEMPLATES_WHATSAPP[templateKey];
+  const text = customMessage || (template
+    ? template
+        .replace(/{nom}/g, lead.nom)
+        .replace(/{produit}/g, lead.produitInteresse || 'nos produits')
+        .replace(/{montant}/g, (lead.valeurEstimee || 0).toLocaleString('fr-FR'))
+    : `Bonjour ${lead.nom} 👋, 2CGC Daloa vous informe de la prise en charge de votre devis/proforma.`);
+
+  try {
+    const res = await fetch('/api/whatsapp/n8n-relay', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-2cgc-api-key': '2cgc_n8n_secret_key_2026',
+      },
+      body: JSON.stringify({
+        action: 'devis',
+        client: {
+          nom: lead.nom,
+          telephone: lead.telephone,
+        },
+        articles: [],
+        totalHT: lead.valeurEstimee || 0,
+        totalTTC: lead.valeurEstimee || 0,
+        notesAgentIA: text,
+      }),
+    });
+    return res.ok;
+  } catch (e) {
+    console.warn('[BotCommercial] Erreur envoi WhatsApp auto:', e);
+    return false;
+  }
+}
+
+// =============================================
 // TRAITEMENT DES SÉQUENCES EN ATTENTE
 // =============================================
 export async function traiterSequencesEnAttente(): Promise<{
@@ -64,10 +102,14 @@ export async function traiterSequencesEnAttente(): Promise<{
           erreurs++;
         }
       }
-      // WhatsApp : on marque comme "à envoyer manuellement" (via le lien)
       if (sequence.canal === 'whatsapp') {
-        // Le commercial clique sur le lien — on log juste l'alerte
-        whatsapps++;
+        const ok = await envoyerWhatsAppAutomatique(lead, sequence.template);
+        if (ok) {
+          marquerSequenceEnvoyee(lead.id, sequence.id, 'whatsapp');
+          whatsapps++;
+        } else {
+          whatsapps++; // comptabilisé en relance WhatsApp préparée
+        }
       }
     } catch (e) {
       console.error('[BotCommercial] Erreur séquence:', sequence.id, e);

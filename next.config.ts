@@ -27,6 +27,10 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), payment=()", // Restreint l'accès matériel non autorisé
           },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload", // Force le chiffrement HTTPS (Anti-MITM)
+          },
         ],
       },
     ];

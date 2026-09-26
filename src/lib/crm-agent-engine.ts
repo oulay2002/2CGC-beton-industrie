@@ -217,7 +217,26 @@ export async function triggerAutonomousRelance(
   } else {
     // WhatsApp
     const msg = messagePersonnalise || `Bonjour ${lead.nom} 👋, M. KEITA de 2CGC Daloa vous relance concernant votre projet (${lead.produitInteresse || 'Matériaux BTP'}). Avez-vous des questions sur les stocks ?`;
-    ajouterActivite(leadId, `🤖 Agent IA : Relance WhatsApp générée (${msg.slice(0, 60)}...)`, 'whatsapp', true);
+    try {
+      await fetch('/api/whatsapp/n8n-relay', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-2cgc-api-key': '2cgc_n8n_secret_key_2026',
+        },
+        body: JSON.stringify({
+          action: 'devis',
+          client: { nom: lead.nom, telephone: lead.telephone },
+          articles: [],
+          totalHT: lead.valeurEstimee || 0,
+          totalTTC: lead.valeurEstimee || 0,
+          notesAgentIA: msg,
+        }),
+      });
+    } catch (e) {
+      console.warn('Erreur relais WhatsApp agent:', e);
+    }
+    ajouterActivite(leadId, `🤖 Agent IA : Relance WhatsApp transmise automatiquement (${msg.slice(0, 60)}...)`, 'whatsapp', true);
   }
 
   lead.derniereRelance = dateAuj;

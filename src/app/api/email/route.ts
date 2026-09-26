@@ -1,25 +1,32 @@
-// src/app/api/email/route.ts — API d'envoi d'emails via Resend
-
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 const FROM_NAME = process.env.RESEND_FROM_NAME || '2CGC Commercial';
+const ENTREPRISE_OFFICIAL_EMAIL = 'cheicknaconstruction@gmail.com';
 
 interface EmailPayload {
   to: string;
   sujet: string;
   corps: string;
-  nomDestinataire: string;
+  html?: string;
+  nomDestinataire?: string;
+  hp?: string;           // Honeypot anti-bot
+  website_url?: string;  // Honeypot anti-bot secondaire
+  timestamp?: number;    // Anti-soumission instantanée
 }
 
 // Templates HTML email brandés 2CGC
-function genererHTML(corps: string, nomDestinataire: string): string {
-  const paragraphes = corps
-    .split('\n')
-    .map(l => l.trim())
-    .map(l => l ? `<p style="margin:0 0 12px 0;color:#374151;line-height:1.6">${l}</p>` : '<br>')
-    .join('');
+function genererHTML(corps: string, nomDestinataire?: string, htmlContent?: string): string {
+  const content = htmlContent
+    ? htmlContent
+    : corps
+        .split('\n')
+        .map(l => l.trim())
+        .map(l => l ? `<p style="margin:0 0 12px 0;color:#374151;line-height:1.6">${l}</p>` : '<br>')
+        .join('');
 
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -42,7 +49,7 @@ function genererHTML(corps: string, nomDestinataire: string): string {
 
     <!-- Contenu -->
     <div style="padding:36px 40px">
-      ${paragraphes}
+      ${content}
     </div>
 
     <!-- Séparateur -->
@@ -76,8 +83,33 @@ function genererHTML(corps: string, nomDestinataire: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Protection Anti-Brute-Force & Rate Limiting par IP (max 5 requêtes par minute)
+    const clientIp = getClientIp(request);
+    const rateCheck = checkRateLimit(`email_${clientIp}`, { limit: 5, windowMs: 60 * 1000 });
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { error: 'Trop de requêtes. Veuillez patienter une minute avant de réessayer.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     const body: EmailPayload = await request.json();
-    const { to, sujet, corps, nomDestinataire } = body;
+    const { to, sujet, corps, html, nomDestinataire, hp, website_url, timestamp } = body;
+
+    // 2. Détection Honeypot (piège à robots : si le champ caché est rempli, rejeter silencieusement)
+    if (hp || website_url) {
+      console.warn(`[Anti-Bot] Soumission rejetée (Honeypot détecté) depuis IP : ${clientIp}`);
+      return NextResponse.json({ success: true, mode: 'bot_blocked' });
+    }
+
+    // 3. Détection de soumission instantanée par robot (< 1.5 seconde après chargement)
+    if (timestamp && typeof timestamp === 'number') {
+      const elapsed = Date.now() - timestamp;
+      if (elapsed < 1500) {
+        console.warn(`[Anti-Bot] Soumission trop rapide (${elapsed}ms) rejetée depuis IP : ${clientIp}`);
+        return NextResponse.json({ success: true, mode: 'bot_too_fast' });
+      }
+    }
 
     if (!to || !sujet || !corps) {
       return NextResponse.json({ error: 'Paramètres manquants (to, sujet, corps requis)' }, { status: 400 });
@@ -89,12 +121,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Adresse email destinataire invalide' }, { status: 400 });
     }
 
-    // Limites de taille pour éviter les abus / buffer overflow
-    if (sujet.length > 200) {
-      return NextResponse.json({ error: 'Le sujet ne peut excéder 200 caractères' }, { status: 400 });
+    // 4. Protection contre le relais de spam ouvert (Anti-Open Mail Relay)
+    // Seul un dirigeant authentifié peut envoyer à une adresse quelconque.
+    // Les requêtes anonymes ne peuvent envoyer qu'à l'entreprise ou recevoir un accusé de réception légitime.
+    const token = request.cookies.get(COOKIE_NAME)?.value;
+    const session = await verifySessionToken(token);
+    const isDirigeant = session && session.role === 'dirigeant';
+
+    const cleanTo = to.trim().toLowerCase();
+    const isToCompany = cleanTo === ENTREPRISE_OFFICIAL_EMAIL;
+    const sujetLower = sujet.toLowerCase();
+    const isReceipt =
+      sujetLower.includes('confirmation') ||
+      sujetLower.includes('reçu') ||
+      sujetLower.includes('receipt') ||
+      sujetLower.includes('devis') ||
+      sujetLower.includes('proforma') ||
+      sujetLower.includes('facture') ||
+      sujetLower.includes('bienvenue');
+
+    if (!isDirigeant && !isToCompany && !isReceipt) {
+      console.warn(`[Anti-Spam] Tentative d'envoi non autorisé vers : ${to} depuis IP : ${clientIp}`);
+      return NextResponse.json({
+        error: 'Destination non autorisée. Les messages publics doivent être adressés au service client officiel.',
+      }, { status: 403 });
     }
-    if (corps.length > 10000) {
-      return NextResponse.json({ error: 'Le corps du message ne peut excéder 10 000 caractères' }, { status: 400 });
+
+    // Limites de taille pour éviter les abus / buffer overflow
+    if (sujet.length > 250) {
+      return NextResponse.json({ error: 'Le sujet ne peut excéder 250 caractères' }, { status: 400 });
+    }
+    if (corps.length > 50000) {
+      return NextResponse.json({ error: 'Le corps du message ne peut excéder 50 000 caractères' }, { status: 400 });
     }
 
     // Mode simulation si pas de clé Resend
@@ -142,7 +200,7 @@ export async function POST(request: NextRequest) {
         from: `${FROM_NAME} <${fromEmail}>`,
         to: [realTo],
         subject: finalSujet,
-        html: genererHTML(corps, nomDestinataire),
+        html: genererHTML(corps, nomDestinataire, html),
         text: corps,
       }),
     });
