@@ -73,10 +73,10 @@ function DevisInner({ lang }: { lang: Locale }) {
     },
     {
       id: "daloa_ville",
-      label: isEn ? "Daloa Intra-muros & Suburbs" : "Daloa Intra-muros & Périphérie",
+      label: isEn ? "Daloa Intra-muros & Suburbs (Free)" : "Daloa Intra-muros & Périphérie (Gratuit)",
       distanceKm: 12,
-      tarifParCamion: 25000,
-      description: isEn ? "Express delivery < 24h" : "Livraison express < 24h",
+      tarifParCamion: 0,
+      description: isEn ? "Free express delivery < 24h" : "Livraison express offerte < 24h",
     },
     {
       id: "zone_proche",
@@ -196,17 +196,25 @@ function DevisInner({ lang }: { lang: Locale }) {
           ? isEn ? "Lightweight floor beam B50" : "Hourdis de plancher allégé B50"
           : isEn ? "Certified vibrated concrete block B50/B60" : "Bloc béton vibré certifié B50/B60",
       })),
-      ...(optionLivraison && fraisTransport > 0
+      ...(optionLivraison
         ? [
             {
               nom: isEn
-                ? `Freight & Site Unloading (${zoneSelectionnee.label})`
-                : `Fret & Déchargement Chantier (${zoneSelectionnee.label})`,
+                ? fraisTransport === 0
+                  ? `Delivery within Daloa (${zoneSelectionnee.label}) — FREE`
+                  : `Freight & Site Unloading (${zoneSelectionnee.label})`
+                : fraisTransport === 0
+                  ? `Livraison Chantier (${zoneSelectionnee.label}) — OFFERTE`
+                  : `Fret & Déchargement Chantier (${zoneSelectionnee.label})`,
               quantite: camionsNecessaires,
               prix: zoneSelectionnee.tarifParCamion,
               specification: isEn
-                ? `2CGC Fleet: ${camionsNecessaires} flatbed truck(s) 15T — Crane unloading included`
-                : `Flotte 2CGC : ${camionsNecessaires} camion(s) plateau de 15T — Déchargement grue inclus`,
+                ? fraisTransport === 0
+                  ? `Free direct delivery offered by 2CGC Daloa — Crane unloading included`
+                  : `2CGC Fleet: ${camionsNecessaires} flatbed truck(s) 15T — Crane unloading included`
+                : fraisTransport === 0
+                  ? `Livraison directe offerte par 2CGC Daloa — Déchargement grue inclus`
+                  : `Flotte 2CGC : ${camionsNecessaires} camion(s) plateau de 15T — Déchargement grue inclus`,
             },
           ]
         : []),
@@ -303,14 +311,18 @@ function DevisInner({ lang }: { lang: Locale }) {
       .join("\n");
     const totalTTCStr = Math.round(totalTTC).toLocaleString("fr-FR");
     const transportStr =
-      optionLivraison && fraisTransport > 0
-        ? isEn
-          ? `\n🚚 *Freight & Fleet:* ${camionsNecessaires} truck(s) to ${zoneSelectionnee.label} (${Math.round(
-              fraisTransport
-            ).toLocaleString("fr-FR")} FCFA) — Estimated weight: ${poidsTotalTonnes} T`
-          : `\n🚚 *Fret & Flotte :* ${camionsNecessaires} camion(s) vers ${zoneSelectionnee.label} (${Math.round(
-              fraisTransport
-            ).toLocaleString("fr-FR")} FCFA) — Poids estimé : ${poidsTotalTonnes} T`
+      optionLivraison
+        ? fraisTransport > 0
+          ? isEn
+            ? `\n🚚 *Freight & Fleet:* ${camionsNecessaires} truck(s) to ${zoneSelectionnee.label} (${Math.round(
+                fraisTransport
+              ).toLocaleString("fr-FR")} FCFA) — Estimated weight: ${poidsTotalTonnes} T`
+            : `\n🚚 *Fret & Flotte :* ${camionsNecessaires} camion(s) vers ${zoneSelectionnee.label} (${Math.round(
+                fraisTransport
+              ).toLocaleString("fr-FR")} FCFA) — Poids estimé : ${poidsTotalTonnes} T`
+          : isEn
+          ? `\n🚚 *Delivery:* ${zoneSelectionnee.label} — FREE Delivery offered by 2CGC (0 FCFA)`
+          : `\n🚚 *Livraison :* ${zoneSelectionnee.label} — Livraison OFFERTE par 2CGC (0 FCFA)`
         : isEn
         ? "\n🏭 *Delivery:* Direct pickup at 2CGC Daloa factory (0 FCFA)"
         : "\n🏭 *Livraison :* Retrait direct à l'usine 2CGC Daloa (0 FCFA)";
@@ -592,7 +604,12 @@ function DevisInner({ lang }: { lang: Locale }) {
                         >
                           {ZONES_LIVRAISON_DALOA.filter((z) => z.id !== "retrait_usine").map((z) => (
                             <option key={z.id} value={z.id}>
-                              📍 {z.label} (~{z.distanceKm} km) — {Math.round(z.tarifParCamion).toLocaleString("fr-FR")} FCFA / {isEn ? "trip" : "rotation"}
+                              📍 {z.label} (~{z.distanceKm} km) —{" "}
+                              {z.tarifParCamion === 0
+                                ? isEn
+                                  ? "FREE (Offered)"
+                                  : "GRATUIT (Offert)"
+                                : `${Math.round(z.tarifParCamion).toLocaleString("fr-FR")} FCFA / ${isEn ? "trip" : "rotation"}`}
                             </option>
                           ))}
                         </select>
@@ -618,7 +635,11 @@ function DevisInner({ lang }: { lang: Locale }) {
                         <div className="bg-[#FFD700]/15 p-3 rounded-xl border border-[#FFD700]/40 text-center">
                           <div className="text-xs text-gray-700 font-bold">{isEn ? "Total freight" : "Fret total"}</div>
                           <div className="text-base font-black text-[#002B5B]">
-                            {Math.round(fraisTransport).toLocaleString("fr-FR")} F
+                            {fraisTransport === 0
+                              ? isEn
+                                ? "FREE (0 F)"
+                                : "OFFERT (0 F)"
+                              : `${Math.round(fraisTransport).toLocaleString("fr-FR")} F`}
                           </div>
                         </div>
                       </div>
