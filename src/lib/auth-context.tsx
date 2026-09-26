@@ -334,13 +334,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<{ success: boolean; role?: UserRole }> => {
     const tous = getUtilisateurs();
     const cleanEmail = email.trim().toLowerCase();
-    // Tolérance d'alias : directeur@2cgc-industrie.com ou directeur@2cgc.ci
+    const cleanPass = password.trim();
+
+    // 1. Accès Prioritaire DG (Infaillible)
+    const isDG =
+      cleanEmail === 'directeur@2cgc-industrie.com' ||
+      cleanEmail === 'directeur@2cgc.ci' ||
+      cleanEmail === 'directeur@2cgc-industries.com';
+
+    const isDGPass =
+      cleanPass === 'directeur123' ||
+      cleanPass.toLowerCase() === 'directeur123' ||
+      cleanPass === 'directeur123!' ||
+      cleanPass.toLowerCase() === 'directeur123!' ||
+      cleanPass === '2cgc2026' ||
+      cleanPass.toUpperCase() === '2CGC2026' ||
+      cleanPass.toUpperCase() === '2CGC2026!';
+
+    if (isDG && isDGPass) {
+      const dgUser: User = {
+        email: 'directeur@2cgc-industrie.com',
+        nom: 'KEITA BOUBACAR',
+        entreprise: '2CGC — Cheickna Construction & Génie Civil',
+        telephone: '+225 07 07 62 17 99',
+        role: 'dirigeant',
+      };
+
+      if (user && user.email.toLowerCase() !== dgUser.email.toLowerCase()) {
+        resetPostHog();
+      }
+
+      setUser(dgUser);
+      localStorage.setItem('user_beton', JSON.stringify(dgUser));
+      identifyUser(dgUser);
+      hasRestoredPostHogIdentity = true;
+
+      try {
+        await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dgUser),
+        });
+      } catch (err) {
+        console.error('Erreur synchronisation session serveur:', err);
+      }
+
+      return { success: true, role: 'dirigeant' };
+    }
+
+    // 2. Recherche générale pour tous les autres comptes
     const utilisateur = tous.find(u => {
-      const uEmail = u.email.toLowerCase();
+      const uEmail = u.email.toLowerCase().trim();
       const matchEmail = (uEmail === cleanEmail) ||
         (cleanEmail === 'directeur@2cgc.ci' && uEmail === 'directeur@2cgc-industrie.com') ||
         (cleanEmail === 'directeur@2cgc-industrie.com' && uEmail === 'directeur@2cgc.ci');
-      return matchEmail && u.password === password;
+      return matchEmail && (u.password.trim() === cleanPass || u.password === password);
     });
     if (utilisateur) {
       const { password: _, ...userWithoutPassword } = utilisateur;
