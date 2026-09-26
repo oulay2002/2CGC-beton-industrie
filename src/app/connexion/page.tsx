@@ -30,7 +30,7 @@ function ConnexionPageInner() {
     setError('');
     setLoading(true);
     await new Promise(r => setTimeout(r, 600));
-    const result = await login(email, password);
+    const result = await login(email, password, mode);
     setLoading(false);
     if (result.success && result.role) {
       const redirectPath = searchParams.get('redirect');
@@ -41,9 +41,10 @@ function ConnexionPageInner() {
       }
     } else {
       setError(
-        mode === 'equipe'
+        result.error ||
+        (mode === 'equipe'
           ? 'Identifiants collaborateurs incorrects. Vérifiez votre email @2cgc-industrie.com et votre mot de passe.'
-          : 'Identifiants incorrects. Veuillez vérifier votre adresse email client et votre mot de passe.'
+          : 'Identifiants incorrects. Veuillez vérifier votre adresse email client et votre mot de passe.')
       );
     }
   };

@@ -297,7 +297,7 @@ export function genererMotDePasse(nom: string): string {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; role?: UserRole }>;
+  login: (email: string, password: string, requiredMode?: 'client' | 'equipe') => Promise<{ success: boolean; role?: UserRole; error?: string }>;
   logout: () => void;
   register: (data: Omit<CompteUtilisateur, 'dateCreation'>) => { success: boolean; error?: string };
   creerUtilisateur: (data: Omit<CompteUtilisateur, 'dateCreation' | 'creeParDirigeant'>) => { success: boolean; error?: string };
@@ -369,7 +369,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; role?: UserRole }> => {
+  const login = async (
+    email: string,
+    password: string,
+    requiredMode?: 'client' | 'equipe'
+  ): Promise<{ success: boolean; role?: UserRole; error?: string }> => {
     const tous = getUtilisateurs();
     const cleanEmail = email.trim().toLowerCase();
     const cleanPass = password.trim();
@@ -397,6 +401,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       cleanPass.toUpperCase() === '2CGC2026!';
 
     if ((isDG || isDGA) && isDirPass) {
+      if (requiredMode === 'client') {
+        return {
+          success: false,
+          error: "Cet identifiant correspond à un compte Direction. Veuillez vous connecter via l'Accès Équipe.",
+        };
+      }
+
       const dirUser: User = isDG
         ? {
             email: 'directeur@2cgc-industrie.com',
@@ -440,6 +451,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const isChauffeur = cleanEmail === 'chauffeur@2cgc-industrie.com' || cleanEmail === 'chauffeur@beton-industrie.com';
 
     if (isUsine && (cleanPass === 'usine123' || cleanPass.toLowerCase() === 'usine123')) {
+      if (requiredMode === 'client') {
+        return {
+          success: false,
+          error: "Cet identifiant correspond à un compte Chef d'Usine. Veuillez vous connecter via l'Accès Équipe.",
+        };
+      }
+
       const usineUser: User = {
         email: 'usine@2cgc-industrie.com',
         nom: 'M. Diallo',
@@ -465,6 +483,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     if (isChauffeur && (cleanPass === 'chauffeur123' || cleanPass.toLowerCase() === 'chauffeur123')) {
+      if (requiredMode === 'client') {
+        return {
+          success: false,
+          error: "Cet identifiant correspond à un compte Chauffeur. Veuillez vous connecter via l'Accès Équipe.",
+        };
+      }
+
       const chaufUser: User = {
         email: 'chauffeur@2cgc-industrie.com',
         nom: 'M. Kouadio',
@@ -504,7 +529,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const matchEmail = (uEmail === cleanEmail) || (normalizedUEmail === normalizedCleanEmail);
       return matchEmail && (u.password.trim() === cleanPass || u.password === password);
     });
+
     if (utilisateur) {
+      // Cloisonnement strict Client vs Équipe
+      if (requiredMode === 'client' && utilisateur.role !== 'client') {
+        return {
+          success: false,
+          error: "Cet identifiant correspond à un profil collaborateur 2CGC. Veuillez vous connecter via l'Accès Équipe.",
+        };
+      }
+      if (requiredMode === 'equipe' && utilisateur.role === 'client') {
+        return {
+          success: false,
+          error: "Cet identifiant correspond à un compte Client B2B. Veuillez vous connecter via l'Espace Client.",
+        };
+      }
+
       const { password: _, ...userWithoutPassword } = utilisateur;
 
       if (user && user.email.toLowerCase() !== utilisateur.email.toLowerCase()) {
