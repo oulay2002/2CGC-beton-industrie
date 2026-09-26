@@ -156,28 +156,115 @@ VALUES
   ('adjuvant', 'Adjuvant Plastifiant & Accélérateur', 2.8, 10, 3.0, 'Tonnes (Fûts)', 'Sika Côte d''Ivoire', '0.3 T / jour')
 ON CONFLICT (id) DO NOTHING;
 
--- Active RLS
+-- ----------------------------------------------------------------------------
+-- ACTIVATION DE LA SÉCURITÉ ROW LEVEL SECURITY (RLS RENFORCÉ)
+-- ----------------------------------------------------------------------------
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.commandes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.commande_articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.stocks_matieres ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.stocks_produits_finis ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.prospects_crm ENABLE ROW LEVEL SECURITY;
 
--- Politiques RLS publiques
-CREATE POLICY "Allow public select profiles" ON public.profiles FOR SELECT USING (true);
-CREATE POLICY "Allow public insert profiles" ON public.profiles FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update profiles" ON public.profiles FOR UPDATE USING (true);
+-- 1. Profiles : Seul l'utilisateur peut lire/modifier son profil ; les dirigeants ont accès complet
+CREATE POLICY "profiles_select_self_or_dirigeant" ON public.profiles
+  FOR SELECT USING (
+    auth.role() = 'service_role' OR
+    email = auth.jwt() ->> 'email' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email') AND p.role = 'dirigeant'
+    )
+  );
 
-CREATE POLICY "Allow public select commandes" ON public.commandes FOR SELECT USING (true);
-CREATE POLICY "Allow public insert commandes" ON public.commandes FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update commandes" ON public.commandes FOR UPDATE USING (true);
+CREATE POLICY "profiles_update_self_or_dirigeant" ON public.profiles
+  FOR UPDATE USING (
+    auth.role() = 'service_role' OR
+    email = auth.jwt() ->> 'email' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email') AND p.role = 'dirigeant'
+    )
+  );
 
-CREATE POLICY "Allow public select articles" ON public.commande_articles FOR SELECT USING (true);
-CREATE POLICY "Allow public insert articles" ON public.commande_articles FOR INSERT WITH CHECK (true);
+-- 2. Commandes : Un client ne voit QUE ses commandes. Le staff a accès opérationnel.
+CREATE POLICY "commandes_select_policy" ON public.commandes
+  FOR SELECT USING (
+    auth.role() = 'service_role' OR
+    client_email = auth.jwt() ->> 'email' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email')
+      AND p.role IN ('dirigeant', 'chef_usine', 'chauffeur')
+    )
+  );
 
-CREATE POLICY "Allow public select stocks" ON public.stocks_matieres FOR SELECT USING (true);
-CREATE POLICY "Allow public update stocks" ON public.stocks_matieres FOR UPDATE USING (true);
+CREATE POLICY "commandes_insert_policy" ON public.commandes
+  FOR INSERT WITH CHECK (
+    auth.role() = 'service_role' OR
+    client_email = auth.jwt() ->> 'email' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email')
+      AND p.role IN ('dirigeant', 'chef_usine')
+    )
+  );
 
-CREATE POLICY "Allow public select crm" ON public.prospects_crm FOR SELECT USING (true);
-CREATE POLICY "Allow public insert crm" ON public.prospects_crm FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update crm" ON public.prospects_crm FOR UPDATE USING (true);
+CREATE POLICY "commandes_update_staff_only" ON public.commandes
+  FOR UPDATE USING (
+    auth.role() = 'service_role' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email')
+      AND p.role IN ('dirigeant', 'chef_usine', 'chauffeur')
+    )
+  );
+
+-- 3. Articles : Lié aux commandes accessibles
+CREATE POLICY "articles_select_policy" ON public.commande_articles
+  FOR SELECT USING (
+    auth.role() = 'service_role' OR
+    EXISTS (
+      SELECT 1 FROM public.commandes c
+      WHERE c.id = commande_articles.commande_id
+      AND (
+        c.client_email = auth.jwt() ->> 'email' OR
+        EXISTS (
+          SELECT 1 FROM public.profiles p
+          WHERE p.email = (auth.jwt() ->> 'email')
+          AND p.role IN ('dirigeant', 'chef_usine', 'chauffeur')
+        )
+      )
+    )
+  );
+
+-- 4. CRM : Données stratégiques confidentielles — strictement réservé au Dirigeant
+CREATE POLICY "crm_dirigeant_only" ON public.prospects_crm
+  FOR ALL USING (
+    auth.role() = 'service_role' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email') AND p.role = 'dirigeant'
+    )
+  );
+
+-- 5. Stocks : Consultation par l'équipe, modification réservée usine/dirigeant
+CREATE POLICY "stocks_select_staff" ON public.stocks_matieres
+  FOR SELECT USING (
+    auth.role() = 'service_role' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email')
+      AND p.role IN ('dirigeant', 'chef_usine')
+    )
+  );
+
+CREATE POLICY "stocks_update_staff" ON public.stocks_matieres
+  FOR UPDATE USING (
+    auth.role() = 'service_role' OR
+    EXISTS (
+      SELECT 1 FROM public.profiles p
+      WHERE p.email = (auth.jwt() ->> 'email')
+      AND p.role IN ('dirigeant', 'chef_usine')
+    )
+  );

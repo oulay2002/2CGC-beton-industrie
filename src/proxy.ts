@@ -21,7 +21,9 @@ function getLocale(request: NextRequest): Locale {
 // ─── Routes protégées par rôle ────────────────────────────────────────────────
 const ROLE_PROTECTED = ['/dirigeant', '/usine', '/chauffeur', '/client'];
 
-export function proxy(request: NextRequest) {
+import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
+
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Ignorer les fichiers statiques et les routes Next.js internes
@@ -33,18 +35,20 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Routes protégées par rôle (jamais traduites — toujours en français)
+  // 2. Routes protégées par rôle (strictement vérifiées par token HMAC inviolable)
   const isProtected = ROLE_PROTECTED.some((r) => pathname.startsWith(r));
   if (isProtected) {
-    const authSessionCookie = request.cookies.get('beton_session_role');
+    const sessionToken = request.cookies.get(COOKIE_NAME)?.value;
+    const session = await verifySessionToken(sessionToken);
 
-    if (!authSessionCookie?.value) {
-      const response = NextResponse.next();
-      response.headers.set('x-auth-protected', '1');
-      return response;
+    // Si aucune session valide et signée n'est présente : REDIRECTION STRICTE
+    if (!session) {
+      const loginUrl = new URL('/connexion', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
     }
 
-    const userRole = authSessionCookie.value;
+    const userRole = session.role;
 
     if (pathname.startsWith('/dirigeant') && userRole !== 'dirigeant') {
       return NextResponse.redirect(new URL('/connexion', request.url));

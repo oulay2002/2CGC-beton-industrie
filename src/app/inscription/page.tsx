@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
+import posthog from 'posthog-js';
 
 export default function InscriptionPage() {
   const { register } = useAuth();
@@ -75,6 +76,12 @@ export default function InscriptionPage() {
       });
     } catch {
       // Non bloquant — le compte est déjà créé
+    }
+
+    if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+      posthog.capture('account_registered', {
+        account_type: 'client',
+      });
     }
 
     setLoading(false);

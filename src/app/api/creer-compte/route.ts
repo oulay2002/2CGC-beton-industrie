@@ -1,6 +1,6 @@
-// src/app/api/creer-compte/route.ts — API création de compte + envoi d'identifiants
-
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
@@ -101,8 +101,30 @@ function genererHTMLBienvenue(data: PayloadCreationCompte): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Rate Limiting anti-bruteforce (max 5 créations par minute par IP)
+    const clientIp = getClientIp(request);
+    const rateCheck = checkRateLimit(`register_${clientIp}`, { limit: 5, windowMs: 60 * 1000 });
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives de création de compte. Veuillez patienter.' },
+        { status: 429 }
+      );
+    }
+
     const body: PayloadCreationCompte = await request.json();
     const { nom, email, motDePasse, role = 'client', envoyerEmail = true } = body;
+
+    // 2. Vérification d'élévation de privilèges : seuls les dirigeants peuvent créer des comptes staff
+    const token = request.cookies.get(COOKIE_NAME)?.value;
+    const session = await verifySessionToken(token);
+    const isDirigeant = session && session.role === 'dirigeant';
+
+    if (role !== 'client' && !isDirigeant) {
+      return NextResponse.json(
+        { error: 'Seul un dirigeant authentifié peut créer un compte membre de l\'équipe (dirigeant, usine, chauffeur).' },
+        { status: 403 }
+      );
+    }
 
     if (!nom || !email || !motDePasse) {
       return NextResponse.json({ error: 'Paramètres manquants (nom, email, motDePasse requis)' }, { status: 400 });

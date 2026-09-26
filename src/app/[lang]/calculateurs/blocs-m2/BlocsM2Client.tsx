@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import posthog from "posthog-js";
 
 interface BlocsM2ClientProps {
   lang: Locale;
@@ -261,6 +262,16 @@ export default function BlocsM2Client({ lang }: BlocsM2ClientProps) {
               {resultat.blocsTotaux > 0 ? (
                 <Link
                   href={`/${lang}/devis?produit=${produitId}&quantite=${resultat.blocsTotaux}`}
+                  onClick={() => {
+                    if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+                      posthog.capture("calculator_quote_started", {
+                        calculator: "blocks_m2",
+                        product_id: produitId,
+                        recommended_quantity: resultat.blocsTotaux,
+                        breakage_margin_percent: margeCasse,
+                      });
+                    }
+                  }}
                   className="w-full inline-flex items-center justify-center gap-3 bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] text-center py-4 px-6 rounded-xl font-extrabold text-base shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[50px] cursor-pointer"
                 >
                   <span>{isEn ? "Insert into my Express Quote" : "Insérer dans mon Devis Express"}</span>

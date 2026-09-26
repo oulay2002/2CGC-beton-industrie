@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { traiterMessageWhatsAppEntrant, WhatsAppIncomingMessage } from '@/lib/whatsapp-service';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 // Token de vérification configuré dans Meta Developer Portal
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || '2cgc_whatsapp_secret_token_2026';
@@ -34,6 +35,13 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
+    // 1. Protection Anti-DDoS & Rate Limiting (max 60 requêtes par minute)
+    const clientIp = getClientIp(req);
+    const rateCheck = checkRateLimit(`wa_webhook_${clientIp}`, { limit: 60, windowMs: 60 * 1000 });
+    if (!rateCheck.success) {
+      return NextResponse.json({ error: 'Trop de requêtes webhook' }, { status: 429 });
+    }
+
     const body = await req.json();
 
     // Verification si c'est un appel direct (simulateur ou API standard)

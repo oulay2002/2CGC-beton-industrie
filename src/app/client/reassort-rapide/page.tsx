@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import { getCommandes, ajouterCommandeDepuisDevis, Commande } from '@/lib/commandes-store';
 import { genererBonCommande } from '@/lib/generer-bons';
 import Link from 'next/link';
+import posthog from 'posthog-js';
 
 function formatFCFA(montant: number): string {
   return Math.round(montant).toLocaleString('fr-FR') + ' FCFA';
@@ -162,6 +163,14 @@ function ReassortRapidePageInner() {
       total,
       type: 'commande',
     });
+
+    if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+      posthog.capture('quick_reorder_created', {
+        product_count: articles.length,
+        total_amount: Math.round(total),
+        currency: 'XOF',
+      });
+    }
   };
 
   const totalPanier = panier.reduce((sum, p) => {

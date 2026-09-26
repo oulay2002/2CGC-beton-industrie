@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
 import { ajouterLeadManuellement } from "@/lib/crm-data";
+import posthog from "posthog-js";
 
 interface ContactClientProps {
   lang: Locale;
@@ -12,6 +13,8 @@ interface ContactClientProps {
 export default function ContactClient({ lang }: ContactClientProps) {
   const isEn = lang === "en";
 
+  const [formLoadedAt] = useState<number>(() => Date.now());
+  const [honeypot, setHoneypot] = useState("");
   const [formData, setFormData] = useState({
     nom: "",
     email: "",
@@ -34,6 +37,13 @@ export default function ContactClient({ lang }: ContactClientProps) {
     e.preventDefault();
     setLoading(true);
     setErreur(null);
+
+    // Détection bot côté client immédiate
+    if (honeypot) {
+      setLoading(false);
+      setMessageEnvoye(true);
+      return;
+    }
 
     try {
       ajouterLeadManuellement({
@@ -68,6 +78,8 @@ Ce prospect a été automatiquement importé dans le CRM commercial.`;
           sujet: `📬 Nouveau contact web [${formData.sujet}] — ${formData.nom}`,
           corps: corpsEmailDirigeant,
           nomDestinataire: "Direction 2CGC",
+          hp: honeypot,
+          timestamp: formLoadedAt,
         }),
       });
 
@@ -112,6 +124,13 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
             nomDestinataire: formData.nom,
           }),
         }).catch((err) => console.warn("Erreur envoi accusé réception", err));
+      }
+
+      if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+        posthog.capture("contact_form_submitted", {
+          subject: formData.sujet,
+          locale: lang,
+        });
       }
 
       setLoading(false);
@@ -398,6 +417,19 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot invisible pour piéger les bots */}
+                <div style={{ display: 'none', position: 'absolute', left: '-9999px', opacity: 0 }} aria-hidden="true">
+                  <label htmlFor="website_url_hp">Ne pas remplir</label>
+                  <input
+                    type="text"
+                    id="website_url_hp"
+                    name="website_url_hp"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
                 <div className="grid md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">

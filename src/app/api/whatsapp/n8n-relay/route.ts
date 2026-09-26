@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { SeverityNumber } from '@opentelemetry/api-logs';
+import { after, NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { ajouterLeadDepuisWhatsApp } from '@/lib/crm-data';
 import { ajouterCommandeDepuisWhatsApp, CommandeArticle } from '@/lib/commandes-store';
+import { loggerProvider, posthogLogExporterLogger } from '@/instrumentation';
 
 // Clé d'API partagée entre le Workflow n8n (Hostinger) et la plateforme 2CGC
 const API_KEY_AUTORISEE = process.env.N8N_RELAY_API_KEY || '2cgc_n8n_secret_key_2026';
@@ -104,6 +106,21 @@ export async function POST(req: NextRequest) {
       leadId = lead.id;
 
       responseMessage = `Lead CRM mis à jour pour ${clientNom} (${action.toUpperCase()}).`;
+    }
+
+    if (posthogLogExporterLogger) {
+      posthogLogExporterLogger.emit({
+        body: 'n8n relay request processed',
+        severityNumber: SeverityNumber.INFO,
+        attributes: {
+          endpoint: '/api/whatsapp/n8n-relay',
+          is_order: action === 'commande',
+          article_count: articles.length,
+        },
+      });
+      after(async () => {
+        await loggerProvider?.forceFlush();
+      });
     }
 
     return NextResponse.json({

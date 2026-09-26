@@ -30,6 +30,14 @@ export default function DirigeantDashboard() {
   const [immatriculationRapide, setImmatriculationRapide] = useState('');
   const [notifRapide, setNotifRapide] = useState<string | null>(null);
   const [modalLogsOpen, setModalLogsOpen] = useState(false);
+  const [identifiantGenere, setIdentifiantGenere] = useState<{
+    role: string;
+    nom: string;
+    email: string;
+    password: string;
+    telephone?: string;
+  } | null>(null);
+  const [copieMdp, setCopieMdp] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
@@ -65,12 +73,18 @@ export default function DirigeantDashboard() {
     });
 
     if (res.success) {
-      setNotifRapide(`✅ ${roleRapide === 'chauffeur' ? 'Chauffeur' : "Chef d'Usine"} ${nomRapide} enregistré avec succès ! Identifiants générés : ${emailGenere} / ${mdpGenere}`);
+      setIdentifiantGenere({
+        role: roleRapide,
+        nom: nomRapide,
+        email: emailGenere,
+        password: mdpGenere,
+        telephone: telephoneRapide || undefined,
+      });
+      setNotifRapide(`✅ ${roleRapide === 'chauffeur' ? 'Chauffeur' : "Chef d'Usine"} ${nomRapide} enregistré !`);
       setNomRapide('');
       setTelephoneRapide('');
       setVehiculeRapide('');
       setImmatriculationRapide('');
-      setTimeout(() => setNotifRapide(null), 5000);
       setShowModalRapide(false);
     }
   };
@@ -160,13 +174,21 @@ export default function DirigeantDashboard() {
             <span className="text-white/60 mx-3">|</span>
             <span className="text-white/80 text-sm">Espace Dirigeant</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dirigeant/identifiants"
+              className="bg-white/10 hover:bg-white/20 border border-white/25 text-white px-3.5 py-2 rounded-lg text-sm font-bold shadow transition-all flex items-center gap-1.5"
+              title="Consulter le trousseau de tous les identifiants collaborateurs"
+            >
+              <span>🔐</span>
+              <span className="hidden md:inline">Identifiants Collaborateurs</span>
+            </Link>
             <button
               onClick={() => setShowModalRapide(true)}
               className="bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] px-4 py-2 rounded-lg text-sm font-extrabold shadow transition-all flex items-center gap-2 cursor-pointer"
             >
               <span>➕</span>
-              <span>Enregistrer Personnel & Véhicule</span>
+              <span className="hidden sm:inline">Enregistrer</span> Personnel
             </button>
             <div className="text-right hidden sm:block">
               <div className="text-sm font-bold">{user.nom}</div>
@@ -252,11 +274,22 @@ export default function DirigeantDashboard() {
           </Link>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+        <div className="grid sm:grid-cols-3 gap-4 mb-8">
+          <Link href="/dirigeant/identifiants" className="bg-white rounded-xl p-6 border-2 border-amber-300 hover:border-[#002B5B] hover:shadow-lg transition-all block group">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-400/20 backdrop-blur-sm flex items-center justify-center text-2xl">🔐</div>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-800 border border-amber-400/20 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                Trousseau Sécurisé
+              </span>
+            </div>
+            <h3 className="font-bold text-lg text-[#002B5B] mb-1 group-hover:text-amber-700 transition-colors">Identifiants Collaborateurs</h3>
+            <p className="text-sm text-gray-600">Accès, mots de passe, fiches PDF &amp; envoi WhatsApp</p>
+          </Link>
+
           <Link href="/dirigeant/crm" className="bg-white rounded-xl p-6 border-2 border-[#FFD700] hover:shadow-lg hover:border-[#002B5B] transition-all block">
             <div className="w-12 h-12 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/40 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🤖</div>
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">CRM Automatisé</h3>
-            <p className="text-sm text-gray-600">Pipeline, leads et actions automatiques</p>
+            <p className="text-sm text-gray-600">Pipeline, leads et relances automatiques</p>
           </Link>
 
           <Link href="/dirigeant/utilisateurs" className="bg-white rounded-xl p-6 border-2 border-emerald-300 hover:border-[#002B5B] hover:shadow-lg transition-all block">
@@ -525,6 +558,102 @@ export default function DirigeantDashboard() {
               </div>
 
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Accès Rapide aux Identifiants Générés */}
+      {identifiantGenere && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-emerald-400 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl font-black">
+                  🔐
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-[#002B5B]">Identifiants Collaborateur</h3>
+                  <p className="text-xs text-gray-500">Compte créé avec succès dans le système</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIdentifiantGenere(null)}
+                className="text-gray-400 hover:text-gray-600 text-2xl leading-none cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 mb-6 space-y-3">
+              <div>
+                <span className="text-xs font-bold text-gray-500 uppercase">Collaborateur</span>
+                <p className="text-base font-extrabold text-[#002B5B]">{identifiantGenere.nom} ({identifiantGenere.role === 'chauffeur' ? 'Chauffeur Flotte' : "Chef d'Usine"})</p>
+              </div>
+
+              <div className="bg-white rounded-xl p-3 border border-gray-200 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">Identifiant (Email)</span>
+                  <p className="text-sm font-mono font-bold text-[#002B5B]">{identifiantGenere.email}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard.writeText(identifiantGenere.email)}
+                  className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition-colors"
+                >
+                  Copier
+                </button>
+              </div>
+
+              <div className="bg-white rounded-xl p-3 border border-gray-200 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">Mot de passe provisoire</span>
+                  <p className="text-sm font-mono font-black text-emerald-700">{identifiantGenere.password}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(identifiantGenere.password);
+                    setCopieMdp(true);
+                    setTimeout(() => setCopieMdp(false), 2000);
+                  }}
+                  className="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-3 py-1.5 rounded-lg font-bold transition-colors"
+                >
+                  {copieMdp ? 'Copié !' : 'Copier'}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2.5">
+              {identifiantGenere.telephone && (
+                <a
+                  href={`https://wa.me/${identifiantGenere.telephone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    `Bonjour ${identifiantGenere.nom},\nVoici vos identifiants d'accès 2CGC BÉTON INDUSTRIE :\n\nLien : https://beton-industrie.com/connexion\nIdentifiant : ${identifiantGenere.email}\nMot de passe : ${identifiantGenere.password}\n\nDirection 2CGC`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow"
+                >
+                  <span>📲</span>
+                  <span>Transmettre sur WhatsApp ({identifiantGenere.telephone})</span>
+                </a>
+              )}
+
+              <Link
+                href="/dirigeant/identifiants"
+                className="w-full py-3 rounded-xl bg-[#002B5B] hover:bg-[#003d80] text-white font-bold text-sm flex items-center justify-center gap-2 shadow"
+              >
+                <span>📂</span>
+                <span>Ouvrir l'Espace Trousseau &amp; Fiches PDF</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => setIdentifiantGenere(null)}
+                className="w-full py-2.5 rounded-xl border border-gray-200 text-gray-600 text-xs font-bold hover:bg-gray-50"
+              >
+                Fermer
+              </button>
+            </div>
           </div>
         </div>
       )}

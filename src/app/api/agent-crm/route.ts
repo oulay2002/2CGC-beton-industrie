@@ -1,5 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { SeverityNumber } from '@opentelemetry/api-logs';
+import { after, NextRequest, NextResponse } from 'next/server';
 import { processCopilotPrompt, getPipelineAnalytics, scoreAllLeads, triggerBulkRelancesExpiress } from '@/lib/crm-agent-engine';
+import { loggerProvider, posthogLogExporterLogger } from '@/instrumentation';
+import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 /**
  * POST /api/agent-crm
@@ -7,6 +11,38 @@ import { processCopilotPrompt, getPipelineAnalytics, scoreAllLeads, triggerBulkR
  */
 export async function POST(req: NextRequest) {
   try {
+    // 1. Contrôle d'accès strict : réservé au Dirigeant 2CGC
+    const token = req.cookies.get(COOKIE_NAME)?.value;
+    const session = await verifySessionToken(token);
+
+    if (!session || session.role !== 'dirigeant') {
+      return NextResponse.json(
+        { error: 'Accès non autorisé. Seul le Dirigeant peut piloter l\'Agent IA CRM.' },
+        { status: 401 }
+      );
+    }
+
+    // 2. Limitation de débit
+    const clientIp = getClientIp(req);
+    const rateCheck = checkRateLimit(`crm_${clientIp}`, { limit: 30, windowMs: 60 * 1000 });
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { error: 'Quota de requêtes IA dépassé. Veuillez patienter.' },
+        { status: 429 }
+      );
+    }
+
+    if (posthogLogExporterLogger) {
+      posthogLogExporterLogger.emit({
+        body: 'CRM copilot request accepted',
+        severityNumber: SeverityNumber.INFO,
+        attributes: { endpoint: '/api/agent-crm' },
+      });
+      after(async () => {
+        await loggerProvider?.forceFlush();
+      });
+    }
+
     const body = await req.json();
     const { action, prompt, leadId } = body;
 

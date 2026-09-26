@@ -34,10 +34,15 @@ function ConnexionPageInner() {
     setError('');
     setLoading(true);
     await new Promise(r => setTimeout(r, 600));
-    const result = login(email, password);
+    const result = await login(email, password);
     setLoading(false);
     if (result.success && result.role) {
-      router.push(ROUTES_PAR_ROLE[result.role]);
+      const redirectPath = searchParams.get('redirect');
+      if (redirectPath && redirectPath.startsWith('/')) {
+        router.push(redirectPath);
+      } else {
+        router.push(ROUTES_PAR_ROLE[result.role]);
+      }
     } else {
       setError('Identifiants incorrects. Veuillez vérifier votre adresse email et mot de passe.');
     }

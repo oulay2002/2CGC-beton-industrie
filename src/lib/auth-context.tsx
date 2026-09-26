@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import posthog from 'posthog-js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client';
 
 export type UserRole = 'client' | 'dirigeant' | 'chef_usine' | 'chauffeur';
@@ -268,17 +269,43 @@ export function genererMotDePasse(nom: string): string {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => { success: boolean; role?: UserRole };
+  login: (email: string, password: string) => Promise<{ success: boolean; role?: UserRole }>;
   logout: () => void;
   register: (data: Omit<CompteUtilisateur, 'dateCreation'>) => { success: boolean; error?: string };
   creerUtilisateur: (data: Omit<CompteUtilisateur, 'dateCreation' | 'creeParDirigeant'>) => { success: boolean; error?: string };
   importerUtilisateurs: (comptes: CompteUtilisateur[]) => { ajoutes: number; ignores: number };
   getUtilisateurs: () => CompteUtilisateur[];
   supprimerUtilisateur: (email: string) => void;
+  mettreAJourMotDePasse: (email: string, nouveauMDP: string) => boolean;
+  mettreAJourUtilisateur: (email: string, donnees: Partial<CompteUtilisateur>) => boolean;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+let hasRestoredPostHogIdentity = false;
+
+const isPostHogConfigured = Boolean(
+  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST
+);
+
+function identifyUser(user: User) {
+  const distinctId = user.email.trim().toLowerCase();
+  if (!isPostHogConfigured || !distinctId) return;
+
+  posthog.identify(distinctId, {
+    email: user.email,
+    name: user.nom,
+    role: user.role,
+    company: user.entreprise,
+  });
+}
+
+function resetPostHog() {
+  if (isPostHogConfigured) {
+    posthog.reset();
+  }
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -287,22 +314,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedUser = localStorage.getItem('user_beton');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const restoredUser = JSON.parse(savedUser) as User;
+      setUser(restoredUser);
+
+      if (!hasRestoredPostHogIdentity) {
+        hasRestoredPostHogIdentity = true;
+        identifyUser(restoredUser);
+      }
     }
     setIsLoading(false);
   }, []);
 
-  const login = (email: string, password: string): { success: boolean; role?: UserRole } => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; role?: UserRole }> => {
     const tous = getUtilisateurs();
-    const utilisateur = tous.find(u => u.email === email && u.password === password);
+    const utilisateur = tous.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password);
     if (utilisateur) {
       const { password: _, ...userWithoutPassword } = utilisateur;
+
+      if (user && user.email.toLowerCase() !== utilisateur.email.toLowerCase()) {
+        resetPostHog();
+      }
+
       setUser(userWithoutPassword);
       localStorage.setItem('user_beton', JSON.stringify(userWithoutPassword));
-      // Cookie de session pour le middleware Next.js
-      if (typeof document !== 'undefined') {
-        document.cookie = `beton_session_role=${utilisateur.role}; path=/; max-age=86400; SameSite=Lax`;
+      identifyUser(userWithoutPassword);
+      hasRestoredPostHogIdentity = true;
+
+      // Établir la session serveur cryptographique (Cookie HttpOnly sécurisé)
+      try {
+        await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: utilisateur.email,
+            role: utilisateur.role,
+            nom: utilisateur.nom,
+          }),
+        });
+      } catch (err) {
+        console.error('Erreur synchronisation session serveur:', err);
       }
+
       return { success: true, role: utilisateur.role };
     }
     return { success: false };
@@ -377,18 +429,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const mettreAJourMotDePasse = (email: string, nouveauMDP: string): boolean => {
+    const tous = getUtilisateurs();
+    const existant = tous.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!existant) return false;
+    const maj: CompteUtilisateur = { ...existant, password: nouveauMDP };
+    sauvegarderUtilisateur(maj);
+    return true;
+  };
+
+  const mettreAJourUtilisateur = (email: string, donnees: Partial<CompteUtilisateur>): boolean => {
+    const tous = getUtilisateurs();
+    const existant = tous.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!existant) return false;
+    const maj: CompteUtilisateur = { ...existant, ...donnees };
+    sauvegarderUtilisateur(maj);
+    return true;
+  };
+
   const logout = () => {
+    if (user) {
+      resetPostHog();
+    }
+
     setUser(null);
     localStorage.removeItem('user_beton');
     if (typeof document !== 'undefined') {
       document.cookie = 'beton_session_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
+    fetch('/api/auth/session', { method: 'DELETE' }).catch(console.error);
   };
 
   return (
     <AuthContext.Provider value={{
       user, login, logout, register, creerUtilisateur, importerUtilisateurs,
-      getUtilisateurs, supprimerUtilisateur, isLoading,
+      getUtilisateurs, supprimerUtilisateur, mettreAJourMotDePasse, mettreAJourUtilisateur, isLoading,
     }}>
       {children}
     </AuthContext.Provider>
@@ -468,4 +543,4 @@ export const BONS_LIVRAISON_MOCK = [
       { nom: 'Agglo 15x20x50 Creux', quantite: 300 },
     ],
   },
-];
+];

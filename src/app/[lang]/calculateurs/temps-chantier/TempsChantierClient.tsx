@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import posthog from "posthog-js";
 
 interface TempsChantierClientProps {
   lang: Locale;
@@ -231,6 +232,15 @@ export default function TempsChantierClient({ lang }: TempsChantierClientProps) 
             <div className="mt-8 space-y-3">
               <Link
                 href={`/${lang}/devis`}
+                onClick={() => {
+                  if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST) {
+                    posthog.capture("calculator_quote_started", {
+                      calculator: "worksite_time",
+                      work_type: travailId,
+                      estimated_days: resultat.jours,
+                    });
+                  }
+                }}
                 className="w-full inline-flex items-center justify-center gap-2 bg-brand-accent hover:bg-amber-400 text-brand-navy text-center py-4 rounded-xl font-bold text-base shadow-lg shadow-amber-400/20 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[48px]"
               >
                 <span>

@@ -279,7 +279,17 @@ export default function GestionUtilisateurs() {
             </h1>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Bouton Trousseau Identifiants Collaborateurs */}
+            <Link
+              href="/dirigeant/identifiants"
+              className="bg-amber-400 hover:bg-amber-300 text-[#002B5B] text-xs font-black px-3.5 py-2 rounded-xl transition-all shadow flex items-center gap-1.5"
+              title="Accéder au coffre-fort des identifiants et accès des collaborateurs"
+            >
+              <span>🔐</span>
+              <span>Trousseau Collaborateurs</span>
+            </Link>
+
             {/* Bouton Télécharger Modèle CSV */}
             <button
               onClick={telechargerModeleCSV}
@@ -452,7 +462,7 @@ export default function GestionUtilisateurs() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 flex-shrink-0 opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                  {u.role === 'client' && (
+                  {u.role === 'client' ? (
                     <Link
                       href={`/client?email=${encodeURIComponent(u.email)}`}
                       className="bg-[#002B5B] hover:bg-[#003d80] text-white text-xs font-bold px-3 py-2 rounded-xl transition-colors flex items-center gap-1.5 shadow-sm"
@@ -460,6 +470,15 @@ export default function GestionUtilisateurs() {
                     >
                       <span>👁️</span>
                       <span className="hidden sm:inline">Vue Client</span>
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/dirigeant/identifiants"
+                      className="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl transition-colors flex items-center gap-1 shadow-sm"
+                      title="Voir les identifiants et mot de passe dans le trousseau"
+                    >
+                      <span>🔐</span>
+                      <span className="hidden sm:inline">Accès</span>
                     </Link>
                   )}
                   {u.telephone && u.telephone !== 'Non renseigné' && (

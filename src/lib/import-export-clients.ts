@@ -261,3 +261,331 @@ export function exporterBaseClientsCSV(clients: CompteUtilisateur[]) {
   link.click();
   document.body.removeChild(link);
 }
+
+/**
+ * Impression officielle PDF du Trousseau des Collaborateurs (Direction Générale)
+ */
+export function imprimerTrousseauCollaborateursPDF(collaborateurs: CompteUtilisateur[]) {
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4',
+  });
+
+  const dateStr = new Date().toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  // Bandeau supérieur 2CGC Bleu Nuit
+  doc.setFillColor(0, 43, 91);
+  doc.rect(0, 0, 297, 36, 'F');
+
+  // Liseré or
+  doc.setFillColor(255, 215, 0);
+  doc.rect(0, 36, 297, 2.5, 'F');
+
+  // Logo 2CGC
+  try {
+    doc.addImage(LOGO_2CGC_BASE64, 'PNG', 12, 6, 20, 16);
+  } catch (e) {
+    doc.setTextColor(255, 215, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('2CGC', 22, 17, { align: 'center' });
+  }
+
+  // En-tête Société
+  doc.setTextColor(255, 215, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('CHEICKNA CONSTRUCTION & GÉNIE CIVIL (2CGC SARL Unipersonnel)', 36, 14);
+
+  doc.setFontSize(7.8);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Direction Générale — Usine de Préfabriqués Béton Haute Performance • BP 129 Daloa (Côte d\'Ivoire)', 36, 20);
+  doc.text('Ligne Directrice : +225 07 07 62 17 99 / +225 07 07 85 76 29 • Email officiel : cheicknaconstruction@gmail.com', 36, 26);
+
+  // Titre du document
+  doc.setTextColor(0, 43, 91);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.text('TROUSSEAU OFFICIEL DES IDENTIFIANTS & ACCÈS COLLABORATEURS', 14, 46);
+
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(185, 28, 28);
+  doc.text(`DOCUMENT STRICTEMENT CONFIDENTIEL — DIRECTION GÉNÉRALE • Arrêté au ${dateStr} • ${collaborateurs.length} collaborateurs actifs`, 14, 52);
+
+  const roleLabel = (role: string) => {
+    switch (role) {
+      case 'chef_usine': return "Chef d'Usine (Production)";
+      case 'chauffeur': return 'Chauffeur (Flotte / Logistique)';
+      case 'dirigeant': return 'Dirigeant (Direction)';
+      default: return 'Collaborateur';
+    }
+  };
+
+  const tableData = collaborateurs.map((c, idx) => [
+    (idx + 1).toString(),
+    roleLabel(c.role),
+    c.nom,
+    c.telephone || '—',
+    c.email,
+    c.password || '••••••••',
+    c.vehicule ? `${c.vehicule} (${c.permis || 'Permis OK'})` : '—',
+    c.dateCreation || '2026',
+  ]);
+
+  autoTable(doc, {
+    startY: 56,
+    margin: { top: 22, bottom: 20, left: 14, right: 14 },
+    head: [['N°', 'Fonction / Rôle', 'Nom & Prénoms', 'Téléphone WhatsApp', 'Identifiant (Email)', 'Mot de Passe', 'Véhicule / Affectation', 'Date']],
+    body: tableData,
+    theme: 'grid',
+    styles: {
+      fontSize: 8.5,
+      cellPadding: 3.5,
+      textColor: [30, 41, 59],
+      lineColor: [226, 232, 240],
+      lineWidth: 0.2,
+    },
+    headStyles: {
+      fillColor: [0, 43, 91],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+      fontSize: 8.5,
+    },
+    columnStyles: {
+      0: { cellWidth: 10, halign: 'center' },
+      1: { cellWidth: 42, fontStyle: 'bold' },
+      2: { cellWidth: 45, fontStyle: 'bold' },
+      3: { cellWidth: 32 },
+      4: { cellWidth: 50 },
+      5: { cellWidth: 32, fontStyle: 'bold', textColor: [0, 43, 91] },
+      6: { cellWidth: 38 },
+      7: { cellWidth: 20, halign: 'center' },
+    },
+    didDrawPage: (data: any) => {
+      const pageCount = (doc as any).internal.getNumberOfPages();
+      doc.setFontSize(7.5);
+      doc.setTextColor(140, 140, 140);
+      doc.text(
+        `2CGC — Coffre-fort des Accès Collaborateurs • Document confidentiel interne • Page ${data.pageNumber} sur ${pageCount}`,
+        148,
+        202,
+        { align: 'center' }
+      );
+    },
+  });
+
+  doc.save(`2CGC_Trousseau_Collaborateurs_${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
+/**
+ * Fiche individuelle d'accès collaborateur en PDF (prête à imprimer ou remettre en main propre)
+ */
+export function imprimerFicheCollaborateurPDF(c: CompteUtilisateur) {
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+
+  const dateStr = new Date().toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  // En-tête bleu nuit
+  doc.setFillColor(0, 43, 91);
+  doc.rect(0, 0, 210, 38, 'F');
+
+  // Liseré or
+  doc.setFillColor(255, 215, 0);
+  doc.rect(0, 38, 210, 2.5, 'F');
+
+  // Logo 2CGC
+  try {
+    doc.addImage(LOGO_2CGC_BASE64, 'PNG', 12, 6, 22, 18);
+  } catch (e) {
+    doc.setTextColor(255, 215, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('2CGC', 22, 17, { align: 'center' });
+  }
+
+  // Titre Société
+  doc.setTextColor(255, 215, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('CHEICKNA CONSTRUCTION & GÉNIE CIVIL (2CGC)', 38, 14);
+
+  doc.setFontSize(7.5);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Usine & Siège : Quartier Commerce non loin de la Pharmacie Appaul, BP 129 Daloa', 38, 20);
+  doc.text('Direction Générale : +225 07 07 62 17 99 / 07 07 85 76 29 • cheicknaconstruction@gmail.com', 38, 26);
+
+  // Titre Document
+  doc.setTextColor(0, 43, 91);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.text('FICHE INDIVIDUELLE D\'ACCÈS COLLABORATEUR', 14, 52);
+
+  doc.setFontSize(9);
+  doc.setTextColor(185, 28, 28);
+  doc.text(`STRICTEMENT CONFIDENTIEL — REMISE EN MAIN PROPRE OU VIA CANAL SÉCURISÉ`, 14, 58);
+
+  // Bloc Informations Collaborateur
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(14, 66, 182, 42, 3, 3, 'F');
+  doc.setDrawColor(226, 232, 240);
+  doc.roundedRect(14, 66, 182, 42, 3, 3, 'S');
+
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 43, 91);
+  doc.text('PROFIL COLLABORATEUR', 20, 74);
+
+  const roleText = c.role === 'chef_usine' ? "Chef d'Usine (Responsable Fabrication Daloa)" :
+                   c.role === 'chauffeur' ? 'Chauffeur Flotte (Logistique & Tournées)' :
+                   c.role === 'dirigeant' ? 'Direction Générale (Administration 2CGC)' : 'Collaborateur';
+
+  doc.setFontSize(9.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(30, 41, 59);
+  doc.text(`Nom & Prénoms : `, 20, 82);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`${c.nom}`, 55, 82);
+
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Fonction / Rôle : `, 20, 89);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 43, 91);
+  doc.text(`${roleText}`, 55, 89);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(30, 41, 59);
+  doc.text(`Téléphone WhatsApp : `, 20, 96);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`${c.telephone || 'Non renseigné'}`, 55, 96);
+
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Date d'émission : `, 20, 103);
+  doc.text(`${dateStr}`, 55, 103);
+
+  // Bloc Identifiants de Connexion
+  doc.setFillColor(254, 243, 199);
+  doc.roundedRect(14, 116, 182, 60, 4, 4, 'F');
+  doc.setDrawColor(245, 158, 11);
+  doc.roundedRect(14, 116, 182, 60, 4, 4, 'S');
+
+  doc.setFontSize(10.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(146, 64, 14);
+  doc.text('🔐 VOS IDENTIFIANTS OFFICIELS DE CONNEXION', 20, 126);
+
+  doc.setFontSize(9.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(74, 85, 104);
+  doc.text('Portail Web 2CGC :', 20, 136);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 43, 91);
+  doc.text('https://2cgc.ci/connexion  (ou https://2cgc-industries.com/connexion)', 60, 136);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(74, 85, 104);
+  doc.text('Identifiant (Email) :', 20, 146);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 43, 91);
+  doc.text(`${c.email}`, 60, 146);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(74, 85, 104);
+  doc.text('Mot de Passe Actuel :', 20, 156);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(185, 28, 28);
+  doc.text(`${c.password || '••••••••'}`, 60, 156);
+
+  if (c.vehicule || c.permis) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(74, 85, 104);
+    doc.text('Véhicule / Permis :', 20, 166);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 118, 110);
+    doc.text(`${c.vehicule || ''} ${c.permis ? `• Permis: ${c.permis}` : ''}`, 60, 166);
+  }
+
+  // Consignes de sécurité et utilisation
+  doc.setFillColor(241, 245, 249);
+  doc.roundedRect(14, 184, 182, 46, 3, 3, 'F');
+  doc.setDrawColor(203, 213, 225);
+  doc.roundedRect(14, 184, 182, 46, 3, 3, 'S');
+
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(51, 65, 85);
+  doc.text('RÈGLES D\'UTILISATION & SÉCURITÉ INTERNE', 20, 192);
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(71, 85, 105);
+  doc.text('1. Vos accès sont strictement personnels et nominatifs. Ne les communiquez à aucun tiers.', 20, 199);
+  doc.text('2. Vous pouvez vous connecter depuis n\'importe quel smartphone, tablette ou ordinateur de chantier.', 20, 205);
+  doc.text('3. Chef d\'Usine : validation des ordres de fabrication, saisie des consommations de ciment et agrégats.', 20, 211);
+  doc.text('4. Chauffeur : consultation des bons de livraison, signature électronique client et rapport de tournée.', 20, 217);
+  doc.text('5. En cas de perte, perte de téléphone ou compromission, prévenez immédiatement la Direction.', 20, 223);
+
+  // Bloc de signature
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 43, 91);
+  doc.text('Signature du Collaborateur', 24, 244);
+  doc.text('Pour la Direction Générale 2CGC', 128, 244);
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'italic');
+  doc.setTextColor(100, 116, 139);
+  doc.text('(Mention "Lu et approuvé")', 24, 249);
+  doc.text('KEITA BOUBACAR — Directeur Général', 128, 249);
+
+  doc.setDrawColor(148, 163, 184);
+  doc.line(24, 270, 80, 270);
+  doc.line(128, 270, 184, 270);
+
+  doc.save(`2CGC_Fiche_Acces_${c.nom.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+}
+
+/**
+ * Exporte le trousseau des collaborateurs en CSV
+ */
+export function exporterTrousseauCSV(collaborateurs: CompteUtilisateur[]) {
+  const entetes = ['N°', 'Fonction', 'Nom', 'Email', 'Mot de Passe', 'Telephone', 'Vehicule', 'Permis', 'Date Inscription'];
+  const lignes = collaborateurs.map((c, i) => [
+    i + 1,
+    `"${(c.role || '').replace(/"/g, '""')}"`,
+    `"${(c.nom || '').replace(/"/g, '""')}"`,
+    `"${c.email}"`,
+    `"${c.password || ''}"`,
+    `"${c.telephone || ''}"`,
+    `"${(c.vehicule || '').replace(/"/g, '""')}"`,
+    `"${(c.permis || '').replace(/"/g, '""')}"`,
+    `"${c.dateCreation || ''}"`,
+  ].join(';'));
+
+  const csvContent = '\uFEFF' + [entetes.join(';'), ...lignes].join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `2CGC_Trousseau_Collaborateurs_${new Date().toISOString().slice(0, 10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

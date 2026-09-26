@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
 
 export interface ProspectScrape {
   id: string;
@@ -217,7 +218,13 @@ const BASE_PROSPECTS_BTP: ProspectScrape[] = [
   },
 ];
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = await verifySessionToken(token);
+  if (!session || session.role !== 'dirigeant') {
+    return NextResponse.json({ error: 'Accès non autorisé. Réservé à la direction.' }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const ville = searchParams.get('ville') || 'toutes';
   const secteur = searchParams.get('secteur') || 'tous';
@@ -265,7 +272,13 @@ export async function GET(request: Request) {
   });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = await verifySessionToken(token);
+  if (!session || session.role !== 'dirigeant') {
+    return NextResponse.json({ error: 'Accès non autorisé. Réservé à la direction.' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { ville = 'toutes', secteur = 'tous', motsCles = '' } = body;
