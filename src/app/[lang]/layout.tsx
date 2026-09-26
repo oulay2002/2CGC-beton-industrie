@@ -113,7 +113,7 @@ export async function generateMetadata({
       images: ["/logo-2cgc.png"],
     },
     verification: {
-      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+      google: "Qrr3mxC-Wemf3WRqx6klnx4VE093QI4iHmOdheppW9s",
     },
     other: {
       "geo.region": "CI-13",

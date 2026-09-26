@@ -27,6 +27,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com"),
+  verification: {
+    google: "Qrr3mxC-Wemf3WRqx6klnx4VE093QI4iHmOdheppW9s",
+  },
   title: "2CGC - Cheickna Construction et Génie Civil | Daloa",
   description:
     "Leader des préfabriqués béton, calculateurs de chantier, devis proforma et suivi des commandes à Daloa et en Côte d'Ivoire.",
@@ -52,6 +55,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        <meta name="google-site-verification" content="Qrr3mxC-Wemf3WRqx6klnx4VE093QI4iHmOdheppW9s" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
