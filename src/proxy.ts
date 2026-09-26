@@ -45,6 +45,11 @@ export async function proxy(request: NextRequest) {
     if (!session) {
       const loginUrl = new URL('/connexion', request.url);
       loginUrl.searchParams.set('redirect', pathname);
+      if (pathname.startsWith('/client')) {
+        loginUrl.searchParams.set('mode', 'client');
+      } else {
+        loginUrl.searchParams.set('mode', 'equipe');
+      }
       return NextResponse.redirect(loginUrl);
     }
 

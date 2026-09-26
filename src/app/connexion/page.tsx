@@ -10,6 +10,7 @@ function ConnexionPageInner() {
   const searchParams = useSearchParams();
   const { login } = useAuth();
 
+  const [mode, setMode] = useState<'client' | 'equipe'>('client');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -18,16 +19,26 @@ function ConnexionPageInner() {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<'email' | 'password' | null>(null);
 
+  // Synchronisation avec l'URL param (?mode=equipe ou ?mode=client)
   useEffect(() => {
     const param = searchParams.get('mode');
     if (param === 'equipe') {
-      setEmail('');
-      setPassword('');
+      setMode('equipe');
     } else if (param === 'client') {
-      setEmail('');
-      setPassword('');
+      setMode('client');
     }
   }, [searchParams]);
+
+  const handleSwitchMode = (newMode: 'client' | 'equipe') => {
+    if (newMode === mode) return;
+    setMode(newMode);
+    setEmail('');
+    setPassword('');
+    setError('');
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('mode', newMode);
+    router.replace(`/connexion?${params.toString()}`, { scroll: false });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,17 +55,25 @@ function ConnexionPageInner() {
         router.push(ROUTES_PAR_ROLE[result.role]);
       }
     } else {
-      setError('Identifiants incorrects. Veuillez vérifier votre adresse email et mot de passe.');
+      setError(
+        mode === 'equipe'
+          ? 'Identifiants collaborateurs incorrects. Vérifiez votre email @2cgc-industrie.com et votre mot de passe.'
+          : 'Identifiants incorrects. Veuillez vérifier votre adresse email client et votre mot de passe.'
+      );
     }
   };
+
+  const whatsappHelpUrl = mode === 'equipe'
+    ? 'https://wa.me/2250707621799?text=Bonjour%20Direction%202CGC%2C%20je%20suis%20collaborateur%20et%20j%27ai%20besoin%20d%27assistance%20pour%20mes%20identifiants.'
+    : 'https://wa.me/2250707621799?text=Bonjour%202CGC%2C%20je%20suis%20client%20et%20j%27ai%20oubli%C3%A9%20mon%20mot%20de%20passe%20Espace%20Client.';
 
   return (
     <main className="min-h-screen flex overflow-hidden bg-[#F8F9FA]">
 
       {/* ══════════════════════════════════════════════
-          PANNEAU GAUCHE — BRANDING ENTERPRISE PREMIUM
+          PANNEAU GAUCHE — BRANDING DYNAMIQUE
       ══════════════════════════════════════════════ */}
-      <div className="hidden lg:flex lg:w-[50%] xl:w-[54%] bg-[#001D3D] flex-col justify-between p-12 xl:p-16 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[50%] xl:w-[54%] bg-[#001D3D] flex-col justify-between p-12 xl:p-16 relative overflow-hidden transition-all duration-300">
         
         {/* Motifs de fond & dégradés de lumière */}
         <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.05]" />
@@ -80,46 +99,86 @@ function ConnexionPageInner() {
           </Link>
         </div>
 
-        {/* Message de bienvenue Corporate */}
+        {/* Message de bienvenue Contextuel */}
         <div className="relative z-10 max-w-lg my-auto py-8">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] font-bold text-white/80 uppercase tracking-widest">Portail Sécurisé 2CGC</span>
-          </div>
-
-          <h1 className="text-4xl xl:text-[3.25rem] font-black text-white leading-[1.12] tracking-tight mb-6">
-            L&apos;excellence du béton <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-yellow-200 to-amber-400">
-              au service de vos chantiers.
+            <span className={`w-2 h-2 rounded-full animate-pulse ${mode === 'equipe' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
+            <span className="text-[11px] font-bold text-white/90 uppercase tracking-widest">
+              {mode === 'equipe' ? 'Portail Sécurisé Interne' : 'Portail Sécurisé Clients B2B'}
             </span>
-          </h1>
-
-          <p className="text-white/60 text-base leading-relaxed mb-10">
-            Accédez à votre espace dédié pour gérer vos commandes de bétons prêts à l&apos;emploi, vos bons de livraison et suivre l&apos;avancement de vos projets BTP en Côte d&apos;Ivoire.
-          </p>
-
-          {/* Engagements Qualité */}
-          <div className="space-y-4">
-            <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
-              <div className="w-10 h-10 rounded-xl bg-[#FFD700]/10 border border-[#FFD700]/30 flex items-center justify-center text-lg flex-shrink-0 text-[#FFD700]">
-                🏗️
-              </div>
-              <div>
-                <div className="text-white text-sm font-bold">Centrale à Béton Haute Performance</div>
-                <div className="text-white/40 text-xs mt-0.5">Fabrication automatisée d&apos;agglos, pavés et bordures certifiés à Daloa.</div>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-lg flex-shrink-0 text-blue-400">
-                🚚
-              </div>
-              <div>
-                <div className="text-white text-sm font-bold">Logistique &amp; Camions-Grues Intégrés</div>
-                <div className="text-white/40 text-xs mt-0.5">Livraison directe sur chantier avec géolocalisation et émargement numérique.</div>
-              </div>
-            </div>
           </div>
+
+          {mode === 'equipe' ? (
+            <>
+              <h1 className="text-4xl xl:text-[3.25rem] font-black text-white leading-[1.12] tracking-tight mb-6">
+                Supervision &amp; Pilotage <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-yellow-200 to-amber-400">
+                  industriel en direct.
+                </span>
+              </h1>
+
+              <p className="text-white/70 text-base leading-relaxed mb-10">
+                Plateforme interne réservée à la direction, aux équipes d&apos;exploitation usine et aux chauffeurs pour le suivi de la production et de la logistique à Daloa.
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-lg flex-shrink-0 text-amber-400">
+                    🏭
+                  </div>
+                  <div>
+                    <div className="text-white text-sm font-bold">Pilotage Usine &amp; Centrales</div>
+                    <div className="text-white/50 text-xs mt-0.5">Suivi des cadences de production d&apos;agglos, pavés et gestion des stocks agrégats.</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-lg flex-shrink-0 text-blue-400">
+                    🚛
+                  </div>
+                  <div>
+                    <div className="text-white text-sm font-bold">Flotte &amp; Dispatch Chantiers</div>
+                    <div className="text-white/50 text-xs mt-0.5">Affectation des camions-grues, suivi des livraisons et émargement numérique.</div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl xl:text-[3.25rem] font-black text-white leading-[1.12] tracking-tight mb-6">
+                L&apos;excellence du béton <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-yellow-200 to-amber-400">
+                  au service de vos chantiers.
+                </span>
+              </h1>
+
+              <p className="text-white/70 text-base leading-relaxed mb-10">
+                Accédez à votre espace dédié pour gérer vos commandes de bétons prêts à l&apos;emploi, vos bons de livraison et suivre l&apos;avancement de vos projets BTP en Côte d&apos;Ivoire.
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
+                  <div className="w-10 h-10 rounded-xl bg-[#FFD700]/10 border border-[#FFD700]/30 flex items-center justify-center text-lg flex-shrink-0 text-[#FFD700]">
+                    🏗️
+                  </div>
+                  <div>
+                    <div className="text-white text-sm font-bold">Centrale à Béton Haute Performance</div>
+                    <div className="text-white/50 text-xs mt-0.5">Fabrication automatisée d&apos;agglos, pavés et bordures certifiés à Daloa.</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-lg flex-shrink-0 text-blue-400">
+                    🚚
+                  </div>
+                  <div>
+                    <div className="text-white text-sm font-bold">Logistique &amp; Camions-Grues Intégrés</div>
+                    <div className="text-white/50 text-xs mt-0.5">Livraison directe sur chantier avec géolocalisation et émargement numérique.</div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Footer Gauche */}
@@ -135,12 +194,12 @@ function ConnexionPageInner() {
       </div>
 
       {/* ══════════════════════════════════════════════
-          PANNEAU DROIT — FORMULAIRE DE CONNEXION CLEAN
+          PANNEAU DROIT — FORMULAIRE AVEC ONGLETS
       ══════════════════════════════════════════════ */}
       <div className="flex-1 flex flex-col justify-between">
         
         {/* Navigation Supérieure */}
-        <div className="flex items-center justify-between px-8 py-6">
+        <div className="flex items-center justify-between px-6 sm:px-8 py-5">
           <Link href="/" className="flex items-center gap-2 lg:hidden">
             <img src="/logo-2cgc.png" alt="Logo 2CGC" className="h-8 w-auto" />
             <span className="font-black text-[#002B5B] text-lg">2CGC</span>
@@ -149,7 +208,7 @@ function ConnexionPageInner() {
           <div className="ml-auto">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#002B5B] transition-colors bg-white/70 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-200/80 hover:bg-white"
+              className="inline-flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#002B5B] transition-colors bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-200/80 hover:bg-white"
             >
               <span>←</span>
               <span>Retour au site principal</span>
@@ -158,27 +217,74 @@ function ConnexionPageInner() {
         </div>
 
         {/* Conteneur Formulaire */}
-        <div className="max-w-md w-full mx-auto px-6 py-6">
+        <div className="max-w-md w-full mx-auto px-6 py-4">
           
-          {/* En-tête principal */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-black text-[#002B5B] tracking-tight">
-              Espace Connexion 2CGC
-            </h2>
-            <p className="text-gray-500 text-sm mt-2">
-              Saisissez vos identifiants pour accéder à votre tableau de bord
-            </p>
+          {/* SÉLECTEUR D'ONGLETS CLAIR ET ÉLÉGANT */}
+          <div className="bg-gray-200/70 p-1.5 rounded-2xl mb-6 border border-gray-300/40 flex items-center shadow-inner">
+            <button
+              type="button"
+              onClick={() => handleSwitchMode('client')}
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+                mode === 'client'
+                  ? 'bg-white text-[#002B5B] shadow-md shadow-black/5'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <span>👤</span>
+              <span>Espace Client</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSwitchMode('equipe')}
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+                mode === 'equipe'
+                  ? 'bg-[#002B5B] text-white shadow-md shadow-[#002B5B]/20'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <span>🏢</span>
+              <span>Accès Équipe</span>
+            </button>
           </div>
 
-          {/* Carte Formulaire Unique */}
-          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-xl shadow-gray-200/50 p-7 sm:p-8">
+          {/* En-tête principal dynamique */}
+          <div className="text-center mb-6">
+            {mode === 'equipe' ? (
+              <>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200 mb-2">
+                  🔐 Portail Collaborateurs &amp; Direction
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black text-[#002B5B] tracking-tight">
+                  Accès Équipe 2CGC
+                </h2>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1.5">
+                  Connectez-vous avec vos identifiants nominatifs délivrés par la Direction.
+                </p>
+              </>
+            ) : (
+              <>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-blue-50 text-[#002B5B] border border-blue-200 mb-2">
+                  👤 Espace Entreprises &amp; Clients B2B
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black text-[#002B5B] tracking-tight">
+                  Espace Client 2CGC
+                </h2>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1.5">
+                  Saisissez vos identifiants pour accéder à vos commandes et factures.
+                </p>
+              </>
+            )}
+          </div>
+
+          {/* Carte Formulaire */}
+          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-xl shadow-gray-200/50 p-6 sm:p-8">
             
             <form onSubmit={handleSubmit} className="space-y-5">
               
-              {/* Adresse Email */}
+              {/* Adresse Email / Identifiant */}
               <div>
                 <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
-                  Adresse Email / Identifiant
+                  {mode === 'equipe' ? 'Identifiant Collaborateur Officiel' : 'Adresse Email Client / Identifiant'}
                 </label>
                 <div className={`relative rounded-2xl border-2 transition-all duration-200 ${
                   focused === 'email'
@@ -197,11 +303,18 @@ function ConnexionPageInner() {
                     onFocus={() => setFocused('email')}
                     onBlur={() => setFocused(null)}
                     className="w-full bg-transparent pl-12 pr-4 py-3.5 text-sm font-semibold text-gray-900 placeholder-gray-400 focus:outline-none"
-                    placeholder="votre@email.com"
+                    placeholder={mode === 'equipe' ? 'prenom.nom@2cgc-industrie.com' : 'contact@entreprise-btp.com'}
                     required
                     autoComplete="email"
                   />
                 </div>
+
+                {mode === 'equipe' && (
+                  <div className="mt-2 flex items-center gap-1.5 text-[11px] text-blue-900 font-semibold bg-blue-50/80 px-2.5 py-1.5 rounded-xl border border-blue-100">
+                    <span>💡</span>
+                    <span>Format officiel : <strong className="font-bold text-[#002B5B]">@2cgc-industrie.com</strong></span>
+                  </div>
+                )}
               </div>
 
               {/* Mot de Passe */}
@@ -211,7 +324,7 @@ function ConnexionPageInner() {
                     Mot de passe
                   </label>
                   <a
-                    href="https://wa.me/2250707621799?text=Bonjour%202CGC%2C%20j%27ai%20oubli%C3%A9%20mon%20mot%20de%20passe."
+                    href={whatsappHelpUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs font-bold text-[#002B5B] hover:underline"
@@ -292,29 +405,45 @@ function ConnexionPageInner() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
-                    <span>Connexion sécurisée en cours...</span>
+                    <span>Vérification des accès en cours...</span>
+                  </>
+                ) : mode === 'equipe' ? (
+                  <>
+                    <span>🔐</span>
+                    <span>Accéder au Portail Collaborateur</span>
+                    <span className="text-base">→</span>
                   </>
                 ) : (
                   <>
-                    <span>Se connecter à mon espace</span>
+                    <span>Se connecter à mon Espace Client</span>
                     <span className="text-base">→</span>
                   </>
                 )}
               </button>
             </form>
 
-            {/* Inscription B2B */}
-            <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-              <p className="text-xs text-gray-500 font-medium">
-                Vous n&apos;avez pas encore de compte client B2B ?{' '}
-                <Link href="/inscription" className="text-[#002B5B] font-extrabold hover:underline">
-                  Faire une demande d&apos;ouverture →
-                </Link>
-              </p>
+            {/* Pied de Carte Différencié */}
+            <div className="mt-5 pt-4 border-t border-gray-100 text-center">
+              {mode === 'equipe' ? (
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-600 font-semibold flex items-center justify-center gap-1.5">
+                    <span>🛡️</span>
+                    <span>Accès strictement réservé au personnel 2CGC</span>
+                  </p>
+                  <p className="text-[11px] text-gray-400">
+                    Les accès sont attribués par la Direction Générale.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-500 font-medium">
+                  Vous n&apos;avez pas encore de compte client B2B ?{' '}
+                  <Link href="/inscription" className="text-[#002B5B] font-extrabold hover:underline">
+                    Faire une demande d&apos;ouverture →
+                  </Link>
+                </p>
+              )}
             </div>
           </div>
-
-
 
         </div>
 
