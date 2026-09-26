@@ -286,26 +286,26 @@ export const ZONES: ZoneData[] = [
   {
     slug: "guiglo",
     aliases: ["gioglo"],
-    name: "Guiglo (Gioglo)",
+    name: "Guiglo",
     region: "Cavally",
     lat: 6.5439,
     lng: -7.4939,
     distanceFromDaloa: 135,
     deliveryDelay: { fr: "Livraison sous 48h", en: "Delivery within 48h" },
     description: {
-      fr: "Chef-lieu de la région du Cavally dans l'ouest ivoirien (Gioglo). 2CGC approvisionne les chantiers de Guiglo en briques et hourdis depuis Daloa.",
+      fr: "Chef-lieu de la région du Cavally dans l'ouest ivoirien. 2CGC approvisionne les chantiers de Guiglo en briques et hourdis depuis Daloa.",
       en: "Capital of the Cavally region in western Ivory Coast. 2CGC supplies construction sites in Guiglo with blocks and floor beams from Daloa.",
     },
     metaTitle: {
-      fr: "Briques & Préfabriqués Béton à Guiglo (Gioglo) | 2CGC Daloa",
+      fr: "Briques & Préfabriqués Béton à Guiglo | 2CGC Daloa",
       en: "Concrete Blocks & Precast in Guiglo | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Livraison de briques pleines, creuses, hourdis et pavés à Guiglo (Gioglo, Cavally) sous 48h depuis l'usine 2CGC Daloa. Qualité B60 certifiée, devis gratuit.",
+      fr: "Livraison de briques pleines, creuses, hourdis et pavés à Guiglo sous 48h depuis l'usine 2CGC Daloa. Qualité B60 certifiée, devis gratuit.",
       en: "Delivery of solid, hollow blocks, floor beams and pavers to Guiglo within 48h from 2CGC Daloa. Certified B60 quality, free quote.",
     },
     heroTitle: {
-      fr: "Béton Préfabriqué Livré à Guiglo (Gioglo)",
+      fr: "Béton Préfabriqué Livré à Guiglo",
       en: "Precast Concrete Delivered to Guiglo",
     },
     heroSubtitle: {
@@ -313,8 +313,8 @@ export const ZONES: ZoneData[] = [
       en: "135 km from Daloa · Cavally Region · Delivery within 48h",
     },
     localContent: {
-      fr: "Guiglo (Gioglo), carrefour stratégique du Cavally et du Grand Ouest ivoirien, connaît un développement soutenu de ses infrastructures publiques et résidentielles. 2CGC assure l'approvisionnement des chantiers de Guiglo et de ses environs en briques pleines B60, hourdis de plancher et pavés carrossables, avec une livraison sécurisée par camion-grue sous 48h depuis notre usine de Daloa.",
-      en: "Guiglo (Gioglo), strategic crossroads of Cavally and the Grand West, experiences steady infrastructure and residential growth. 2CGC provides supply to Guiglo sites with B60 solid blocks, floor beams, and drivable pavers delivered by crane-truck within 48h from our Daloa plant.",
+      fr: "Guiglo, carrefour stratégique du Cavally et du Grand Ouest ivoirien, connaît un développement soutenu de ses infrastructures publiques et résidentielles. 2CGC assure l'approvisionnement des chantiers de Guiglo et de ses environs en briques pleines B60, hourdis de plancher et pavés carrossables, avec une livraison sécurisée par camion-grue sous 48h depuis notre usine de Daloa.",
+      en: "Guiglo, strategic crossroads of Cavally and the Grand West, experiences steady infrastructure and residential growth. 2CGC provides supply to Guiglo sites with B60 solid blocks, floor beams, and drivable pavers delivered by crane-truck within 48h from our Daloa plant.",
     },
   },
   {
@@ -452,26 +452,26 @@ export const ZONES: ZoneData[] = [
   {
     slug: "zouan-hounien",
     aliases: ["zouan-hein"],
-    name: "Zouan-Hounien (Zouan-Hein)",
+    name: "Zouan-Hounien",
     region: "Tonkpi",
     lat: 6.9192,
     lng: -8.2131,
     distanceFromDaloa: 300,
     deliveryDelay: { fr: "Livraison sous 48–72h", en: "Delivery within 48–72h" },
     description: {
-      fr: "Bassin minier et agricole du Tonkpi (Zouan-Hein). 2CGC approvisionne les projets d'infrastructures et bâtiments à Zouan-Hounien en béton préfabriqué.",
+      fr: "Bassin minier et agricole du Tonkpi. 2CGC approvisionne les projets d'infrastructures et bâtiments à Zouan-Hounien en béton préfabriqué.",
       en: "Mining and agricultural basin of Tonkpi. 2CGC supplies infrastructure and building projects in Zouan-Hounien with precast concrete.",
     },
     metaTitle: {
-      fr: "Béton Préfabriqué à Zouan-Hounien (Zouan-Hein) | 2CGC",
+      fr: "Béton Préfabriqué à Zouan-Hounien | 2CGC Daloa",
       en: "Precast Concrete in Zouan-Hounien | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Livraison de briques industrielles B60, hourdis et pavés à Zouan-Hounien (Zouan-Hein) sous 48–72h depuis Daloa. 2CGC, spécialiste du BTP en Côte d'Ivoire.",
+      fr: "Livraison de briques industrielles B60, hourdis et pavés à Zouan-Hounien sous 48–72h depuis Daloa. 2CGC, spécialiste du BTP en Côte d'Ivoire.",
       en: "Industrial B60 blocks, floor beams and pavers delivered to Zouan-Hounien within 48–72h from Daloa. 2CGC construction specialist.",
     },
     heroTitle: {
-      fr: "Préfabriqués Béton pour Zouan-Hounien (Zouan-Hein)",
+      fr: "Préfabriqués Béton pour Zouan-Hounien",
       en: "Precast Concrete for Zouan-Hounien",
     },
     heroSubtitle: {
@@ -479,8 +479,8 @@ export const ZONES: ZoneData[] = [
       en: "300 km from Daloa · Tonkpi Region · Large projects",
     },
     localContent: {
-      fr: "Avec son activité économique et minière florissante, Zouan-Hounien (Zouan-Hein) exige des matériaux de haute technicité. 2CGC répond aux besoins des entreprises minières, prestataires de travaux et promoteurs avec des briques B60 certifiées et des pavés haute densité pour voiries lourdes.",
-      en: "With its flourishing economic and mining activity, Zouan-Hounien (Zouan-Hein) demands high-spec building materials. 2CGC meets the needs of mining firms, contractors and developers with certified B60 blocks and heavy-duty pavers.",
+      fr: "Avec son activité économique et minière florissante, Zouan-Hounien exige des matériaux de haute technicité. 2CGC répond aux besoins des entreprises minières, prestataires de travaux et promoteurs avec des briques B60 certifiées et des pavés haute densité pour voiries lourdes.",
+      en: "With its flourishing economic and mining activity, Zouan-Hounien demands high-spec building materials. 2CGC meets the needs of mining firms, contractors and developers with certified B60 blocks and heavy-duty pavers.",
     },
   },
   {
@@ -552,26 +552,26 @@ export const ZONES: ZoneData[] = [
   {
     slug: "gonate",
     aliases: ["konate"],
-    name: "Gonaté (Konaté)",
+    name: "Gonaté",
     region: "Haut-Sassandra",
     lat: 6.9833,
     lng: -6.2833,
     distanceFromDaloa: 22,
     deliveryDelay: { fr: "Livraison express sous 24h", en: "Express delivery within 24h" },
     description: {
-      fr: "Sous-préfecture du Haut-Sassandra à 22 km de Daloa sur l'axe Bouaflé (couramment appelée Konaté). Livraison express sous 24h garantie.",
-      en: "Subprefecture of Haut-Sassandra 22 km from Daloa on the Bouaflé road. Guaranteed express delivery within 24h.",
+      fr: "Sous-préfecture du Haut-Sassandra à 22 km de Daloa sur l'axe Bouaflé. Livraison express sous 24h garantie pour tous vos chantiers.",
+      en: "Subprefecture of Haut-Sassandra 22 km from Daloa on the Bouaflé road. Guaranteed express delivery within 24h for all jobsites.",
     },
     metaTitle: {
-      fr: "Briques & Béton à Gonaté (Konaté) | Livraison Express 24h — 2CGC",
+      fr: "Briques & Béton à Gonaté | Livraison Express 24h — 2CGC",
       en: "Blocks & Concrete in Gonaté | Express 24h Delivery — 2CGC",
     },
     metaDescription: {
-      fr: "Livraison express 24h de briques, agglos, hourdis et pavés à Gonaté (Konaté). Usine 2CGC Daloa à seulement 22 km. Tarifs directs usine.",
+      fr: "Livraison express 24h de briques, agglos, hourdis et pavés à Gonaté. Usine 2CGC Daloa à seulement 22 km. Tarifs directs usine.",
       en: "Express 24h delivery of blocks, floor beams and pavers to Gonaté. 2CGC Daloa factory just 22 km away. Direct factory prices.",
     },
     heroTitle: {
-      fr: "Préfabriqués Béton Livrés à Gonaté (Konaté) en Express",
+      fr: "Préfabriqués Béton Livrés à Gonaté en Express",
       en: "Precast Concrete Delivered Express to Gonaté",
     },
     heroSubtitle: {
@@ -579,7 +579,7 @@ export const ZONES: ZoneData[] = [
       en: "22 km from Daloa factory · 24h express delivery",
     },
     localContent: {
-      fr: "À seulement 22 km de nos installations de Daloa sur la route nationale vers Bouaflé, Gonaté (souvent appelée Konaté) bénéficie d'une réactivité logistique maximale. Les chantiers de construction y sont livrés en quelques heures avec nos briques B60, hourdis et pavés au meilleur tarif transport du marché.",
+      fr: "À seulement 22 km de nos installations de Daloa sur la route nationale vers Bouaflé, Gonaté bénéficie d'une réactivité logistique maximale. Les chantiers de construction y sont livrés en quelques heures avec nos briques B60, hourdis et pavés au meilleur tarif transport du marché.",
       en: "Only 22 km from our Daloa plant on the national road to Bouaflé, Gonaté enjoys ultra-fast delivery. Construction sites are supplied within hours with our B60 blocks, floor beams and pavers at minimal freight costs.",
     },
   },
@@ -652,26 +652,26 @@ export const ZONES: ZoneData[] = [
   {
     slug: "zuenoula",
     aliases: ["zenoula"],
-    name: "Zuénoula (Zénoula)",
+    name: "Zuénoula",
     region: "Marahoué",
     lat: 7.4267,
     lng: -6.0494,
     distanceFromDaloa: 100,
     deliveryDelay: { fr: "Livraison sous 24–48h", en: "Delivery within 24–48h" },
     description: {
-      fr: "Grand centre urbain et agro-industriel de la Marahoué (Zénoula). 2CGC livre ses préfabriqués béton haute performance sur les chantiers de Zuénoula.",
+      fr: "Grand centre urbain et agro-industriel de la Marahoué. 2CGC livre ses préfabriqués béton haute performance sur les chantiers de Zuénoula.",
       en: "Major urban and agro-industrial center of Marahoué. 2CGC delivers high-performance precast concrete to Zuénoula construction sites.",
     },
     metaTitle: {
-      fr: "Briques & Béton à Zuénoula (Zénoula) | 2CGC Daloa",
+      fr: "Briques & Béton à Zuénoula | 2CGC Daloa",
       en: "Concrete & Blocks in Zuénoula | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Fournisseur de briques B60, hourdis et pavés pour Zuénoula (Zénoula). Livraison 24–48h depuis l'usine 2CGC Daloa. Tarifs direct usine, devis en ligne.",
+      fr: "Fournisseur de briques B60, hourdis et pavés pour Zuénoula. Livraison 24–48h depuis l'usine 2CGC Daloa. Tarifs direct usine, devis en ligne.",
       en: "Supplier of B60 blocks, floor beams and pavers for Zuénoula. 24–48h delivery from 2CGC Daloa. Factory direct prices, online quote.",
     },
     heroTitle: {
-      fr: "Béton Préfabriqué Livré à Zuénoula (Zénoula)",
+      fr: "Béton Préfabriqué Livré à Zuénoula",
       en: "Precast Concrete Delivered to Zuénoula",
     },
     heroSubtitle: {
@@ -679,7 +679,7 @@ export const ZONES: ZoneData[] = [
       en: "100 km from Daloa · Marahoué · Delivery within 24–48h",
     },
     localContent: {
-      fr: "Bassin agro-industriel de premier plan dans la Marahoué, Zuénoula (Zénoula) fait appel aux préfabriqués 2CGC pour ses entrepôts, logements de fonction, commerces et résidences. Nos blocs B60 certifiés garantissent la solidité d'édifices soumis à un usage intensif.",
+      fr: "Bassin agro-industriel de premier plan dans la Marahoué, Zuénoula fait appel aux préfabriqués 2CGC pour ses entrepôts, logements de fonction, commerces et résidences. Nos blocs B60 certifiés garantissent la solidité d'édifices soumis à un usage intensif.",
       en: "A premier agro-industrial basin in Marahoué, Zuénoula relies on 2CGC precast products for warehouses, staff housing, shops and residences. Our certified B60 blocks guarantee structural durability under intensive use.",
     },
   },
