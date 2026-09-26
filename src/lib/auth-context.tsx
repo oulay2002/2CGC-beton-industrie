@@ -103,9 +103,9 @@ const UTILISATEURS_MOCK = [
     permis: 'AB-1234-CD',
     dateCreation: '2026-01-01',
   },
-  // 👔 DIRIGEANT 2 — Keita Dambou
+  // 👔 DIRIGEANT 2 — Keita Dambou (Directeur Général Adjoint)
   {
-    email: 'keita.dambou@2cgc.ci',
+    email: 'keita.dambou@2cgc-industrie.com',
     password: 'directeur123',
     nom: 'Keita Dambou',
     entreprise: '2CGC — Cheickna Construction & Génie Civil',
@@ -228,8 +228,12 @@ function getUtilisateurs(): CompteUtilisateur[] {
   if (typeof window === 'undefined') return UTILISATEURS_MOCK as CompteUtilisateur[];
   const saved = localStorage.getItem(STORAGE_KEY);
   let dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-  // Migration automatique de l'ancien identifiant DG vers le domaine officiel
-  dynamiques = dynamiques.map(u => (u.email === 'directeur@2cgc.ci' ? { ...u, email: 'directeur@2cgc-industrie.com' } : u));
+  // Migration automatique des anciens identifiants Direction vers le domaine officiel
+  dynamiques = dynamiques.map(u => {
+    if (u.email === 'directeur@2cgc.ci') return { ...u, email: 'directeur@2cgc-industrie.com' };
+    if (u.email === 'keita.dambou@2cgc.ci') return { ...u, email: 'keita.dambou@2cgc-industrie.com' };
+    return u;
+  });
   // Fusionner les comptes mock statiques + les comptes créés dynamiquement
   const emailsDynamiques = new Set(dynamiques.map(u => u.email));
   const statiques = (UTILISATEURS_MOCK as CompteUtilisateur[]).filter(u => !emailsDynamiques.has(u.email));
@@ -321,6 +325,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         restoredUser = { ...restoredUser, email: 'directeur@2cgc-industrie.com' };
         localStorage.setItem('user_beton', JSON.stringify(restoredUser));
       }
+      if (restoredUser.email === 'keita.dambou@2cgc.ci') {
+        restoredUser = { ...restoredUser, email: 'keita.dambou@2cgc-industrie.com' };
+        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
+      }
       setUser(restoredUser);
 
       if (!hasRestoredPostHogIdentity) {
@@ -336,13 +344,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPass = password.trim();
 
-    // 1. Accès Prioritaire DG (Infaillible)
+    // 1. Accès Prioritaire Direction (DG & DGA Infaillibles)
     const isDG =
       cleanEmail === 'directeur@2cgc-industrie.com' ||
       cleanEmail === 'directeur@2cgc.ci' ||
       cleanEmail === 'directeur@2cgc-industries.com';
 
-    const isDGPass =
+    const isDGA =
+      cleanEmail === 'keita.dambou@2cgc-industrie.com' ||
+      cleanEmail === 'keita.dambou@2cgc.ci' ||
+      cleanEmail === 'keita.kambou@2cgc-industrie.com' ||
+      cleanEmail === 'keite.kambou@2cgc-industrie.com' ||
+      cleanEmail === 'adjoint@2cgc-industrie.com';
+
+    const isDirPass =
       cleanPass === 'directeur123' ||
       cleanPass.toLowerCase() === 'directeur123' ||
       cleanPass === 'directeur123!' ||
@@ -351,29 +366,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       cleanPass.toUpperCase() === '2CGC2026' ||
       cleanPass.toUpperCase() === '2CGC2026!';
 
-    if (isDG && isDGPass) {
-      const dgUser: User = {
-        email: 'directeur@2cgc-industrie.com',
-        nom: 'KEITA BOUBACAR',
-        entreprise: '2CGC — Cheickna Construction & Génie Civil',
-        telephone: '+225 07 07 62 17 99',
-        role: 'dirigeant',
-      };
+    if ((isDG || isDGA) && isDirPass) {
+      const dirUser: User = isDG
+        ? {
+            email: 'directeur@2cgc-industrie.com',
+            nom: 'KEITA BOUBACAR',
+            entreprise: '2CGC — Cheickna Construction & Génie Civil',
+            telephone: '+225 07 07 62 17 99',
+            role: 'dirigeant',
+          }
+        : {
+            email: 'keita.dambou@2cgc-industrie.com',
+            nom: 'Keita Dambou',
+            entreprise: '2CGC — Cheickna Construction & Génie Civil',
+            telephone: '+225 07 07 85 76 29',
+            role: 'dirigeant',
+          };
 
-      if (user && user.email.toLowerCase() !== dgUser.email.toLowerCase()) {
+      if (user && user.email.toLowerCase() !== dirUser.email.toLowerCase()) {
         resetPostHog();
       }
 
-      setUser(dgUser);
-      localStorage.setItem('user_beton', JSON.stringify(dgUser));
-      identifyUser(dgUser);
+      setUser(dirUser);
+      localStorage.setItem('user_beton', JSON.stringify(dirUser));
+      identifyUser(dirUser);
       hasRestoredPostHogIdentity = true;
 
       try {
         await fetch('/api/auth/session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dgUser),
+          body: JSON.stringify(dirUser),
         });
       } catch (err) {
         console.error('Erreur synchronisation session serveur:', err);

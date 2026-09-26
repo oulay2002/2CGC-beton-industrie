@@ -317,9 +317,23 @@ function ConnexionPageInner() {
                     setError('');
                   }}
                   className="bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
+                  title="Directeur Général — KEITA BOUBACAR"
                 >
                   <span>👔</span>
-                  <span className="truncate">Directeur Général</span>
+                  <span className="truncate">DG (Boubacar)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('keita.dambou@2cgc-industrie.com');
+                    setPassword('directeur123');
+                    setError('');
+                  }}
+                  className="bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
+                  title="Directeur Adjoint — Keita Dambou"
+                >
+                  <span>👔</span>
+                  <span className="truncate">DGA (Keita Dambou)</span>
                 </button>
                 <button
                   type="button"
@@ -344,18 +358,6 @@ function ConnexionPageInner() {
                 >
                   <span>🚚</span>
                   <span className="truncate">Chauffeur</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('client@btp-afrique.com');
-                    setPassword('client123');
-                    setError('');
-                  }}
-                  className="bg-purple-50 hover:bg-purple-100/80 border border-purple-200/80 text-[#002B5B] px-3 py-2 rounded-xl text-xs font-bold text-left transition-colors flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span>👤</span>
-                  <span className="truncate">Client Pro</span>
                 </button>
               </div>
             </div>

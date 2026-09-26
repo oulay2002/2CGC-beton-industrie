@@ -143,7 +143,7 @@ VALUES
   ('mamadou.diop@batir-plus.ci', 'M. Diop Mamadou', 'Bâtir Plus International', '+225 01 23 45 67', 'client', 4200, 12, NULL, NULL),
   ('kouame.yao@gr-ci.com', 'M. Yao Kouamé', 'Génie Route CI', '+225 07 88 99 00', 'client', 950, 5, NULL, NULL),
   ('directeur@2cgc-industrie.com', 'KEITA BOUBACAR', '2CGC — Cheickna Construction & Génie Civil', '+225 07 07 62 17 99', 'dirigeant', 0, 0, NULL, NULL),
-  ('keita.dambou@2cgc.ci', 'Keita Dambou', '2CGC — Cheickna Construction & Génie Civil', '+225 07 07 85 76 29', 'dirigeant', 0, 0, NULL, NULL),
+  ('keita.dambou@2cgc-industrie.com', 'Keita Dambou', '2CGC — Cheickna Construction & Génie Civil', '+225 07 07 85 76 29', 'dirigeant', 0, 0, NULL, NULL),
   ('usine@beton-industrie.com', 'M. Diallo', 'Beton Industrie - Usine', '+225 01 00 00 02', 'chef_usine', 0, 0, NULL, NULL),
   ('chauffeur@beton-industrie.com', 'M. Kouadio', 'Beton Industrie - Logistique', '+225 07 99 88 77', 'chauffeur', 0, 0, 'Camion Volvo FH16', 'AB-1234-CD')
 ON CONFLICT (email) DO NOTHING;

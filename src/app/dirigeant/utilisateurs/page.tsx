@@ -226,7 +226,7 @@ export default function GestionUtilisateurs() {
   const handleSupprimerUtilisateur = (email: string, nom: string) => {
     if (!confirm(`Supprimer le compte de ${nom} (${email}) ?`)) return;
     // Ne pas supprimer les comptes fixes (mock)
-    const comptesDynamiques = ['directeur@2cgc-industrie.com', 'usine@beton-industrie.com', 'chauffeur@beton-industrie.com', 'client@btp-afrique.com', 'keita.dambou@2cgc.ci'];
+    const comptesDynamiques = ['directeur@2cgc-industrie.com', 'usine@beton-industrie.com', 'chauffeur@beton-industrie.com', 'client@btp-afrique.com', 'keita.dambou@2cgc-industrie.com'];
     if (comptesDynamiques.includes(email)) {
       afficherNotif('Impossible de supprimer un compte système.', 'error');
       return;
