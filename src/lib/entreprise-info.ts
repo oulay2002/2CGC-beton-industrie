@@ -23,7 +23,7 @@ export const ENTREPRISE_INFO = {
   telephonesIndicatif: '+225 07 07 62 17 99 / +225 07 07 85 76 29',
   telephoneMobileDG: '+225 07 07 62 17 99',
   emailOfficiel: 'cheicknaconstruction@gmail.com',
-  siteWeb: 'https://2cgc.ci',
+  siteWeb: process.env.NEXT_PUBLIC_SITE_URL || 'https://2cgc-industrie.com',
 
 
   // Immatriculation, Fiscalité & Juridique

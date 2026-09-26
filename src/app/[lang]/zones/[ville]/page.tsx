@@ -38,7 +38,7 @@ export async function generateMetadata({
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc.ci";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com";
   const title = zone.metaTitle[locale];
   const description = zone.metaDescription[locale];
 
@@ -81,7 +81,7 @@ export default async function ZonePage({ params }: ZonePageProps) {
     notFound();
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc.ci";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com";
 
   // Schema.org spécifique à la zone locale
   const localSchema = {
@@ -91,7 +91,7 @@ export default async function ZonePage({ params }: ZonePageProps) {
     "description": zone.description[locale],
     "provider": {
       "@type": "LocalBusiness",
-      "@id": "https://2cgc.ci/#organization",
+      "@id": `${siteUrl}/#organization`,
       "name": "2CGC - Cheickna Construction et Génie Civil",
       "telephone": "+2250707621799",
       "address": {

@@ -627,7 +627,7 @@ export default function DirigeantDashboard() {
               {identifiantGenere.telephone && (
                 <a
                   href={`https://wa.me/${identifiantGenere.telephone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                    `Bonjour ${identifiantGenere.nom},\nVoici vos identifiants d'accès 2CGC BÉTON INDUSTRIE :\n\nLien : https://beton-industrie.com/connexion\nIdentifiant : ${identifiantGenere.email}\nMot de passe : ${identifiantGenere.password}\n\nDirection 2CGC`
+                    `Bonjour ${identifiantGenere.nom},\nVoici vos identifiants d'accès 2CGC BÉTON INDUSTRIE :\n\nLien : https://2cgc-industrie.com/connexion\nIdentifiant : ${identifiantGenere.email}\nMot de passe : ${identifiantGenere.password}\n\nDirection 2CGC`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

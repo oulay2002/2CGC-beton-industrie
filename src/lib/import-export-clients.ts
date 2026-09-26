@@ -495,7 +495,7 @@ export function imprimerFicheCollaborateurPDF(c: CompteUtilisateur) {
   doc.text('Portail Web 2CGC :', 20, 136);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(0, 43, 91);
-  doc.text('https://2cgc.ci/connexion  (ou https://2cgc-industries.com/connexion)', 60, 136);
+  doc.text('https://2cgc-industrie.com/connexion', 60, 136);
 
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(74, 85, 104);

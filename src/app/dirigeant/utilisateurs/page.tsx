@@ -240,7 +240,7 @@ export default function GestionUtilisateurs() {
     const roleLabel: Record<string, string> = {
       client: 'Client', chef_usine: "Chef d'Usine", chauffeur: 'Chauffeur', dirigeant: 'Dirigeant',
     };
-    const message = `Bonjour ${u.nom} 👋\n\nVotre accès au portail *2CGC* est prêt !\n\n🔐 *Vos identifiants :*\n• Profil : ${roleLabel[u.role]}\n• Email : ${u.email}\n• Mot de passe : *${mdp}*\n\n🔗 Connexion : https://2cgc.ci/connexion\n\n_Conservez ce message précieusement. 2CGC Daloa_`;
+    const message = `Bonjour ${u.nom} 👋\n\nVotre accès au portail *2CGC* est prêt !\n\n🔐 *Vos identifiants :*\n• Profil : ${roleLabel[u.role]}\n• Email : ${u.email}\n• Mot de passe : *${mdp}*\n\n🔗 Connexion : https://2cgc-industrie.com/connexion\n\n_Conservez ce message précieusement. 2CGC Daloa_`;
     const tel = u.telephone.replace(/[\s\+\-]/g, '');
     const telFinal = tel.startsWith('225') ? tel : `225${tel}`;
     window.open(`https://wa.me/${telFinal}?text=${encodeURIComponent(message)}`, '_blank');

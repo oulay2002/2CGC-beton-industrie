@@ -7,19 +7,20 @@ interface JsonLdProps {
 
 export default function JsonLd({ lang }: JsonLdProps) {
   const isFr = lang === "fr";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com";
 
   const schemaData = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": ["LocalBusiness", "GeneralContractor"],
-        "@id": "https://2cgc.ci/#organization",
+        "@id": `${siteUrl}/#organization`,
         "name": "2CGC - Cheickna Construction et Génie Civil",
         "alternateName": "2CGC BTP Daloa",
         "legalName": "Cheickna Construction et Génie Civil SARL Unipersonnel",
-        "url": "https://2cgc.ci",
-        "logo": "https://2cgc.ci/logo-2cgc.png",
-        "image": "https://2cgc.ci/images/hero-bg.jpg",
+        "url": siteUrl,
+        "logo": `${siteUrl}/logo-2cgc.png`,
+        "image": `${siteUrl}/images/hero-bg.jpg`,
         "description": isFr
           ? "Leader de la fabrication de préfabriqués béton à Daloa et en Côte d'Ivoire : briques pleines et creuses, hourdis de plancher, pavés autobloquants et calculateurs BTP."
           : "Leading precast concrete manufacturer in Daloa and Ivory Coast: solid and hollow blocks, floor beams, interlocking pavers, and construction estimation tools.",
@@ -149,13 +150,13 @@ export default function JsonLd({ lang }: JsonLdProps) {
       },
       {
         "@type": "WebSite",
-        "@id": "https://2cgc.ci/#website",
-        "url": "https://2cgc.ci",
+        "@id": `${siteUrl}/#website`,
+        "url": siteUrl,
         "name": "2CGC - Cheickna Construction et Génie Civil",
         "description": isFr
           ? "Site officiel de 2CGC : préfabriqués béton, devis en ligne, calculateurs de chantier et suivi de commandes."
           : "Official 2CGC website: precast concrete, online quotes, construction calculators and order tracking.",
-        "publisher": { "@id": "https://2cgc.ci/#organization" },
+        "publisher": { "@id": `${siteUrl}/#organization` },
         "inLanguage": [
           { "@type": "Language", "name": "French", "alternateName": "fr" },
           { "@type": "Language", "name": "English", "alternateName": "en" }
@@ -164,19 +165,19 @@ export default function JsonLd({ lang }: JsonLdProps) {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://2cgc.ci/{lang}/catalogue?q={search_term_string}"
+            "urlTemplate": `${siteUrl}/{lang}/catalogue?q={search_term_string}`
           },
           "query-input": "required name=search_term_string"
         }
       },
       {
         "@type": "Organization",
-        "@id": "https://2cgc.ci/#organization",
+        "@id": `${siteUrl}/#organization`,
         "name": "2CGC - Cheickna Construction et Génie Civil",
-        "url": "https://2cgc.ci",
+        "url": siteUrl,
         "logo": {
           "@type": "ImageObject",
-          "url": "https://2cgc.ci/logo-2cgc.png",
+          "url": `${siteUrl}/logo-2cgc.png`,
           "width": 800,
           "height": 600
         },

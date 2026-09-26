@@ -73,7 +73,7 @@ Merci de votre intérêt pour 2CGC (Cheickna Construction & Génie Civil) !
 Nous avons bien enregistré votre demande concernant : {produit}.
 Un conseiller commercial va vous recontacter dans les plus brefs délais.
 
-🔗 Consultez notre catalogue complet : https://2cgc.ci/catalogue
+🔗 Consultez notre catalogue complet : https://2cgc-industrie.com/catalogue
 
 En attendant, voici nos tarifs indicatifs :
 • Briques : à partir de 260 FCFA/unité
@@ -158,7 +158,7 @@ Ce mois-ci, 2CGC vous propose des tarifs exceptionnels sur les pavés autobloqua
 Offre valable jusqu'à fin du mois, dans la limite des stocks disponibles.
 
 📞 Commandez maintenant : +225 07 07 62 17 99 / +225 07 07 85 76 29
-🌐 Ou via notre site : https://2cgc.ci/catalogue
+🌐 Ou via notre site : https://2cgc-industrie.com/catalogue
 
 2CGC — Votre partenaire BTP de confiance à Daloa`,
   },
@@ -182,7 +182,7 @@ Nous avons identifié vos réalisations et chantiers avec {entreprise}. En tant 
 • Flotte logistique dédiée avec camions-grues et déchargement direct sur vos chantiers
 • Tarifs préférentiels B2B et facilités de règlement pour nos partenaires
 
-🔗 Consultez notre catalogue en ligne : https://2cgc.ci/catalogue
+🔗 Consultez notre catalogue en ligne : https://2cgc-industrie.com/catalogue
 
 Pouvons-nous convenir d'un court échange ou vous transmettre notre grille tarifaire réservée aux professionnels ?
 

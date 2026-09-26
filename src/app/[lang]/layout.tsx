@@ -22,7 +22,7 @@ export async function generateMetadata({
   const dict = await getDictionary(locale);
   const isFr = locale === "fr";
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc.ci";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com";
   const ogTitle = isFr
     ? "2CGC Cheickna Construction | Préfabriqués Béton & Génie Civil Daloa"
     : "2CGC Cheickna Construction | Precast Concrete & Civil Engineering Daloa";

@@ -110,7 +110,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
     const texte = `🔐 VOS IDENTIFIANTS 2CGC (${roleStr.toUpperCase()})\n\n` +
       `Bonjour ${c.nom},\n` +
       `Voici vos accès au portail officiel 2CGC :\n\n` +
-      `🌐 Lien de connexion : https://2cgc.ci/connexion\n` +
+      `🌐 Lien de connexion : https://2cgc-industrie.com/connexion\n` +
       `📧 Identifiant : ${c.email}\n` +
       `🔑 Mot de passe : ${c.password || '••••••••'}\n` +
       (c.vehicule ? `🚚 Véhicule assigné : ${c.vehicule}\n` : '') +
@@ -122,7 +122,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
   const transmettreWhatsApp = (c: CompteUtilisateur) => {
     const roleStr = ROLES_INFO[c.role]?.label || c.role;
     const msg = `Bonjour ${c.nom} 👋\n\nVoici vos identifiants d'accès au portail *2CGC* (${roleStr}) :\n\n` +
-      `🌐 *Lien :* https://2cgc.ci/connexion\n` +
+      `🌐 *Lien :* https://2cgc-industrie.com/connexion\n` +
       `📧 *Identifiant :* \`${c.email}\`\n` +
       `🔑 *Mot de passe :* \`${c.password || '2CGC-2026'}\`\n` +
       (c.vehicule ? `🚚 *Véhicule :* ${c.vehicule}\n` : '') +

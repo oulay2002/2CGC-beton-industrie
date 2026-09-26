@@ -54,6 +54,8 @@ const SERVICES = {
 export default function JsonLdService({ lang, serviceType }: JsonLdServiceProps) {
   const service = SERVICES[serviceType];
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com";
+
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -62,7 +64,7 @@ export default function JsonLdService({ lang, serviceType }: JsonLdServiceProps)
     "serviceType": service.serviceType[lang],
     "provider": {
       "@type": "LocalBusiness",
-      "@id": "https://2cgc.ci/#organization",
+      "@id": `${siteUrl}/#organization`,
       "name": "2CGC - Cheickna Construction et Génie Civil",
     },
     "areaServed": [
@@ -72,7 +74,7 @@ export default function JsonLdService({ lang, serviceType }: JsonLdServiceProps)
     ],
     "availableChannel": {
       "@type": "ServiceChannel",
-      "serviceUrl": "https://2cgc.ci",
+      "serviceUrl": siteUrl,
       "servicePhone": "+2250707621799",
     },
   };

@@ -53,7 +53,7 @@ export default function PolitiqueConfidentialitePage() {
               Cadre Légal et Portée
             </h2>
             <p>
-              La présente politique s'applique à l'ensemble des services, sites web (<strong className="text-[#002B5B]">https://2cgc.ci</strong>), applications et portails clients édités par la société <strong>2CGC SARL</strong> (Cheickna Construction &amp; Génie Civil), immatriculée au RCCM de Daloa sous le n° <strong>CI DAL 2013 B. 20779</strong>.
+              La présente politique s'applique à l'ensemble des services, sites web (<strong className="text-[#002B5B]">https://2cgc-industrie.com</strong>), applications et portails clients édités par la société <strong>2CGC SARL</strong> (Cheickna Construction &amp; Génie Civil), immatriculée au RCCM de Daloa sous le n° <strong>CI DAL 2013 B. 20779</strong>.
             </p>
             <p>
               Nous respectons scrupuleusement la réglementation applicable en matière de protection des données, notamment :

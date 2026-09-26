@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { lang } = await params;
   const locale = (hasLocale(lang) ? lang : "fr") as Locale;
   const isFr = locale === "fr";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc.ci";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://2cgc-industrie.com";
 
   const title = isFr
     ? "FAQ Béton & Construction | Questions Fréquentes — 2CGC Daloa"
