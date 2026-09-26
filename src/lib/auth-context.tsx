@@ -73,7 +73,7 @@ const UTILISATEURS_MOCK = [
   },
   // 👔 DIRIGEANT — DG
   {
-    email: 'directeur@2cgc.ci',
+    email: 'directeur@2cgc-industrie.com',
     password: 'directeur123',
     nom: 'KEITA BOUBACAR',
     entreprise: '2CGC — Cheickna Construction & Génie Civil',
@@ -227,7 +227,9 @@ export interface CompteUtilisateur {
 function getUtilisateurs(): CompteUtilisateur[] {
   if (typeof window === 'undefined') return UTILISATEURS_MOCK as CompteUtilisateur[];
   const saved = localStorage.getItem(STORAGE_KEY);
-  const dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
+  let dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
+  // Migration automatique de l'ancien identifiant DG vers le domaine officiel
+  dynamiques = dynamiques.map(u => (u.email === 'directeur@2cgc.ci' ? { ...u, email: 'directeur@2cgc-industrie.com' } : u));
   // Fusionner les comptes mock statiques + les comptes créés dynamiquement
   const emailsDynamiques = new Set(dynamiques.map(u => u.email));
   const statiques = (UTILISATEURS_MOCK as CompteUtilisateur[]).filter(u => !emailsDynamiques.has(u.email));
@@ -314,7 +316,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedUser = localStorage.getItem('user_beton');
     if (savedUser) {
-      const restoredUser = JSON.parse(savedUser) as User;
+      let restoredUser = JSON.parse(savedUser) as User;
+      if (restoredUser.email === 'directeur@2cgc.ci') {
+        restoredUser = { ...restoredUser, email: 'directeur@2cgc-industrie.com' };
+        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
+      }
       setUser(restoredUser);
 
       if (!hasRestoredPostHogIdentity) {
@@ -327,7 +333,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; role?: UserRole }> => {
     const tous = getUtilisateurs();
-    const utilisateur = tous.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password);
+    const cleanEmail = email.trim().toLowerCase();
+    // Tolérance d'alias : directeur@2cgc-industrie.com ou directeur@2cgc.ci
+    const utilisateur = tous.find(u => {
+      const uEmail = u.email.toLowerCase();
+      const matchEmail = (uEmail === cleanEmail) ||
+        (cleanEmail === 'directeur@2cgc.ci' && uEmail === 'directeur@2cgc-industrie.com') ||
+        (cleanEmail === 'directeur@2cgc-industrie.com' && uEmail === 'directeur@2cgc.ci');
+      return matchEmail && u.password === password;
+    });
     if (utilisateur) {
       const { password: _, ...userWithoutPassword } = utilisateur;
 
