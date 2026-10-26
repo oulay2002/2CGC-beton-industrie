@@ -1,6 +1,16 @@
-// src/lib/commandes-store.ts — Gestionnaire centralisé et réactif des commandes 2CGC
-
-import { COMMANDES_MOCK } from './auth-context';
+// src/lib/commandes-store.ts — Accès aux commandes depuis le navigateur.
+//
+// Avant : les commandes étaient lues dans localStorage, amorcées avec un jeu de
+// données de démonstration. Chaque poste voyait donc ses propres commandes, et
+// un client connecté depuis un autre appareil ne retrouvait rien.
+//
+// Désormais : la source de vérité est la table `commandes`, et ce module n'est
+// qu'une façade sur /api/commandes, qui filtre selon la session (un client ne
+// reçoit que les siennes, l'équipe reçoit tout). Toutes les fonctions sont donc
+// asynchrones.
+//
+// L'écriture côté serveur (webhook WhatsApp, relais n8n) passe par
+// src/lib/commandes-server.ts, pas par ce module.
 
 export interface CommandeArticle {
   nom: string;
@@ -28,53 +38,81 @@ export interface Commande {
   notes?: string;
 }
 
-const STORAGE_COMMANDES_KEY = 'beton_commandes_2cgc';
+const ENDPOINT = '/api/commandes';
 
-export function getCommandes(): Commande[] {
-  if (typeof window === 'undefined') return COMMANDES_MOCK as Commande[];
-  try {
-    const data = localStorage.getItem(STORAGE_COMMANDES_KEY);
-    if (!data) {
-      localStorage.setItem(STORAGE_COMMANDES_KEY, JSON.stringify(COMMANDES_MOCK));
-      return COMMANDES_MOCK as Commande[];
-    }
-    return JSON.parse(data);
-  } catch {
-    return COMMANDES_MOCK as Commande[];
+/** Prévient les autres composants montés qu'une commande a changé. */
+function notifierChangement(): void {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('commandes_updated'));
   }
 }
 
-export function saveCommandes(commandes: Commande[]): void {
-  if (typeof window === 'undefined') return;
+/**
+ * Commandes visibles par la session courante.
+ * Retourne [] si le service est injoignable — à l'appelant d'afficher un état
+ * vide plutôt que des données inventées.
+ */
+export async function getCommandes(): Promise<Commande[]> {
   try {
-    localStorage.setItem(STORAGE_COMMANDES_KEY, JSON.stringify(commandes));
-    window.dispatchEvent(new Event('commandes_updated'));
+    const res = await fetch(ENDPOINT, { credentials: 'same-origin' });
+    if (!res.ok) {
+      console.error(`[commandes] GET -> HTTP ${res.status}`);
+      return [];
+    }
+    const data = (await res.json()) as { commandes?: Commande[] };
+    return data.commandes ?? [];
+  } catch (err) {
+    console.error('[commandes] GET', err);
+    return [];
+  }
+}
 
-    // La persistance passe par le serveur : le navigateur n'a plus aucun droit
-    // d'ecriture direct sur Supabase (cf. migration 003).
-    void fetch('/api/commandes', {
+/** Enregistre un lot de commandes. */
+export async function saveCommandes(commandes: Commande[]): Promise<boolean> {
+  if (commandes.length === 0) return true;
+  try {
+    const res = await fetch(ENDPOINT, {
       method: 'POST',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ commandes }),
-    }).catch((err) => console.error('Erreur persistance commandes', err));
+    });
+    if (!res.ok) {
+      console.error(`[commandes] POST -> HTTP ${res.status}`);
+      return false;
+    }
+    notifierChangement();
+    return true;
   } catch (err) {
-    console.error('Erreur sauvegarde commandes', err);
+    console.error('[commandes] POST', err);
+    return false;
   }
 }
 
-export function ajouterCommandeDepuisDevis(params: {
+/** Met à jour une commande (statut, chauffeur, signature, livraison…). */
+export async function updateStatutCommande(
+  id: string,
+  updates: Partial<Commande>
+): Promise<Commande | null> {
+  const commandes = await getCommandes();
+  const existante = commandes.find((c) => c.id === id);
+  if (!existante) return null;
+
+  const majour = { ...existante, ...updates };
+  const ok = await saveCommandes([majour]);
+  return ok ? majour : null;
+}
+
+/** Crée une commande issue d'un devis accepté. */
+export async function ajouterCommandeDepuisDevis(params: {
   id?: string;
   total: number;
   client: { nom: string; entreprise?: string; email: string; telephone: string; adresse: string };
   articles: CommandeArticle[];
-}): Commande {
-  const commandes = getCommandes();
-  const dateAuj = new Date().toISOString().split('T')[0];
-  const ref = params.id || `CMD-2026-${Date.now().toString().slice(-4)}`;
-
-  const nouvelleCommande: Commande = {
-    id: ref,
-    date: dateAuj,
+}): Promise<Commande> {
+  const commande: Commande = {
+    id: params.id || `CMD-2026-${Date.now().toString().slice(-6)}`,
+    date: new Date().toISOString().split('T')[0],
     statut: 'nouvelle',
     statutProduction: 'a_preparer',
     total: params.total,
@@ -89,35 +127,25 @@ export function ajouterCommandeDepuisDevis(params: {
     articles: params.articles,
   };
 
-  commandes.unshift(nouvelleCommande);
-  saveCommandes(commandes);
-  return nouvelleCommande;
+  await saveCommandes([commande]);
+  return commande;
 }
 
-export function updateStatutCommande(id: string, updates: Partial<Commande>): Commande | null {
-  const commandes = getCommandes();
-  const idx = commandes.findIndex(c => c.id === id);
-  if (idx === -1) return null;
-
-  commandes[idx] = { ...commandes[idx], ...updates };
-  saveCommandes(commandes);
-  return commandes[idx];
-}
-
-export function ajouterCommandeDepuisWhatsApp(params: {
+/**
+ * Crée une commande issue d'une conversation WhatsApp, depuis le navigateur
+ * (conversion d'un lead par le dirigeant). Le pendant serveur, déclenché par
+ * le webhook, vit dans commandes-server.ts.
+ */
+export async function ajouterCommandeDepuisWhatsApp(params: {
   clientNom?: string;
   telephone: string;
   adresse?: string;
   total: number;
   articles: CommandeArticle[];
-}): Commande {
-  const commandes = getCommandes();
-  const dateAuj = new Date().toISOString().split('T')[0];
-  const ref = `CMD-WA-${Date.now().toString().slice(-4)}`;
-
-  const nouvelleCommande: Commande = {
-    id: ref,
-    date: dateAuj,
+}): Promise<Commande> {
+  const commande: Commande = {
+    id: `CMD-WA-${Date.now().toString().slice(-6)}`,
+    date: new Date().toISOString().split('T')[0],
     statut: 'nouvelle',
     statutProduction: 'a_preparer',
     total: params.total,
@@ -133,8 +161,6 @@ export function ajouterCommandeDepuisWhatsApp(params: {
     notes: 'Commande passée en direct via WhatsApp Business',
   };
 
-  commandes.unshift(nouvelleCommande);
-  saveCommandes(commandes);
-  return nouvelleCommande;
+  await saveCommandes([commande]);
+  return commande;
 }
-

@@ -2,7 +2,7 @@
 
 import {
   CRMLead, CRMSequence, TEMPLATES_EMAIL, TEMPLATES_WHATSAPP,
-  getLeads, saveLeads, getSequencesEnAttente, marquerSequenceEnvoyee,
+  getLeads, saveLeads, getSequencesEnAttente, marquerSequenceEnvoyee, sequencesEnAttente,
   genererLienWhatsApp,
 } from './crm-data';
 
@@ -88,7 +88,7 @@ export async function traiterSequencesEnAttente(): Promise<{
   whatsapps: number;
   erreurs: number;
 }> {
-  const sequencesATraiter = getSequencesEnAttente();
+  const sequencesATraiter = await getSequencesEnAttente();
   let emails = 0, whatsapps = 0, erreurs = 0;
 
   for (const { lead, sequence } of sequencesATraiter) {
@@ -96,7 +96,7 @@ export async function traiterSequencesEnAttente(): Promise<{
       if (sequence.canal === 'email') {
         const ok = await envoyerEmail(lead, sequence.template);
         if (ok) {
-          marquerSequenceEnvoyee(lead.id, sequence.id, 'email');
+          await marquerSequenceEnvoyee(lead.id, sequence.id, 'email');
           emails++;
         } else {
           erreurs++;
@@ -105,7 +105,7 @@ export async function traiterSequencesEnAttente(): Promise<{
       if (sequence.canal === 'whatsapp') {
         const ok = await envoyerWhatsAppAutomatique(lead, sequence.template);
         if (ok) {
-          marquerSequenceEnvoyee(lead.id, sequence.id, 'whatsapp');
+          await marquerSequenceEnvoyee(lead.id, sequence.id, 'whatsapp');
           whatsapps++;
         } else {
           whatsapps++; // comptabilisé en relance WhatsApp préparée
@@ -162,10 +162,10 @@ export interface MetriquesBotCommercial {
   relancesUrgentes: number; // leads sans contact depuis > 5j
 }
 
-export function getMetriquesBotCommercial(): MetriquesBotCommercial {
-  const leads = getLeads();
+export async function getMetriquesBotCommercial(): Promise<MetriquesBotCommercial> {
+  const leads = await getLeads();
   const today = new Date().toISOString().split('T')[0];
-  const sequences = getSequencesEnAttente();
+  const sequences = sequencesEnAttente(leads);
 
   const emailsEnAttente = sequences.filter(s => s.sequence.canal === 'email').length;
   const whatsappsEnAttente = sequences.filter(s => s.sequence.canal === 'whatsapp').length;

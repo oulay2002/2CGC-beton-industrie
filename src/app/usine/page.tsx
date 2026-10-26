@@ -83,8 +83,8 @@ export default function UsineDashboard() {
   const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
 
   useEffect(() => {
-    setCommandes(getCommandes());
-    const handleUpdate = () => setCommandes(getCommandes());
+    void getCommandes().then(setCommandes);
+    const handleUpdate = () => void getCommandes().then(setCommandes);
     window.addEventListener('commandes_updated', handleUpdate);
 
     return () => {
@@ -149,7 +149,7 @@ export default function UsineDashboard() {
       return updated;
     });
     setCommandes(updatedList);
-    saveCommandes(updatedList);
+    void saveCommandes(updatedList);
   };
 
   const validerEtGenererBLDirect = (cmd: Commande, chauffeurNom: string, immat: string) => {
@@ -167,7 +167,7 @@ export default function UsineDashboard() {
       };
     });
     setCommandes(updatedList);
-    saveCommandes(updatedList);
+    void saveCommandes(updatedList);
 
     // 3. Générer le Bon de Livraison Officiel PDF 2CGC
     genererBonLivraisonPDF({
@@ -756,7 +756,7 @@ export default function UsineDashboard() {
       <SimulateurWhatsAppModal
         isOpen={modalWhatsAppSimulateur}
         onClose={() => setModalWhatsAppSimulateur(false)}
-        onRefreshData={() => setCommandes(getCommandes())}
+        onRefreshData={() => void getCommandes().then(setCommandes)}
       />
     </main>
   );

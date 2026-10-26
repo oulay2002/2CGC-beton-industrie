@@ -15,8 +15,8 @@ export default function DirigeantDashboard() {
   const [commandes, setCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
-    setCommandes(getCommandes());
-    const handleUpdate = () => setCommandes(getCommandes());
+    void getCommandes().then(setCommandes);
+    const handleUpdate = () => void getCommandes().then(setCommandes);
     window.addEventListener('commandes_updated', handleUpdate);
     return () => window.removeEventListener('commandes_updated', handleUpdate);
   }, []);
@@ -671,7 +671,7 @@ export default function DirigeantDashboard() {
 
       {/* Copilot Agentique IA & Modal Audit */}
       <CRMAgenticCopilot
-        onRefreshLeads={() => setCommandes(getCommandes())}
+        onRefreshLeads={() => void getCommandes().then(setCommandes)}
         onOpenLogsModal={() => setModalLogsOpen(true)}
       />
 

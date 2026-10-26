@@ -34,85 +34,11 @@ export interface User {
 // appels et conserver l'état d'affichage.
 // ============================================================
 
-export const COMMANDES_MOCK = [
-  {
-    id: 'CMD-2026-001',
-    date: '2026-09-10',
-    statut: 'livree',
-    statutProduction: 'terminee',
-    total: 485000,
-    client: { nom: 'M. Koné', entreprise: 'BTP Afrique SARL', email: 'client@btp-afrique.com', telephone: '+225 07 12 34 56', adresse: 'Zone Industrielle, Abidjan' },
-    chauffeur: 'M. Kouadio',
-    articles: [
-      { nom: 'Agglo 20x20x50 Plein', quantite: 200, prix: 1200 },
-      { nom: 'Pavé Autobloquant 20x10x8', quantite: 500, prix: 600 },
-    ],
-  },
-  {
-    id: 'CMD-2026-002',
-    date: '2026-09-12',
-    statut: 'en_cours',
-    statutProduction: 'prete',
-    total: 1250000,
-    client: { nom: 'M. Koné', entreprise: 'BTP Afrique SARL', email: 'client@btp-afrique.com', telephone: '+225 07 12 34 56', adresse: 'Zone Industrielle, Abidjan' },
-    chauffeur: 'M. Kouadio',
-    articles: [
-      { nom: 'Bordure T2 100x25x15', quantite: 100, prix: 5500 },
-      { nom: 'Agglo 15x20x50 Creux', quantite: 300, prix: 950 },
-    ],
-  },
-  {
-    id: 'CMD-2026-003',
-    date: '2026-09-13',
-    statut: 'preparation',
-    statutProduction: 'en_cours',
-    total: 1850000,
-    client: { nom: 'Mme Traoré Fatou', entreprise: 'Ivoire Promotion Immobilière', email: 'fatou.traore@ivoire-promo.ci', telephone: '+225 05 44 33 22', adresse: 'Cocody Riviera 3, Abidjan' },
-    chauffeur: null,
-    articles: [
-      { nom: 'Pavé Hollandais 20x10x6', quantite: 2500, prix: 450 },
-      { nom: 'Agglo 20x20x50 Plein', quantite: 600, prix: 1200 },
-    ],
-  },
-  {
-    id: 'CMD-2026-004',
-    date: '2026-09-14',
-    statut: 'nouvelle',
-    statutProduction: 'a_preparer',
-    total: 3200000,
-    client: { nom: 'M. Diop Mamadou', entreprise: 'Bâtir Plus International', email: 'mamadou.diop@batir-plus.ci', telephone: '+225 01 23 45 67', adresse: 'Zone Portuaire, San Pedro' },
-    chauffeur: null,
-    articles: [
-      { nom: 'Agglo 20x20x50 Plein', quantite: 1500, prix: 1200 },
-      { nom: 'Bordure T2 100x25x15', quantite: 250, prix: 5600 },
-    ],
-  },
-  {
-    id: 'CMD-2026-005',
-    date: '2026-09-15',
-    statut: 'en_cours',
-    statutProduction: 'terminee',
-    total: 980000,
-    client: { nom: 'M. Yao Kouamé', entreprise: 'Génie Route CI', email: 'kouame.yao@gr-ci.com', telephone: '+225 07 88 99 00', adresse: 'Bouaké Quartier Commerce' },
-    chauffeur: 'M. Kouadio',
-    articles: [
-      { nom: 'Pavé Autobloquant 20x10x8', quantite: 1400, prix: 700 },
-    ],
-  },
-  {
-    id: 'CMD-2026-006',
-    date: '2026-09-15',
-    statut: 'livree',
-    statutProduction: 'terminee',
-    total: 650000,
-    client: { nom: 'Mme Traoré Fatou', entreprise: 'Ivoire Promotion Immobilière', email: 'fatou.traore@ivoire-promo.ci', telephone: '+225 05 44 33 22', adresse: 'Cocody Riviera 3, Abidjan' },
-    chauffeur: 'M. Kouadio',
-    articles: [
-      { nom: 'Agglo 15x20x50 Creux', quantite: 500, prix: 950 },
-      { nom: 'Hourdis 16x20x57', quantite: 200, prix: 875 },
-    ],
-  },
-];
+// Les jeux de donnees de demonstration (COMMANDES_MOCK, BONS_COMMANDE_MOCK,
+// BONS_LIVRAISON_MOCK) ont ete retires : commandes et bons sont desormais lus
+// en base via /api/commandes, filtres selon la session. Ils n etaient plus
+// references, et leur presence dans un module client les expediait dans le
+// bundle de chaque visiteur.
 
 // Redirection selon le rôle
 const ROUTES_PAR_ROLE: Record<UserRole, string> = {
@@ -310,12 +236,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Seul le dirigeant peut lister les comptes.
+  // Seul le dirigeant peut lister les comptes. On ne vide pas l'état dans un
+  // effet : la restriction est portée par getUtilisateurs, qui dérive la valeur
+  // du rôle courant. Un effet qui appelle setState déclenche un rendu en
+  // cascade pour rien.
   useEffect(() => {
     if (user?.role === 'dirigeant') {
+      // set-state-in-effect : faux positif. rafraichirUtilisateurs est
+      // asynchrone — le setState survient après résolution du fetch, ce qui
+      // est le motif « s'abonner à un système externe » que la règle autorise.
+      // L'analyse statique ne distingue pas les deux cas.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       void rafraichirUtilisateurs();
-    } else {
-      setComptes([]);
     }
   }, [user, rafraichirUtilisateurs]);
 
@@ -407,7 +339,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [enregistrerCompte, rafraichirUtilisateurs]
   );
 
-  const getUtilisateurs = useCallback(() => comptes, [comptes]);
+  // Le cloisonnement est porte ici plutot que par un vidage de l'etat :
+  // un non-dirigeant ne voit jamais la liste, meme si un rendu precedent
+  // l'avait chargee.
+  const getUtilisateurs = useCallback(
+    () => (user?.role === 'dirigeant' ? comptes : []),
+    [comptes, user]
+  );
 
   const supprimerUtilisateur = useCallback(
     async (email: string): Promise<ResultatAction> => {
@@ -515,66 +453,3 @@ export function useAuth() {
 }
 
 export { ROUTES_PAR_ROLE };
-
-export const BONS_COMMANDE_MOCK = [
-  {
-    id: 'BC-2026-001',
-    date: '2026-09-10',
-    statut: 'confirmee',
-    total: 485000,
-    articles: [
-      { nom: 'Agglo 20x20x50 Plein', quantite: 200, prix: 1200 },
-      { nom: 'Pavé Autobloquant 20x10x8', quantite: 500, prix: 600 },
-    ],
-  },
-  {
-    id: 'BC-2026-002',
-    date: '2026-09-12',
-    statut: 'en_cours',
-    total: 1250000,
-    articles: [
-      { nom: 'Bordure T2 100x25x15', quantite: 100, prix: 5500 },
-      { nom: 'Agglo 15x20x50 Creux', quantite: 300, prix: 950 },
-    ],
-  },
-  {
-    id: 'BC-2026-003',
-    date: '2026-09-13',
-    statut: 'confirmee',
-    total: 780000,
-    articles: [
-      { nom: 'Pavé Hollandais 20x10x6', quantite: 1000, prix: 450 },
-      { nom: 'Agglo 20x20x50 Plein', quantite: 150, prix: 1200 },
-    ],
-  },
-];
-
-// ============================================================
-// DONNÉES MOCK - Bons de livraison (espace client)
-// ============================================================
-export const BONS_LIVRAISON_MOCK = [
-  {
-    id: 'BL-2026-001',
-    date: '2026-09-10',
-    dateLivraison: '2026-09-11',
-    statut: 'livre',
-    chauffeur: 'M. Kouadio',
-    immatriculation: 'AB-1234-CD',
-    articles: [
-      { nom: 'Agglo 20x20x50 Plein', quantite: 200 },
-      { nom: 'Pavé Autobloquant 20x10x8', quantite: 500 },
-    ],
-  },
-  {
-    id: 'BL-2026-002',
-    date: '2026-09-12',
-    dateLivraison: '2026-09-13',
-    statut: 'en_cours',
-    chauffeur: 'M. Kouadio',
-    immatriculation: 'AB-1234-CD',
-    articles: [
-      { nom: 'Bordure T2 100x25x15', quantite: 100 },
-      { nom: 'Agglo 15x20x50 Creux', quantite: 300 },
-    ],
-  },
-];
