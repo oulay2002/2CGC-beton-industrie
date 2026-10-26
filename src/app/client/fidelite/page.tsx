@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
+import { Banknote, Gift, Truck } from 'lucide-react';
 
 
 export default function FidelitePage() {
@@ -50,7 +51,7 @@ export default function FidelitePage() {
       </header>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-[#002B5B] mb-2">🎁 Programme de fidélité</h1>
+        <h1 className="text-3xl font-bold text-[#002B5B] mb-2">Programme de fidélité</h1>
         <p className="text-gray-600 mb-8">Merci pour votre confiance ! Voici vos avantages.</p>
 
         {/* Carte fidélité principale */}
@@ -88,7 +89,7 @@ export default function FidelitePage() {
         {/* Avantages */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="text-4xl mb-3">💰</div>
+            <Banknote className="w-10 h-10 mb-3" />
             <h3 className="font-bold text-[#002B5B] text-lg mb-2">Remise permanente</h3>
             <p className="text-gray-600 text-sm">
               <span className="font-bold text-[#FFD700] text-2xl">-{user.tarifSpecial}%</span> sur tous vos achats grâce à votre statut client privilégié.
@@ -96,7 +97,7 @@ export default function FidelitePage() {
           </div>
 
           <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="text-4xl mb-3">🚚</div>
+            <Truck className="w-10 h-10 mb-3" />
             <h3 className="font-bold text-[#002B5B] text-lg mb-2">Livraison prioritaire</h3>
             <p className="text-gray-600 text-sm">
               Traitement de vos commandes en priorité et créneaux de livraison réservés.
@@ -104,7 +105,7 @@ export default function FidelitePage() {
           </div>
 
           <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="text-4xl mb-3">🎁</div>
+            <Gift className="w-10 h-10 mb-3" />
             <h3 className="font-bold text-[#002B5B] text-lg mb-2">Cadeaux fidélité</h3>
             <p className="text-gray-600 text-sm">
               Échangez vos points contre des réductions ou des produits offerts.
@@ -142,7 +143,7 @@ export default function FidelitePage() {
 
         <div className="mt-8 text-center">
           <Link href="/catalogue" className="inline-block bg-[#FFD700] text-[#002B5B] px-8 py-4 rounded-lg font-bold hover:bg-yellow-400 min-h-[44px]">
-            🛒 Faire un achat pour gagner des points
+            Faire un achat pour gagner des points
           </Link>
         </div>
       </div>

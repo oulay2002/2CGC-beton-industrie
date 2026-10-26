@@ -492,7 +492,7 @@ export function imprimerFicheCollaborateurPDF(c: CompteUtilisateur) {
   doc.setFontSize(10.5);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(146, 64, 14);
-  doc.text('🔐 VOS IDENTIFIANTS OFFICIELS DE CONNEXION', 20, 126);
+  doc.text('VOS IDENTIFIANTS OFFICIELS DE CONNEXION', 20, 126);
 
   doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');

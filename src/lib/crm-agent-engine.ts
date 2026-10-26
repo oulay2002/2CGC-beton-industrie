@@ -238,7 +238,7 @@ export async function triggerAutonomousRelance(
       console.warn('Erreur envoi email agent:', e);
     }
 
-    await ajouterActivite(leadId, `🤖 Agent IA : Relance automatique envoyée par Email (${templateKey})`, 'email');
+    await ajouterActivite(leadId, `Agent IA : Relance automatique envoyée par Email (${templateKey})`, 'email');
   } else {
     // WhatsApp
     const msg = messagePersonnalise || `Bonjour ${lead.nom} 👋, M. KEITA de 2CGC Daloa vous relance concernant votre projet (${lead.produitInteresse || 'Matériaux BTP'}). Avez-vous des questions sur les stocks ?`;
@@ -269,8 +269,8 @@ export async function triggerAutonomousRelance(
     await ajouterActivite(
       leadId,
       modeEnvoi === 'lien_manuel'
-        ? `⚙️ Relance WhatsApp préparée, à envoyer depuis WhatsApp (${msg.slice(0, 50)}...)`
-        : `⚙️ Relance WhatsApp envoyée automatiquement (${msg.slice(0, 50)}...)`,
+        ? `Relance WhatsApp préparée, à envoyer depuis WhatsApp (${msg.slice(0, 50)}...)`
+        : `Relance WhatsApp envoyée automatiquement (${msg.slice(0, 50)}...)`,
       'whatsapp'
     );
   }
@@ -360,7 +360,7 @@ export async function sendLeadToFactory(leadId: string): Promise<{ success: bool
 
   await ajouterActivite(
     leadId,
-    `🏭 Agent IA Usine : Opportunité convertie et relayée au Chef d'Usine à Daloa (N° Commande Usine: ${commande.id})`,
+    `Agent IA Usine : Opportunité convertie et relayée au Chef d'Usine à Daloa (N° Commande Usine: ${commande.id})`,
     'systeme');
 
   logAgentAction({
@@ -406,9 +406,9 @@ export function getPipelineAnalytics(leads: CRMLeadAgentic[]): {
     .sort((a, b) => (b.aiScore?.score || 0) - (a.aiScore?.score || 0));
 
   const recommandations: string[] = [
-    `💎 ${opportunitesCritiques.length} opportunités à très haut potentiel détectées. Concentrer l'effort commercial sur : ${opportunitesCritiques.slice(0, 2).map(o => o.nom).join(', ')}.`,
-    `📉 Le chiffre d'affaires pondéré estimé pour ce mois est de ${Math.round(totalPondere).toLocaleString('fr-FR')} FCFA sur un pipeline de ${totalPotentiel.toLocaleString('fr-FR')} FCFA.`,
-    `⚡ ${leads.filter(l => l.statut === 'devis_envoye').length} devis sont en attente de relance. Exécuter l'agent de relance autonome.`,
+    `${opportunitesCritiques.length} opportunités à très haut potentiel détectées. Concentrer l'effort commercial sur : ${opportunitesCritiques.slice(0, 2).map(o => o.nom).join(', ')}.`,
+    `Le chiffre d'affaires pondéré estimé pour ce mois est de ${Math.round(totalPondere).toLocaleString('fr-FR')} FCFA sur un pipeline de ${totalPotentiel.toLocaleString('fr-FR')} FCFA.`,
+    `${leads.filter(l => l.statut === 'devis_envoye').length} devis sont en attente de relance. Exécuter l'agent de relance autonome.`,
   ];
 
   return {
@@ -435,7 +435,7 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
     const res = await triggerBulkRelancesExpiress();
     return {
       thought: `Analyse de l'intention utilisateur : Relance autonome de devis. Recherche des opportunités stagnantes de plus de 48h.`,
-      reply: `✅ J'ai exécuté la campagne de relance autonome. ${res.relancesCount} prospects ont été relancés par WhatsApp/Email (${res.leadsRelances.join(', ') || 'Aucun devis expiré'}).`,
+      reply: `J'ai exécuté la campagne de relance autonome. ${res.relancesCount} prospects ont été relancés par WhatsApp/Email (${res.leadsRelances.join(', ') || 'Aucun devis expiré'}).`,
       actionTaken: 'triggerBulkRelancesExpiress',
       dataDetails: res
     };
@@ -446,7 +446,7 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
     const tops = scoredLeads.slice(0, 3);
     return {
       thought: `Analyse de l'intention utilisateur : Recalcul et réévaluation des scores de priorité de l'ensemble du CRM.`,
-      reply: `📊 J'ai réévalué l'ensemble des prospects. Les 3 meilleures opportunités actuelles sont :\n` +
+      reply: `J'ai réévalué l'ensemble des prospects. Les 3 meilleures opportunités actuelles sont :\n` +
         tops.map(t => `• **${t.nom}** (${t.entreprise}) — Score IA: **${t.aiScore?.score}%** (${(t.valeurEstimee || 0).toLocaleString('fr-FR')} FCFA)`).join('\n'),
       actionTaken: 'scoreAllLeads',
       dataDetails: tops
@@ -460,7 +460,7 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
       const res = await sendLeadToFactory(topLead.id);
       return {
         thought: `Conversion de la meilleure opportunité en cours (${topLead.nom}) et envoi automatique au Chef d'Usine à Daloa.`,
-        reply: `🏗️ ${res.message} Le statut de ${topLead.nom} est passé à "Gagné".`,
+        reply: `${res.message} Le statut de ${topLead.nom} est passé à"Gagné".`,
         actionTaken: 'sendLeadToFactory',
         dataDetails: res
       };
@@ -477,10 +477,10 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
     const stats = getPipelineAnalytics(await scoreAllLeads());
     return {
       thought: `Génération du rapport prédictif et des métriques de vente pondérées par le score IA.`,
-      reply: `📈 **Rapport d'Analyse Prédictive 2CGC** :\n\n` +
+      reply: `**Rapport d'Analyse Prédictive 2CGC** :\n\n` +
         `• **Pipeline Total :** ${stats.chiffreAffairesPotentiel.toLocaleString('fr-FR')} FCFA\n` +
         `• **Prévision Réalisable Pondérée :** **${stats.tauxConversionPondere.toLocaleString('fr-FR')} FCFA**\n\n` +
-        `💡 **Recommandations Agentiques :**\n` +
+        `**Recommandations Agentiques :**\n` +
         stats.recommandationsStrategiques.map(r => `• ${r}`).join('\n'),
       actionTaken: 'getPipelineAnalytics',
       dataDetails: stats

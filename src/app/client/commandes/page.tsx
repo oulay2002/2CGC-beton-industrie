@@ -1,21 +1,23 @@
 "use client";
 
+import type { LucideIcon } from 'lucide-react';
 import { useEffect, useMemo, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
 import { getCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
 import { genererPDF } from '@/lib/generer-pdf';
 import Link from 'next/link';
+import { CheckCircle2, ClipboardList, Cog, Truck, XCircle } from 'lucide-react';
 
 function formatFCFA(montant: number): string {
   return Math.round(montant).toLocaleString('fr-FR') + ' FCFA';
 }
 
-const STATUT_LABELS: Record<string, { label: string; couleur: string; icone: string }> = {
-  livree: { label: 'Livrée', couleur: 'bg-green-100 text-green-800', icone: '✅' },
-  en_cours: { label: 'En cours de livraison', couleur: 'bg-blue-100 text-blue-800', icone: '🚚' },
-  preparation: { label: 'En préparation', couleur: 'bg-yellow-100 text-yellow-800', icone: '⚙️' },
-  annulee: { label: 'Annulée', couleur: 'bg-red-100 text-red-800', icone: '❌' },
+const STATUT_LABELS: Record<string, { label: string; couleur: string; Icone: LucideIcon }> = {
+  livree: { label: 'Livrée', couleur: 'bg-green-100 text-green-800', Icone: CheckCircle2 },
+  en_cours: { label: 'En cours de livraison', couleur: 'bg-blue-100 text-blue-800', Icone: Truck },
+  preparation: { label: 'En préparation', couleur: 'bg-yellow-100 text-yellow-800', Icone: Cog },
+  annulee: { label: 'Annulée', couleur: 'bg-red-100 text-red-800', Icone: XCircle },
 };
 
 function CommandesPageInner() {
@@ -145,7 +147,7 @@ function CommandesPageInner() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-[#002B5B] mb-1">📦 Historique des commandes</h1>
+            <h1 className="text-3xl font-bold text-[#002B5B] mb-1">Historique des commandes</h1>
             <p className="text-gray-600 text-sm">
               Commandes enregistrées pour <strong>{clientActif.entreprise || clientActif.nom}</strong> ({commandesFiltrees.length} commande{commandesFiltrees.length > 1 ? 's' : ''})
             </p>
@@ -162,7 +164,7 @@ function CommandesPageInner() {
 
         {commandesFiltrees.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
-            <div className="text-5xl mb-3">📋</div>
+            <ClipboardList className="w-12 h-12 mb-3" />
             <h3 className="text-lg font-bold text-gray-800 mb-1">Aucune commande trouvée pour ce compte</h3>
             <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
               Aucun bon de commande n'a encore été émis sous le compte de <strong>{clientActif.entreprise}</strong>.
@@ -190,7 +192,7 @@ function CommandesPageInner() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`px-4 py-2 rounded-full text-sm font-bold ${statut.couleur}`}>
-                      {statut.icone} {statut.label}
+                      <statut.Icone className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />{statut.label}
                     </span>
                     <div className="text-right">
                       <div className="text-xs text-white/70">Total TTC</div>
@@ -224,13 +226,13 @@ function CommandesPageInner() {
                       href="/client/reassort-rapide"
                       className="bg-[#FFD700] text-[#002B5B] px-6 py-3 rounded-xl font-bold hover:bg-yellow-400 min-h-[44px] flex items-center justify-center gap-2 shadow-sm"
                     >
-                      🔄 Réassort identique
+                      Réassort identique
                     </Link>
                     <button
                       onClick={() => handleTelechargerFacture(cmd)}
                       className="border-2 border-[#002B5B] text-[#002B5B] px-6 py-3 rounded-xl font-bold hover:bg-[#002B5B] hover:text-white min-h-[44px] flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
                     >
-                      📄 Télécharger Facture Proforma PDF
+                      Télécharger Facture Proforma PDF
                     </button>
                   </div>
                 </div>

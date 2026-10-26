@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { genererBonLivraison } from '@/lib/generer-bons';
+import { Factory, FileText, Landmark, MapPin, Printer, Scale, Truck, User } from 'lucide-react';
 
 interface BonLivraisonProps {
   numero: string;
@@ -147,7 +148,7 @@ export default function BonLivraison({
                   : 'bg-emerald-500 text-white'
               }`}
             >
-              {statut === 'chargement' ? '⚙️ EN COURS' : statut === 'en_route' ? '🚚 EN ROUTE' : '✅ LIVRÉ'}
+              {statut === 'chargement' ? 'EN COURS' : statut === 'en_route' ? 'EN ROUTE' : 'LIVRÉ'}
             </div>
           </div>
         </div>
@@ -158,7 +159,7 @@ export default function BonLivraison({
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200">
             <div className="text-[10px] font-black text-[#002B5B] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🏭</span> Émetteur / Usine de Béton
+              <Factory className="w-4 h-4" /> Émetteur / Usine de Béton
             </div>
             <div className="font-black text-base text-[#002B5B]">{usine.nom}</div>
             <div className="text-xs text-slate-600 mt-1">{usine.adresse}</div>
@@ -168,7 +169,7 @@ export default function BonLivraison({
 
           <div className="bg-amber-50/60 rounded-2xl p-5 border-2 border-[#FFD700]/60">
             <div className="text-[10px] font-black text-[#002B5B] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>📍</span> Lieu & Client Réceptionnaire
+              <MapPin className="w-4 h-4" /> Lieu & Client Réceptionnaire
             </div>
             <div className="font-black text-base text-[#002B5B]">{client.nom}</div>
             <div className="text-xs text-slate-700 mt-1 font-semibold">Chantier : {client.chantier}</div>
@@ -181,14 +182,14 @@ export default function BonLivraison({
         <div className="bg-[#002B5B] text-white rounded-2xl p-5 shadow-sm">
           <div className="grid md:grid-cols-3 gap-4 items-center">
             <div className="flex items-center gap-3">
-              <div className="text-2xl">🚚</div>
+              <Truck className="w-6 h-6" />
               <div>
                 <div className="text-[10px] text-white/60 uppercase tracking-wider font-bold">Flotte & Véhicule</div>
                 <div className="font-black text-[#FFD700] text-sm">{vehicule}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="text-2xl">👤</div>
+              <User className="w-6 h-6" />
               <div>
                 <div className="text-[10px] text-white/60 uppercase tracking-wider font-bold">Chauffeur Assigné</div>
                 <div className="font-bold text-sm">{chauffeur.nom}</div>
@@ -242,10 +243,10 @@ export default function BonLivraison({
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200">
             <div className="text-xs font-bold text-[#002B5B] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-              <span>🏛️</span> Visa Pesée & Sortie Usine
+              <Landmark className="w-4 h-4" /> Visa Pesée & Sortie Usine
             </div>
             <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center bg-white">
-              <div className="text-2xl mb-1">⚖️</div>
+              <Scale className="w-6 h-6 mb-1" />
               <div className="text-xs font-bold text-emerald-700 uppercase tracking-wider">Cachet Sortie Usine Conforme</div>
               <div className="text-[11px] text-slate-500 mt-1">Bascule 2CGC Daloa</div>
             </div>
@@ -308,7 +309,7 @@ export default function BonLivraison({
         {/* Footer actions */}
         <div className="border-t border-slate-200 pt-5">
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-4">
-            <span className="text-emerald-600 font-bold">🔒 Certificat d'authenticité :</span>
+            <span className="text-emerald-600 font-bold">Certificat d'authenticité :</span>
             <span>Bordereau enregistré et archivé sous certificat 2CGC certifié conforme.</span>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -317,18 +318,18 @@ export default function BonLivraison({
               onClick={handleDownloadPDF}
               className="bg-[#002B5B] hover:bg-[#001D3D] text-[#FFD700] px-6 py-3.5 rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer"
             >
-              <span>📄</span> Télécharger Bon de Livraison PDF (Officiel)
+              <FileText className="w-4 h-4" /> Télécharger Bon de Livraison PDF (Officiel)
             </button>
             <button
               type="button"
               onClick={() => window.print()}
               className="border-2 border-slate-300 text-slate-700 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors flex items-center gap-2 cursor-pointer"
             >
-              <span>🖨️</span> Imprimer la Fiche
+              <Printer className="w-4 h-4" /> Imprimer la Fiche
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+}

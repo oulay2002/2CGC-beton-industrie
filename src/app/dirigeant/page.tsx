@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
 import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
+import { BarChart3, Bot, ClipboardList, Download, Factory, Files, FolderOpen, KeyRound, PartyPopper, Smartphone, Truck, User, Users } from 'lucide-react';
 
 export default function DirigeantDashboard() {
   const { user, logout, creerUtilisateur, getUtilisateurs, isLoading } = useAuth();
@@ -75,7 +76,7 @@ export default function DirigeantDashboard() {
     });
 
     if (!res.success) {
-      setNotifRapide(`⚠️ ${res.error || 'Échec de la création du compte.'}`);
+      setNotifRapide(`${res.error || 'Échec de la création du compte.'}`);
       return;
     }
 
@@ -87,7 +88,7 @@ export default function DirigeantDashboard() {
         password: mdpGenere,
         telephone: telephoneRapide || undefined,
       });
-      setNotifRapide(`✅ ${roleRapide === 'chauffeur' ? 'Chauffeur' : "Chef d'Usine"} ${nomRapide} enregistré !`);
+      setNotifRapide(`${roleRapide === 'chauffeur' ? 'Chauffeur' : "Chef d'Usine"} ${nomRapide} enregistré !`);
       setNomRapide('');
       setTelephoneRapide('');
       setVehiculeRapide('');
@@ -187,7 +188,7 @@ export default function DirigeantDashboard() {
               className="bg-white/10 hover:bg-white/20 border border-white/25 text-white px-3.5 py-2 rounded-lg text-sm font-bold shadow transition-all flex items-center gap-1.5"
               title="Consulter le trousseau de tous les identifiants collaborateurs"
             >
-              <span>🔐</span>
+              <KeyRound className="w-4 h-4" />
               <span className="hidden md:inline">Identifiants Collaborateurs</span>
             </Link>
             <button
@@ -210,8 +211,8 @@ export default function DirigeantDashboard() {
 
       {/* Notification toast */}
       {notifRapide && (
-        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3 border border-emerald-400 animate-bounce">
-          <span>🎉</span>
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3 border border-emerald-400 animate-pulse">
+          <PartyPopper className="w-4 h-4" />
           <span>{notifRapide}</span>
         </div>
       )}
@@ -219,7 +220,7 @@ export default function DirigeantDashboard() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#002B5B]">Bonjour {user.nom} 👔</h1>
+            <h1 className="text-3xl font-bold text-[#002B5B]">Bonjour {user.nom} </h1>
             <p className="text-gray-600 mt-1">Vue d'ensemble de votre entreprise & gestion des opérations</p>
           </div>
           <button
@@ -232,25 +233,25 @@ export default function DirigeantDashboard() {
 
         {/* KPIs Principaux */}
         <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-[#FFD700]">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-[#FFD700]">
             <div className="text-sm text-gray-500 mb-1">Chiffre d'affaires</div>
             <div className="text-2xl font-bold text-[#002B5B]">{formatFCFA(totalCA)}</div>
             <div className="text-xs text-green-600 mt-1">↑ +12% ce mois</div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-green-500">
             <div className="text-sm text-gray-500 mb-1">Commandes livrées</div>
             <div className="text-3xl font-bold text-[#002B5B]">{commandesLivrees}</div>
             <div className="text-xs text-gray-500 mt-1">Ce mois</div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-blue-500">
             <div className="text-sm text-gray-500 mb-1">En cours de traitement</div>
             <div className="text-3xl font-bold text-[#002B5B]">{commandesEnCours}</div>
             <div className="text-xs text-gray-500 mt-1">Production + Livraison</div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-red-500">
             <div className="text-sm text-gray-500 mb-1">Nouvelles commandes</div>
             <div className="text-3xl font-bold text-[#002B5B]">{nouvellesCommandes}</div>
             <div className="text-xs text-red-600 mt-1">À traiter</div>
@@ -260,23 +261,23 @@ export default function DirigeantDashboard() {
         {/* Accès rapide aux autres espaces */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
           <Link href="/usine" className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-            <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🏭</div>
+            <Factory className="w-6 h-6 w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-3" />
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">Vue Usine</h3>
             <p className="text-sm text-gray-600">Superviser la production</p>
           </Link>
 
           <Link href="/chauffeur" className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-            <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🚚</div>
+            <Truck className="w-6 h-6 w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-3" />
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">Vue Logistique</h3>
             <p className="text-sm text-gray-600">Suivi des livraisons</p>
           </Link>
 
           <Link href="/client" className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block group">
-            <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">👤</div>
+            <User className="w-6 h-6 w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-3" />
             <h3 className="font-bold text-lg text-[#002B5B] mb-1 group-hover:text-[#002B5B]">Vue Client</h3>
             <p className="text-sm text-gray-600">Expérience client</p>
             <span className="inline-block mt-2 text-[11px] font-bold text-blue-700 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-200 backdrop-blur-sm">
-              👁️ Sélecteur multi-clients
+              Sélecteur multi-clients
             </span>
           </Link>
         </div>
@@ -284,7 +285,7 @@ export default function DirigeantDashboard() {
         <div className="grid sm:grid-cols-3 gap-4 mb-8">
           <Link href="/dirigeant/identifiants" className="bg-white rounded-xl p-6 border-2 border-amber-300 hover:border-[#002B5B] hover:shadow-lg transition-all block group">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-400/20 backdrop-blur-sm flex items-center justify-center text-2xl">🔐</div>
+              <KeyRound className="w-6 h-6 w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-400/20 backdrop-blur-sm flex items-center justify-center" />
               <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-800 border border-amber-400/20 px-2 py-0.5 rounded-md backdrop-blur-sm">
                 Trousseau Sécurisé
               </span>
@@ -294,14 +295,14 @@ export default function DirigeantDashboard() {
           </Link>
 
           <Link href="/dirigeant/crm" className="bg-white rounded-xl p-6 border-2 border-[#FFD700] hover:shadow-lg hover:border-[#002B5B] transition-all block">
-            <div className="w-12 h-12 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/40 backdrop-blur-sm flex items-center justify-center text-2xl mb-3">🤖</div>
+            <Bot className="w-6 h-6 w-12 h-12 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/40 backdrop-blur-sm flex items-center justify-center mb-3" />
             <h3 className="font-bold text-lg text-[#002B5B] mb-1">CRM Automatisé</h3>
             <p className="text-sm text-gray-600">Pipeline, leads et relances automatiques</p>
           </Link>
 
           <Link href="/dirigeant/utilisateurs" className="bg-white rounded-xl p-6 border-2 border-emerald-300 hover:border-[#002B5B] hover:shadow-lg transition-all block">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-400/20 backdrop-blur-sm flex items-center justify-center text-2xl">👥</div>
+              <Users className="w-6 h-6 w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-400/20 backdrop-blur-sm flex items-center justify-center" />
               <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-800 border border-emerald-400/20 px-2 py-0.5 rounded-md backdrop-blur-sm">
                 Import & Impression
               </span>
@@ -316,7 +317,7 @@ export default function DirigeantDashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 bg-[#FFD700]/20 text-[#FFD700] text-xs font-black px-3 py-1 rounded-full border border-[#FFD700]/30 mb-2">
-                <span>📑</span> MODULE COMPTABILITÉ &amp; AUDIT FISCAL CI
+                <Files className="w-4 h-4" /> MODULE COMPTABILITÉ &amp; AUDIT FISCAL CI
               </div>
               <h2 className="text-2xl font-black text-white">
                 Grand Livre des Ventes &amp; Déclaration TVA (18%)
@@ -331,7 +332,7 @@ export default function DirigeantDashboard() {
               className="bg-brand-gold text-[#002B5B] hover:shadow-xl hover:shadow-[#FFD700]/30 transition-all font-black text-sm px-6 py-4 rounded-2xl flex items-center justify-center gap-2.5 flex-shrink-0 cursor-pointer"
               title="Télécharger le fichier CSV compatible Microsoft Excel et logiciels comptables"
             >
-              <span>📊</span>
+              <BarChart3 className="w-4 h-4" />
               <span>Exporter Journal des Ventes (Excel / CSV)</span>
             </button>
           </div>
@@ -361,12 +362,12 @@ export default function DirigeantDashboard() {
         {/* Tableau de bord des commandes */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-            <h2 className="text-2xl font-bold text-[#002B5B]">📊 Toutes les commandes</h2>
+            <h2 className="text-2xl font-bold text-[#002B5B]">Toutes les commandes</h2>
             <button
               onClick={exporterJournalVentesCSV}
               className="text-xs bg-gray-100 hover:bg-gray-200 text-[#002B5B] font-bold px-3.5 py-2 rounded-xl border border-gray-300 transition-colors flex items-center gap-1.5"
             >
-              <span>📥</span> Export CSV rapide
+              <Download className="w-4 h-4" /> Export CSV rapide
             </button>
           </div>
           <div className="overflow-x-auto">
@@ -428,7 +429,7 @@ export default function DirigeantDashboard() {
             <div className="bg-[#002B5B] text-white p-6 flex justify-between items-center">
               <div>
                 <h3 className="text-xl font-black text-white flex items-center gap-2">
-                  <span>📋</span> Enregistrer Personnel & Véhicule
+                  <ClipboardList className="w-4 h-4" /> Enregistrer Personnel & Véhicule
                 </h3>
                 <p className="text-xs text-gray-300 mt-1">
                   Commande directe Direction Générale 2CGC
@@ -460,7 +461,7 @@ export default function DirigeantDashboard() {
                         : 'border-gray-200 hover:border-gray-300 text-gray-600'
                     }`}
                   >
-                    <div className="text-2xl mb-1">🚚</div>
+                    <Truck className="w-6 h-6 mb-1" />
                     <div className="font-extrabold text-sm">Chauffeur</div>
                     <div className="text-[11px] text-gray-500">Livraisons & flotte</div>
                   </button>
@@ -474,7 +475,7 @@ export default function DirigeantDashboard() {
                         : 'border-gray-200 hover:border-gray-300 text-gray-600'
                     }`}
                   >
-                    <div className="text-2xl mb-1">🏭</div>
+                    <Factory className="w-6 h-6 mb-1" />
                     <div className="font-extrabold text-sm">Chef d'Usine</div>
                     <div className="text-[11px] text-gray-500">Production & stocks</div>
                   </button>
@@ -543,7 +544,7 @@ export default function DirigeantDashboard() {
 
               {/* Note automatique */}
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-800 leading-relaxed">
-                💡 Le mot de passe et l'email d'accès seront générés automatiquement et enregistrés dans le système. Le collaborateur pourra se connecter directement depuis la page de connexion.
+                Le mot de passe et l'email d'accès seront générés automatiquement et enregistrés dans le système. Le collaborateur pourra se connecter directement depuis la page de connexion.
               </div>
 
               {/* Boutons d'action */}
@@ -575,9 +576,7 @@ export default function DirigeantDashboard() {
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-emerald-400 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl font-black">
-                  🔐
-                </div>
+                <KeyRound className="w-6 h-6 w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-black" />
                 <div>
                   <h3 className="text-xl font-black text-[#002B5B]">Identifiants Collaborateur</h3>
                   <p className="text-xs text-gray-500">Compte créé avec succès dans le système</p>
@@ -644,7 +643,7 @@ export default function DirigeantDashboard() {
                   rel="noopener noreferrer"
                   className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow"
                 >
-                  <span>📲</span>
+                  <Smartphone className="w-4 h-4" />
                   <span>Transmettre sur WhatsApp ({identifiantGenere.telephone})</span>
                 </a>
               )}
@@ -653,7 +652,7 @@ export default function DirigeantDashboard() {
                 href="/dirigeant/identifiants"
                 className="w-full py-3 rounded-xl bg-[#002B5B] hover:bg-[#003d80] text-white font-bold text-sm flex items-center justify-center gap-2 shadow"
               >
-                <span>📂</span>
+                <FolderOpen className="w-4 h-4" />
                 <span>Ouvrir l'Espace Trousseau &amp; Fiches PDF</span>
               </Link>
 

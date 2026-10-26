@@ -107,7 +107,7 @@ function ConnexionPageInner() {
             <>
               <h1 className="text-4xl xl:text-[3.25rem] font-black text-white leading-[1.12] tracking-tight mb-6">
                 Supervision &amp; Pilotage <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-yellow-200 to-amber-400">
+                <span className="text-[#FFD700]">
                   industriel en direct.
                 </span>
               </h1>
@@ -142,7 +142,7 @@ function ConnexionPageInner() {
             <>
               <h1 className="text-4xl xl:text-[3.25rem] font-black text-white leading-[1.12] tracking-tight mb-6">
                 L&apos;excellence du béton <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-yellow-200 to-amber-400">
+                <span className="text-[#FFD700]">
                   au service de vos chantiers.
                 </span>
               </h1>

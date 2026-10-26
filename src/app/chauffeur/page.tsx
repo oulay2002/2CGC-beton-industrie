@@ -7,6 +7,7 @@ import { getCommandes, saveCommandes, Commande, CommandeArticle } from '@/lib/co
 import { genererBonLivraison } from '@/lib/generer-bons';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
+import { CheckCircle2, MapPin, Smartphone, Truck } from 'lucide-react';
 
 
 export default function ChauffeurDashboard() {
@@ -68,22 +69,22 @@ export default function ChauffeurDashboard() {
     
     let texte = '';
     if (statutEtape === 'depart') {
-      texte = `🚛 *2CGC LOGISTIQUE — DÉPART USINE DALOA*\n\n` +
+      texte =`*2CGC LOGISTIQUE — DÉPART USINE DALOA*\n\n` +
         `Bonjour ${cmd.client.entreprise || cmd.client.nom},\n` +
         `Votre commande *${cmd.id}* est chargée et vient de quitter notre usine de Daloa !\n\n` +
-        `👤 *Chauffeur :* ${user.nom}\n` +
-        `🚛 *Véhicule :* ${user.vehicule || 'Camion Plateau 15T'} (${user.permis || 'Immat 2CGC'})\n` +
-        `📍 *Destination :* ${cmd.client.adresse}\n\n` +
+        `*Chauffeur :* ${user.nom}\n` +
+        `*Véhicule :* ${user.vehicule || 'Camion Plateau 15T'} (${user.permis || 'Immat 2CGC'})\n` +
+        `*Destination :* ${cmd.client.adresse}\n\n` +
         `Le chauffeur vous contactera dès son approche sur votre chantier.\n` +
         `*CHEICKNA CONSTRUCTION & GÉNIE CIVIL (2CGC)*`;
     } else if (statutEtape === 'arrivee') {
-      texte = `📍 *2CGC LOGISTIQUE — ARRIVÉE SUR CHANTIER*\n\n` +
+      texte =`*2CGC LOGISTIQUE — ARRIVÉE SUR CHANTIER*\n\n` +
         `Bonjour ${cmd.client.entreprise || cmd.client.nom},\n` +
         `Votre chauffeur *${user.nom}* est arrivé sur votre chantier (${cmd.client.adresse}) avec la commande *${cmd.id}*.\n\n` +
         `Merci de préparer la zone de déchargement et le responsable de réception.\n` +
         `*2CGC Daloa*`;
     } else {
-      texte = `✅ *2CGC LOGISTIQUE — LIVRAISON EFFECTUÉE & ÉMARGÉE*\n\n` +
+      texte =`*2CGC LOGISTIQUE — LIVRAISON EFFECTUÉE & ÉMARGÉE*\n\n` +
         `Bonjour ${cmd.client.entreprise || cmd.client.nom},\n` +
         `Votre commande *${cmd.id}* a été livrée et réceptionnée avec succès sur votre chantier.\n` +
         `Le Bon de Livraison officiel émargé électroniquement a été validé.\n\n` +
@@ -165,11 +166,11 @@ export default function ChauffeurDashboard() {
     // sans vérifier qu'une livraison était bien sélectionnée. Le `any` d'origine
     // masquait un plantage possible de l'écran chauffeur en pleine tournée.
     if (!livraisonActive) {
-      alert("⚠️ Aucune livraison sélectionnée. Rouvrez la commande à émarger.");
+      alert("Aucune livraison sélectionnée. Rouvrez la commande à émarger.");
       return;
     }
     if (!signatureData) {
-      alert('⚠️ Veuillez faire signer le réceptionnaire du chantier avec le doigt ou un stylet sur le pad tactile.');
+      alert('Veuillez faire signer le réceptionnaire du chantier avec le doigt ou un stylet sur le pad tactile.');
       return;
     }
 
@@ -200,7 +201,7 @@ export default function ChauffeurDashboard() {
     const lienNotification = genererLienWhatsAppSuivi(livraisonActive, 'livre');
     window.open(lienNotification, '_blank');
 
-    alert(`🎉 Livraison ${livraisonActive.id} validée et émargée avec succès ! Le Bon de Livraison PDF signé a été généré.`);
+    alert(`Livraison ${livraisonActive.id} validée et émargée avec succès ! Le Bon de Livraison PDF signé a été généré.`);
     setLivraisonActive(null);
     setSignatureData(null);
   };
@@ -246,7 +247,7 @@ export default function ChauffeurDashboard() {
         {!livraisonActive ? (
           <>
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-[#002B5B]">Bonjour {user.nom} 🚚</h1>
+              <h1 className="text-3xl font-bold text-[#002B5B]">Bonjour {user.nom} </h1>
               <p className="text-gray-600 mt-1">Vos livraisons assignées aujourd'hui</p>
             </div>
 
@@ -265,7 +266,7 @@ export default function ChauffeurDashboard() {
             {notificationStatus && (
               <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between text-emerald-800 text-sm font-semibold shadow-sm animate-pulse">
                 <span className="flex items-center gap-2">
-                  <span>📱</span> {notificationStatus}
+                  <Smartphone className="w-4 h-4" /> {notificationStatus}
                 </span>
                 <span className="text-xs bg-emerald-200 text-emerald-900 px-2 py-1 rounded-md">Envoyé</span>
               </div>
@@ -273,16 +274,16 @@ export default function ChauffeurDashboard() {
 
             {/* Livraisons en cours */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#002B5B] mb-4">📦 Livraisons à effectuer ({mesLivraisons.length})</h2>
+              <h2 className="text-2xl font-bold text-[#002B5B] mb-4">Livraisons à effectuer ({mesLivraisons.length})</h2>
               {mesLivraisons.length === 0 ? (
                 <div className="bg-white rounded-xl shadow-md p-12 text-center">
-                  <div className="text-6xl mb-4">✅</div>
+                  <CheckCircle2 className="w-14 h-14 mb-4" />
                   <p className="text-gray-500">Aucune livraison en cours</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {mesLivraisons.map((cmd) => (
-                    <div key={cmd.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden border-l-4 border-green-500 hover:shadow-md transition-shadow">
+                    <div key={cmd.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden border border-green-500 hover:shadow-md transition-shadow">
                       <div className="p-6">
                         <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                           <div>
@@ -298,11 +299,11 @@ export default function ChauffeurDashboard() {
                         </div>
 
                         <div className="bg-gray-50 rounded-xl p-4 mb-4 border border-gray-100">
-                          <h4 className="font-bold text-sm text-gray-700 mb-2">📍 Destination Chantier :</h4>
+                          <h4 className="font-bold text-sm text-gray-700 mb-2">Destination Chantier :</h4>
                           <div className="text-sm text-gray-700 space-y-0.5">
                             <div className="font-black text-[#002B5B]">{cmd.client.entreprise}</div>
                             <div>{cmd.client.adresse}</div>
-                            <div className="text-xs text-emerald-700 font-semibold mt-1">📞 Contact : {cmd.client.telephone}</div>
+                            <div className="text-xs text-emerald-700 font-semibold mt-1">Contact : {cmd.client.telephone}</div>
                           </div>
                         </div>
 
@@ -322,7 +323,7 @@ export default function ChauffeurDashboard() {
                             className="bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] border border-[#25D366]/30 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                             title="Alerter le client que le camion quitte l'usine de Daloa"
                           >
-                            <span>🚚</span> 1. Départ Usine
+                            <Truck className="w-4 h-4" /> 1. Départ Usine
                           </button>
 
                           <button
@@ -330,7 +331,7 @@ export default function ChauffeurDashboard() {
                             className="bg-blue-50 hover:bg-blue-100 text-[#002B5B] border border-blue-200 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                             title="Alerter le client que le camion est devant le chantier"
                           >
-                            <span>📍</span> 2. Arrivé Chantier
+                            <MapPin className="w-4 h-4" /> 2. Arrivé Chantier
                           </button>
 
                           <button
@@ -350,7 +351,7 @@ export default function ChauffeurDashboard() {
             {/* Historique */}
             {mesLivraisonsTerminees.length > 0 && (
               <div>
-                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">✅ Livraisons terminées ({mesLivraisonsTerminees.length})</h2>
+                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">Livraisons terminées ({mesLivraisonsTerminees.length})</h2>
                 <div className="space-y-2">
                   {mesLivraisonsTerminees.map((cmd) => (
                     <div key={cmd.id} className="bg-white rounded-lg shadow-sm p-4 flex justify-between items-center">
@@ -373,7 +374,7 @@ export default function ChauffeurDashboard() {
             </button>
 
             <div className="bg-white rounded-xl shadow-md p-8">
-              <h1 className="text-2xl font-bold text-[#002B5B] mb-6">📄 Bon de Livraison - {livraisonActive.id}</h1>
+              <h1 className="text-2xl font-bold text-[#002B5B] mb-6">Bon de Livraison - {livraisonActive.id}</h1>
 
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
                 <h3 className="font-bold text-sm text-gray-700 mb-2">Client :</h3>
@@ -429,7 +430,7 @@ export default function ChauffeurDashboard() {
                   onClick={validerLivraison}
                   className="flex-1 bg-green-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-600 min-h-[44px]"
                 >
-                  ✅ Valider la livraison
+                  Valider la livraison
                 </button>
                 <button
                   onClick={() => { setLivraisonActive(null); setSignatureData(null); }}

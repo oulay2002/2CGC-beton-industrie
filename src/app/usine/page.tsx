@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import { updateStockMatiere } from '@/lib/supabase/services';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
+import { AlertTriangle, CheckCircle2, Cog, FileText, HardHat, MessageCircle, Package, Siren, Truck } from 'lucide-react';
 
 type Commande = CommandeStore;
 
@@ -188,7 +189,7 @@ export default function UsineDashboard() {
       type: 'livraison',
     });
 
-    setNotificationAction(`✅ Stock suffisant ! Bon de Livraison généré pour ${cmd.id} et affecté à ${chauffeurNom}.`);
+    setNotificationAction(`Stock suffisant ! Bon de Livraison généré pour ${cmd.id} et affecté à ${chauffeurNom}.`);
     setTimeout(() => setNotificationAction(null), 5000);
   };
 
@@ -213,18 +214,18 @@ export default function UsineDashboard() {
       }
       return m;
     }));
-    setAlertStockMessage(`✅ Réapprovisionnement de +${quantiteAjout} Tonnes enregistré avec succès.`);
+    setAlertStockMessage(`Réapprovisionnement de +${quantiteAjout} Tonnes enregistré avec succès.`);
     setModalReappro(null);
     setTimeout(() => setAlertStockMessage(null), 4000);
   };
 
   const genererLienWhatsAppAlerteDG = (matiere: typeof stocksMatieres[0]) => {
-    const texte = `🚨 *ALERTE STOCK CRITIQUE USINE 2CGC DALOA*\n\n` +
+    const texte =`*ALERTE STOCK CRITIQUE USINE 2CGC DALOA*\n\n` +
       `Bonjour Direction Générale,\n` +
       `Le niveau de *${matiere.nom}* a atteint son seuil critique !\n\n` +
-      `📊 *Stock actuel :* ${matiere.quantiteTonnes} ${matiere.unite} (Seuil d'alerte : ${matiere.seuilCritiqueTonnes} ${matiere.unite})\n` +
-      `🏭 *Capacité silo :* ${matiere.capaciteMaxTonnes} ${matiere.unite}\n` +
-      `🚚 *Fournisseur recommandé :* ${matiere.fournisseur}\n\n` +
+      `*Stock actuel :* ${matiere.quantiteTonnes} ${matiere.unite} (Seuil d'alerte : ${matiere.seuilCritiqueTonnes} ${matiere.unite})\n` +
+      `*Capacité silo :* ${matiere.capaciteMaxTonnes} ${matiere.unite}\n` +
+      `*Fournisseur recommandé :* ${matiere.fournisseur}\n\n` +
       `Merci d'émettre un bon de commande fournisseur d'urgence afin d'éviter tout arrêt de presse.\n` +
       `*Chef d'Usine 2CGC*`;
     return `https://wa.me/2250707621799?text=${encodeURIComponent(texte)}`;
@@ -250,7 +251,7 @@ export default function UsineDashboard() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-black transition-colors shadow flex items-center gap-1.5 cursor-pointer border border-emerald-400/30"
               title="Tester les commandes et demandes de devis WhatsApp"
             >
-              <span>💬</span>
+              <MessageCircle className="w-4 h-4" />
               <span>Simulateur WhatsApp Live</span>
             </button>
             {user.role === 'dirigeant' && (
@@ -279,15 +280,15 @@ export default function UsineDashboard() {
         {!commandeSelectionnee ? (
           <>
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-[#002B5B]">Bonjour {user.nom} 🏭</h1>
+              <h1 className="text-3xl font-bold text-[#002B5B]">Bonjour {user.nom} </h1>
               <p className="text-gray-600 mt-1">Gestion de la production et préparation des commandes</p>
             </div>
 
             {/* Notification Bon de Livraison Direct */}
             {notificationAction && (
-              <div className="mb-6 p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-2xl text-sm font-bold flex items-center justify-between shadow-sm animate-bounce">
+              <div className="mb-6 p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-2xl text-sm font-bold flex items-center justify-between shadow-sm animate-pulse">
                 <span className="flex items-center gap-2">
-                  <span>🚛</span> {notificationAction}
+                  <Truck className="w-4 h-4" /> {notificationAction}
                 </span>
                 <span className="text-xs bg-emerald-200 text-emerald-900 px-3 py-1 rounded-full uppercase">BL Téléchargé</span>
               </div>
@@ -295,20 +296,20 @@ export default function UsineDashboard() {
 
             {/* Stats production */}
             <div className="grid md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
-                <div className="text-sm text-gray-500 mb-1">📥 À préparer</div>
+              <div className="bg-white rounded-xl shadow-md p-6 border border-red-500">
+                <div className="text-sm text-gray-500 mb-1">À préparer</div>
                 <div className="text-3xl font-bold text-[#002B5B]">{commandesAPreparer.length}</div>
                 <div className="text-xs text-red-600 mt-1">Nouvelles commandes</div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
-                <div className="text-sm text-gray-500 mb-1">⚙️ En production</div>
+              <div className="bg-white rounded-xl shadow-md p-6 border border-yellow-500">
+                <div className="text-sm text-gray-500 mb-1">En production</div>
                 <div className="text-3xl font-bold text-[#002B5B]">{commandesEnProduction.length}</div>
                 <div className="text-xs text-gray-500 mt-1">En cours de fabrication</div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-                <div className="text-sm text-gray-500 mb-1">✅ Prêtes à livrer</div>
+              <div className="bg-white rounded-xl shadow-md p-6 border border-green-500">
+                <div className="text-sm text-gray-500 mb-1">Prêtes à livrer</div>
                 <div className="text-3xl font-bold text-[#002B5B]">{commandesPretes.length}</div>
                 <div className="text-xs text-green-600 mt-1">En attente de chauffeur</div>
               </div>
@@ -327,7 +328,7 @@ export default function UsineDashboard() {
               <div className="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                 <div>
                   <h2 className="text-xl font-black text-[#002B5B] flex items-center gap-2">
-                    <span>🏗️</span> Niveaux des Silos &amp; Stocks Matières Premières
+                    <HardHat className="w-4 h-4" /> Niveaux des Silos &amp; Stocks Matières Premières
                   </h2>
                   <p className="text-gray-500 text-xs mt-1">
                     Supervision en temps réel des intrants de fabrication à l'usine 2CGC de Daloa
@@ -360,8 +361,8 @@ export default function UsineDashboard() {
                           {mat.id === 'ciment' ? 'Silo Ciment' : mat.id === 'sable' ? 'Parc Sable' : mat.id === 'gravier' ? 'Parc Gravier' : 'Adjuvants'}
                         </span>
                         {isCritique ? (
-                          <span className="text-[10px] font-black uppercase bg-red-600 text-white px-2 py-0.5 rounded-full animate-bounce">
-                            ⚠️ Critique
+                          <span className="text-[10px] font-black uppercase bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse">
+                            Critique
                           </span>
                         ) : (
                           <span className="text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
@@ -397,8 +398,8 @@ export default function UsineDashboard() {
                       </div>
 
                       <div className="text-[11px] text-gray-500 space-y-0.5 mb-3 border-t border-gray-200/50 pt-2">
-                        <div>⏱️ Conso : <span className="font-semibold">{mat.consommationMoyenne}</span></div>
-                        <div className="truncate" title={mat.fournisseur}>🚚 {mat.fournisseur}</div>
+                        <div>Conso : <span className="font-semibold">{mat.consommationMoyenne}</span></div>
+                        <div className="truncate" title={mat.fournisseur}>{mat.fournisseur}</div>
                       </div>
 
                       {/* Boutons Action */}
@@ -420,7 +421,7 @@ export default function UsineDashboard() {
                             rel="noopener noreferrer"
                             className="w-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold py-2 rounded-xl transition-colors flex items-center justify-center gap-1 shadow-sm"
                           >
-                            <span>🚨</span> Alerter DG (WhatsApp)
+                            <Siren className="w-4 h-4" /> Alerter DG (WhatsApp)
                           </a>
                         )}
                       </div>
@@ -436,7 +437,7 @@ export default function UsineDashboard() {
                 <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-150">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-black text-lg text-[#002B5B]">
-                      📦 Réapprovisionner le stock
+                      Réapprovisionner le stock
                     </h3>
                     <button 
                       onClick={() => setModalReappro(null)}
@@ -497,10 +498,10 @@ export default function UsineDashboard() {
             {/* Commandes à préparer */}
             {commandesAPreparer.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">📥 Commandes à préparer</h2>
+                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">Commandes à préparer</h2>
                 <div className="space-y-4">
                   {commandesAPreparer.map((cmd) => (
-                    <div key={cmd.id} className="bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-red-500">
+                    <div key={cmd.id} className="bg-white rounded-xl shadow-md overflow-hidden border border-red-500">
                       <div className="p-6">
                         <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                           <div>
@@ -508,7 +509,7 @@ export default function UsineDashboard() {
                               <span className="font-bold text-lg text-[#002B5B]">{cmd.id}</span>
                               {(cmd.client.email?.includes('@whatsapp.2cgc.ci') || cmd.notes?.includes('WhatsApp')) && (
                                 <span className="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
-                                  💬 WhatsApp Live
+                                  WhatsApp Live
                                 </span>
                               )}
                             </div>
@@ -527,14 +528,14 @@ export default function UsineDashboard() {
                             <div className="mb-4">
                               <div className="flex items-center justify-between mb-2">
                                 <h4 className="font-bold text-xs text-gray-700 uppercase tracking-wider">
-                                  🔍 Contrôle Stock Disponibilité Usine :
+                                  Contrôle Stock Disponibilité Usine :
                                 </h4>
                                 <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
                                   estTotalementEnStock 
                                     ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' 
                                     : 'bg-amber-100 text-amber-900 border border-amber-200'
                                 }`}>
-                                  {estTotalementEnStock ? '✅ Stock Suffisant (Direct BL)' : '⚙️ Stock Insuffisant (Production requise)'}
+                                  {estTotalementEnStock ? 'Stock Suffisant (Direct BL)' : 'Stock Insuffisant (Production requise)'}
                                 </span>
                               </div>
 
@@ -563,34 +564,34 @@ export default function UsineDashboard() {
                                 {estTotalementEnStock ? (
                                   <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 space-y-3">
                                     <div className="text-xs text-emerald-900 font-semibold flex items-center gap-1.5">
-                                      <span>📦</span> Le stock actuel couvre intégralement cette commande. Vous pouvez émettre le Bon de Livraison immédiatement.
+                                      <Package className="w-4 h-4" /> Le stock actuel couvre intégralement cette commande. Vous pouvez émettre le Bon de Livraison immédiatement.
                                     </div>
                                     <div className="flex flex-col sm:flex-row gap-2">
                                       <button
                                         onClick={() => validerEtGenererBLDirect(cmd, CHAUFFEURS[0].nom, CHAUFFEURS[0].vehicules[0])}
                                         className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-black text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                                       >
-                                        <span>📄</span> Émettre Bon de Livraison Direct (Stock dispo)
+                                        <FileText className="w-4 h-4" /> Émettre Bon de Livraison Direct (Stock dispo)
                                       </button>
                                       <button
                                         onClick={() => updateStatutProduction(cmd.id, 'en_cours')}
                                         className="px-3.5 py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl font-bold text-xs transition-colors"
                                         title="Lancer quand même un cycle de presse pour reconstituer les stocks"
                                       >
-                                        ⚙️ Lancer aussi fabrication
+                                        Lancer aussi fabrication
                                       </button>
                                     </div>
                                   </div>
                                 ) : (
                                   <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 space-y-2">
                                     <div className="text-xs text-amber-900 font-semibold flex items-center gap-1.5">
-                                      <span>⚠️</span> Quantités en stock insuffisantes. Le lancement en fabrication est obligatoire avant livraison.
+                                      <AlertTriangle className="w-4 h-4" /> Quantités en stock insuffisantes. Le lancement en fabrication est obligatoire avant livraison.
                                     </div>
                                     <button
                                       onClick={() => updateStatutProduction(cmd.id, 'en_cours')}
                                       className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-xl font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                                     >
-                                      <span>⚙️</span> Lancer la production usine
+                                      <Cog className="w-4 h-4" /> Lancer la production usine
                                     </button>
                                   </div>
                                 )}
@@ -608,10 +609,10 @@ export default function UsineDashboard() {
             {/* Commandes en production */}
             {commandesEnProduction.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">⚙️ En production</h2>
+                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">En production</h2>
                 <div className="space-y-4">
                   {commandesEnProduction.map((cmd) => (
-                    <div key={cmd.id} className="bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-yellow-500">
+                    <div key={cmd.id} className="bg-white rounded-xl shadow-md overflow-hidden border border-yellow-500">
                       <div className="p-6">
                         <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                           <div>
@@ -634,7 +635,7 @@ export default function UsineDashboard() {
                           onClick={() => updateStatutProduction(cmd.id, 'prete')}
                           className="w-full bg-green-500 text-white py-3 rounded-lg font-bold hover:bg-green-600 min-h-[44px]"
                         >
-                          ✅ Marquer comme prête à livrer
+                          Marquer comme prête à livrer
                         </button>
                       </div>
                     </div>
@@ -646,10 +647,10 @@ export default function UsineDashboard() {
             {/* Commandes prêtes - Génération BL */}
             {commandesPretes.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">✅ Prêtes à livrer - Générer le Bon de Livraison</h2>
+                <h2 className="text-2xl font-bold text-[#002B5B] mb-4">Prêtes à livrer - Générer le Bon de Livraison</h2>
                 <div className="space-y-4">
                   {commandesPretes.map((cmd) => (
-                    <div key={cmd.id} className="bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-green-500">
+                    <div key={cmd.id} className="bg-white rounded-xl shadow-md overflow-hidden border border-green-500">
                       <div className="p-6">
                         <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                           <div>
@@ -692,7 +693,7 @@ export default function UsineDashboard() {
                           onClick={() => genererBonLivraison(cmd)}
                           className="w-full bg-[#002B5B] text-white py-3 rounded-lg font-bold hover:bg-[#001d3d] min-h-[44px]"
                         >
-                          📄 Générer le Bon de Livraison
+                          Générer le Bon de Livraison
                         </button>
                       </div>
                     </div>
@@ -703,7 +704,7 @@ export default function UsineDashboard() {
 
             {commandesPretes.length === 0 && commandesAPreparer.length === 0 && commandesEnProduction.length === 0 && (
               <div className="bg-white rounded-xl shadow-md p-12 text-center">
-                <div className="text-6xl mb-4">✅</div>
+                <CheckCircle2 className="w-14 h-14 mb-4" />
                 <p className="text-gray-500">Aucune commande à traiter</p>
               </div>
             )}

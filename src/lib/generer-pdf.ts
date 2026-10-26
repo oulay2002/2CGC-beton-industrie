@@ -316,7 +316,7 @@ export function genererPDF(data: DevisData) {
   if (data.recap.totalCO2) {
     doc.setTextColor(22, 101, 52);
     doc.setFont('helvetica', 'bold');
-    doc.text(`🌱 Empreinte carbone estimée du lot : ${data.recap.totalCO2.toFixed(1)} kg CO2e`, 16, finalY + 39);
+    doc.text(`Empreinte carbone estimée du lot : ${data.recap.totalCO2.toFixed(1)} kg CO2e`, 16, finalY + 39);
   }
 
   // Tableau Totaux Financiers (Droite)

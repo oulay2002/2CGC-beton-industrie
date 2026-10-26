@@ -1,32 +1,34 @@
 "use client";
 
+import type { LucideIcon } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth, CompteUtilisateur, NouveauCompte, UserRole, genererMotDePasse } from '@/lib/auth-context';
+import { BarChart3, Briefcase, Factory, Files, Mail, MessageCircle, PartyPopper, Printer, RefreshCw, Search, Truck, User, Users } from 'lucide-react';
 import {
   imprimerTrousseauCollaborateursPDF,
   imprimerFicheCollaborateurPDF,
   exporterTrousseauCSV,
 } from '@/lib/import-export-clients';
 
-const ROLES_INFO: Record<string, { label: string; badge: string; icon: string; desc: string }> = {
+const ROLES_INFO: Record<string, { label: string; badge: string; Icone: LucideIcon; desc: string }> = {
   chef_usine: {
     label: "Chef d'Usine",
     badge: 'bg-orange-100 text-orange-800 border-orange-200',
-    icon: '🏭',
+    Icone: Factory,
     desc: 'Validation des ordres de fabrication, suivi des stocks de ciment et agrégats',
   },
   chauffeur: {
     label: 'Chauffeur Flotte',
     badge: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    icon: '🚚',
+    Icone: Truck,
     desc: 'Feuille de route, bons de livraison dématérialisés et déchargement grue',
   },
   dirigeant: {
     label: 'Dirigeant 2CGC',
     badge: 'bg-purple-100 text-purple-800 border-purple-200',
-    icon: '👔',
+    Icone: Briefcase,
     desc: 'Supervision globale, comptabilité TVA, CRM et administration des accès',
   },
 };
@@ -104,7 +106,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
   const copierTexte = (texte: string, label: string) => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(texte);
-      afficherNotif(`📋 ${label} copié dans le presse-papier !`, 'success');
+      afficherNotif(`${label} copié dans le presse-papier !`, 'success');
     }
   };
 
@@ -126,14 +128,14 @@ export default function EspaceIdentifiantsCollaborateurs() {
     if (!mdp) return;
 
     const roleStr = ROLES_INFO[c.role]?.label || c.role;
-    const texte = `🔐 VOS IDENTIFIANTS 2CGC (${roleStr.toUpperCase()})\n\n` +
+    const texte =`VOS IDENTIFIANTS 2CGC (${roleStr.toUpperCase()})\n\n` +
       `Bonjour ${c.nom},\n` +
       `Voici vos accès au portail officiel 2CGC :\n\n` +
-      `🌐 Lien de connexion : https://2cgc-industrie.com/connexion\n` +
-      `📧 Identifiant : ${c.email}\n` +
-      `🔑 Mot de passe provisoire : ${mdp}\n` +
-      (c.vehicule ? `🚚 Véhicule assigné : ${c.vehicule}\n` : '') +
-      (c.permis ? `🔢 N° Permis : ${c.permis}\n` : '') +
+      `Lien de connexion : https://2cgc-industrie.com/connexion\n` +
+      `Identifiant : ${c.email}\n` +
+      `Mot de passe provisoire : ${mdp}\n` +
+      (c.vehicule ? `Véhicule assigné : ${c.vehicule}\n` : '') +
+      (c.permis ? `N° Permis : ${c.permis}\n` : '') +
       `\nConservez ces accès confidentiels. Direction Générale 2CGC Daloa.`;
     copierTexte(texte, 'Fiche d\'accès complète');
   };
@@ -152,7 +154,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
     const cleanTel = c.telephone.replace(/[\s\+\-]/g, '');
     const telFinal = cleanTel.startsWith('225') ? cleanTel : `225${cleanTel}`;
     window.open(`https://wa.me/${telFinal}?text=${encodeURIComponent(msg)}`, '_blank');
-    afficherNotif(`💬 WhatsApp ouvert pour ${c.nom}`, 'info');
+    afficherNotif(`WhatsApp ouvert pour ${c.nom}`, 'info');
   };
 
   const renvoyerEmail = async (c: CompteUtilisateur) => {
@@ -160,7 +162,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
     if (!mdp) return;
 
     try {
-      afficherNotif(`📧 Envoi des accès à ${c.email}...`, 'info');
+      afficherNotif(`Envoi des accès à ${c.email}...`, 'info');
       const res = await fetch('/api/creer-compte', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -176,9 +178,9 @@ export default function EspaceIdentifiantsCollaborateurs() {
       });
       const data = await res.json();
       if (data.mode === 'reel') {
-        afficherNotif(`✅ Identifiants officiels envoyés par email à ${c.email} !`, 'success');
+        afficherNotif(`Identifiants officiels envoyés par email à ${c.email} !`, 'success');
       } else {
-        afficherNotif(`✅ Identifiants envoyés (Mode simulation / local) !`, 'info');
+        afficherNotif(`Identifiants envoyés (Mode simulation / local) !`, 'info');
       }
     } catch {
       afficherNotif(`Erreur lors de l'envoi de l'email`, 'error');
@@ -268,7 +270,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
     setEnvoiEnCours(false);
     charger();
     setDerniersIdentifiantsGeneres({ ...compte, motDePasseProvisoire: compte.motDePasse });
-    afficherNotif(`🎉 Identifiants créés pour ${compte.nom} !`, 'success');
+    afficherNotif(`Identifiants créés pour ${compte.nom} !`, 'success');
   };
 
   const ouvrirModalReinitialiser = (c: CompteUtilisateur) => {
@@ -281,7 +283,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
     const ok = await mettreAJourMotDePasse(collabAReinitialiser.email, nouveauMDP);
     if (ok.success) {
       charger();
-      afficherNotif(`🔑 Mot de passe mis à jour pour ${collabAReinitialiser.nom} !`, 'success');
+      afficherNotif(`Mot de passe mis à jour pour ${collabAReinitialiser.nom} !`, 'success');
       setCollabAReinitialiser(null);
       setNouveauMDP('');
     } else {
@@ -344,7 +346,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow flex items-center gap-1.5 cursor-pointer"
               title="Générer le PDF officiel du trousseau des accès pour archivage"
             >
-              <span>🖨️</span>
+              <Printer className="w-4 h-4" />
               <span className="hidden sm:inline">Imprimer Trousseau (PDF)</span>
               <span className="sm:hidden">PDF</span>
             </button>
@@ -354,7 +356,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
               className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
               title="Exporter les identifiants en format Excel/CSV"
             >
-              <span>📊</span>
+              <BarChart3 className="w-4 h-4" />
               <span>CSV</span>
             </button>
 
@@ -375,7 +377,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
           notif.type === 'success' ? 'bg-emerald-600 border border-emerald-400' :
           notif.type === 'error' ? 'bg-red-600 border border-red-400' : 'bg-blue-600 border border-blue-400'
         }`}>
-          <span>{notif.type === 'success' ? '✅' : notif.type === 'error' ? '⚠️' : 'ℹ️'}</span>
+          <span>{notif.type === 'success' ? '' : notif.type === 'error' ? '' : ''}</span>
           <span>{notif.msg}</span>
         </div>
       )}
@@ -388,7 +390,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
               Espace Sécurisé Direction Générale
             </span>
             <h1 className="text-2xl sm:text-3xl font-black mt-2 text-white">
-              🔐 Trousseau & Identifiants des Collaborateurs
+              Trousseau & Identifiants des Collaborateurs
             </h1>
             <p className="text-xs sm:text-sm text-white/80 mt-1.5 leading-relaxed">
               Consultez, révélez, copiez et transmettez instantanément les identifiants et mots de passe d'accès
@@ -401,14 +403,14 @@ export default function EspaceIdentifiantsCollaborateurs() {
       {/* KPI Stats */}
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
         {[
-          { label: 'Collaborateurs Actifs', val: stats.total, icon: '👥', color: 'border-[#002B5B]' },
-          { label: "Chefs d'Usine (Daloa)", val: stats.chefsUsine, icon: '🏭', color: 'border-orange-500' },
-          { label: 'Chauffeurs Flotte', val: stats.chauffeurs, icon: '🚚', color: 'border-emerald-500' },
-          { label: 'Direction Générale', val: stats.dirigeants, icon: '👔', color: 'border-purple-500' },
+          { label: 'Collaborateurs Actifs', val: stats.total, Icone: Users, color: 'border-[#002B5B]' },
+          { label: "Chefs d'Usine (Daloa)", val: stats.chefsUsine, Icone: Factory, color: 'border-orange-500' },
+          { label: 'Chauffeurs Flotte', val: stats.chauffeurs, Icone: Truck, color: 'border-emerald-500' },
+          { label: 'Direction Générale', val: stats.dirigeants, Icone: Briefcase, color: 'border-purple-500' },
         ].map((k, i) => (
-          <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border-l-4 ${k.color}`}>
+          <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border ${k.color}`}>
             <div className="flex items-center justify-between">
-              <span className="text-xl">{k.icon}</span>
+              <k.Icone className="w-5 h-5 text-[#002B5B]" />
               <span className="text-2xl font-black text-[#002B5B]">{k.val}</span>
             </div>
             <div className="text-xs font-semibold text-gray-500 mt-1">{k.label}</div>
@@ -420,7 +422,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
       <div className="max-w-7xl mx-auto px-4 mt-6">
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full sm:w-80">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Rechercher par nom, email, véhicule, tél..."
@@ -457,7 +459,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
       <div className="max-w-7xl mx-auto px-4 mt-6">
         {collaborateursFiltres.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-gray-200 shadow-sm">
-            <div className="text-4xl mb-3">🔍</div>
+            <Search className="w-10 h-10 mb-3" />
             <h3 className="text-base font-bold text-gray-700">Aucun collaborateur trouvé</h3>
             <p className="text-xs text-gray-400 mt-1">Essayez un autre mot-clé ou générez de nouveaux identifiants.</p>
             <button
@@ -470,7 +472,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {collaborateursFiltres.map(c => {
-              const roleInfo = ROLES_INFO[c.role] || { label: c.role, badge: 'bg-gray-100 text-gray-700', icon: '👤', desc: '' };
+              const roleInfo = ROLES_INFO[c.role] || { label: c.role, badge: 'bg-gray-100 text-gray-700', Icone: User, desc: '' };
 
               return (
                 <div
@@ -487,7 +489,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                         <div>
                           <h3 className="text-sm font-black text-[#002B5B] leading-snug">{c.nom}</h3>
                           <span className={`inline-block mt-0.5 text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${roleInfo.badge}`}>
-                            {roleInfo.icon} {roleInfo.label}
+                            <roleInfo.Icone className="w-3 h-3 inline-block mr-1 -mt-0.5" />{roleInfo.label}
                           </span>
                         </div>
                       </div>
@@ -497,7 +499,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                         title="Télécharger la fiche d'accès individuelle PDF"
                         className="text-gray-400 hover:text-[#002B5B] p-1.5 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                       >
-                        🖨️
+                        
                       </button>
                     </div>
 
@@ -510,13 +512,13 @@ export default function EspaceIdentifiantsCollaborateurs() {
                       {c.vehicule && (
                         <div className="flex items-center justify-between">
                           <span className="text-gray-400">Véhicule :</span>
-                          <span className="font-bold text-emerald-800">🚚 {c.vehicule}</span>
+                          <span className="font-bold text-emerald-800">{c.vehicule}</span>
                         </div>
                       )}
                       {c.permis && (
                         <div className="flex items-center justify-between">
                           <span className="text-gray-400">Permis :</span>
-                          <span className="font-mono text-slate-700">🔢 {c.permis}</span>
+                          <span className="font-mono text-slate-700">{c.permis}</span>
                         </div>
                       )}
                     </div>
@@ -537,7 +539,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                             className="text-xs text-gray-400 hover:text-[#002B5B] p-1 hover:bg-gray-100 rounded cursor-pointer"
                             title="Copier l'identifiant"
                           >
-                            📋
+                            
                           </button>
                         </div>
                       </div>
@@ -572,7 +574,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                         className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold py-2 px-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                         title="Transmettre les identifiants sur WhatsApp"
                       >
-                        <span>💬</span>
+                        <MessageCircle className="w-4 h-4" />
                         <span>WhatsApp</span>
                       </button>
 
@@ -581,7 +583,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                         className="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold py-2 px-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                         title="Renvoyer la fiche d'accès par email"
                       >
-                        <span>📧</span>
+                        <Mail className="w-4 h-4" />
                         <span>Par Email</span>
                       </button>
                     </div>
@@ -591,7 +593,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                         onClick={() => copierFicheComplete(c)}
                         className="text-[#002B5B] hover:underline font-bold text-[11px] flex items-center gap-1 cursor-pointer"
                       >
-                        <span>📑</span> Copier toute la fiche
+                        <Files className="w-4 h-4" /> Copier toute la fiche
                       </button>
 
                       <div className="flex items-center gap-2">
@@ -600,7 +602,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                           className="text-amber-700 hover:text-amber-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
                           title="Réinitialiser le mot de passe"
                         >
-                          <span>🔄</span> Reset
+                          <RefreshCw className="w-4 h-4" /> Reset
                         </button>
 
                         {c.creeParDirigeant && (
@@ -609,7 +611,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                             className="text-red-500 hover:text-red-700 font-bold text-[11px] cursor-pointer"
                             title="Supprimer ce compte"
                           >
-                            🗑️
+                            
                           </button>
                         )}
                       </div>
@@ -639,7 +641,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
             {derniersIdentifiantsGeneres ? (
               <div className="p-6 space-y-4">
                 <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-800 text-center">
-                  <div className="text-3xl mb-1">🎉</div>
+                  <PartyPopper className="w-8 h-8 mb-1" />
                   <h3 className="font-black text-base">Identifiants créés avec succès !</h3>
                   <p className="text-xs text-emerald-700 mt-0.5">Le collaborateur peut dès maintenant se connecter.</p>
                 </div>
@@ -668,14 +670,14 @@ export default function EspaceIdentifiantsCollaborateurs() {
                     onClick={() => transmettreWhatsApp(derniersIdentifiantsGeneres)}
                     className="w-full bg-[#25D366] text-white py-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <span>💬</span> Envoyer sur WhatsApp
+                    <MessageCircle className="w-4 h-4" /> Envoyer sur WhatsApp
                   </button>
 
                   <button
                     onClick={() => imprimerFicheCollaborateurPDF(derniersIdentifiantsGeneres)}
                     className="w-full bg-[#002B5B] text-[#FFD700] py-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <span>🖨️</span> Imprimer Fiche (PDF)
+                    <Printer className="w-4 h-4" /> Imprimer Fiche (PDF)
                   </button>
                 </div>
 
@@ -693,9 +695,9 @@ export default function EspaceIdentifiantsCollaborateurs() {
                   <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Fonction *</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { role: 'chauffeur', label: 'Chauffeur', icon: '🚚' },
-                      { role: 'chef_usine', label: "Chef d'Usine", icon: '🏭' },
-                      { role: 'dirigeant', label: 'Dirigeant', icon: '👔' },
+                      { role: 'chauffeur', label: 'Chauffeur', Icone: Truck },
+                      { role: 'chef_usine', label: "Chef d'Usine", Icone: Factory },
+                      { role: 'dirigeant', label: 'Dirigeant', Icone: Briefcase },
                     ].map(r => (
                       <button
                         key={r.role}
@@ -710,7 +712,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                             : 'border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}
                       >
-                        <div className="text-xl mb-0.5">{r.icon}</div>
+                        <r.Icone className="w-5 h-5 mx-auto mb-0.5" />
                         <div className="text-xs">{r.label}</div>
                       </button>
                     ))}
@@ -790,7 +792,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                       onClick={() => setNouveauCollab(prev => ({ ...prev, motDePasse: `2CGC-${Math.floor(100 + Math.random() * 900)}!` }))}
                       className="text-[11px] text-[#002B5B] font-bold hover:underline cursor-pointer"
                     >
-                      🎲 Régénérer
+                      Régénérer
                     </button>
                   </div>
                   <input
@@ -844,7 +846,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setCollabAReinitialiser(null)}>
           <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-base font-black text-[#002B5B]">
-              🔄 Réinitialiser le mot de passe
+              Réinitialiser le mot de passe
             </h3>
             <p className="text-xs text-gray-500 mt-1">
               Pour le collaborateur : <strong>{collabAReinitialiser.nom}</strong> ({collabAReinitialiser.email})
@@ -864,7 +866,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                   onClick={() => setNouveauMDP(genererMotDePasse(collabAReinitialiser.nom))}
                   className="bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl text-xs font-bold"
                 >
-                  🎲 Aléatoire
+                  Aléatoire
                 </button>
               </div>
             </div>

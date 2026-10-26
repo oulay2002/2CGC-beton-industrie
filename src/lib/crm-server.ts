@@ -177,7 +177,7 @@ export async function changerStatut(
   lead.statut = nouveauStatut;
   lead.activites.unshift({
     date: new Date().toISOString().split('T')[0],
-    action: `🔄 Statut : "${ancien}" → "${nouveauStatut}"`,
+    action: `Statut : "${ancien}" →"${nouveauStatut}"`,
     automatique: false,
     canal: 'systeme',
   });
@@ -202,7 +202,7 @@ export async function marquerSequenceEnvoyee(
   lead.derniereRelance = dateAuj;
   lead.activites.unshift({
     date: dateAuj,
-    action: `✅ Séquence « ${sequence.nom} » envoyée par ${canal}`,
+    action: `Séquence « ${sequence.nom} » envoyée par ${canal}`,
     automatique: true,
     canal,
   });
@@ -237,7 +237,7 @@ export async function enregistrerLeadWhatsApp(params: {
     const lead = versLead(existant);
     lead.activites.unshift({
       date: new Date().toISOString().split('T')[0],
-      action: params.action || '💬 Nouveau message reçu sur WhatsApp',
+      action: params.action || 'Nouveau message reçu sur WhatsApp',
       automatique: true,
       canal: 'whatsapp',
     });

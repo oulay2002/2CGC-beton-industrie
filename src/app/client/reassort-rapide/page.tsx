@@ -7,6 +7,7 @@ import { getCommandes, ajouterCommandeDepuisDevis, Commande } from '@/lib/comman
 import { genererBonCommande } from '@/lib/generer-bons';
 import Link from 'next/link';
 import posthog from 'posthog-js';
+import { Package, ShoppingCart } from 'lucide-react';
 
 function formatFCFA(montant: number): string {
   return Math.round(montant).toLocaleString('fr-FR') + ' FCFA';
@@ -223,7 +224,7 @@ function ReassortRapidePageInner() {
           {/* Colonne gauche : Produits fréquents */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-              <h2 className="text-xl font-bold text-[#002B5B] mb-4">📦 Vos produits fréquents</h2>
+              <h2 className="text-xl font-bold text-[#002B5B] mb-4">Vos produits fréquents</h2>
               <p className="text-sm text-gray-600 mb-6">
                 Basé sur les {commandesClient.length} commande{commandesClient.length > 1 ? 's' : ''} de <strong>{clientActif.entreprise || clientActif.nom}</strong>
               </p>
@@ -281,7 +282,7 @@ function ReassortRapidePageInner() {
 
                 {produitsAffiches.length === 0 && (
                   <div className="text-center py-12 text-gray-500">
-                    <div className="text-6xl mb-4">📦</div>
+                    <Package className="w-14 h-14 mb-4" />
                     <p>Aucun produit dans votre historique</p>
                     <Link href="/catalogue" className="text-[#002B5B] font-bold hover:text-[#FFD700] mt-2 inline-block">
                       Parcourir le catalogue →
@@ -313,12 +314,12 @@ function ReassortRapidePageInner() {
 
           {/* Colonne droite : Récapitulatif */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-xl border-t-4 border-[#FFD700] p-6 sticky top-4">
-              <h2 className="text-2xl font-bold text-[#002B5B] mb-4">📋 Votre commande</h2>
+            <div className="bg-white rounded-xl shadow-xl border border-[#FFD700] p-6 sticky top-4">
+              <h2 className="text-2xl font-bold text-[#002B5B] mb-4">Votre commande</h2>
 
               {panier.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <div className="text-5xl mb-3">🛒</div>
+                  <ShoppingCart className="w-12 h-12 mb-3" />
                   <p>Votre panier est vide</p>
                   <p className="text-sm mt-2">Ajoutez des produits pour commander</p>
                 </div>
@@ -362,7 +363,7 @@ function ReassortRapidePageInner() {
                     onClick={genererCommandeRapide}
                     className="w-full bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-[#002B5B] py-4 rounded-lg font-black text-lg hover:shadow-lg transition-all min-h-[44px] mb-3"
                   >
-                    ⚡ Commander maintenant
+                    Commander maintenant
                   </button>
 
                   <div className="text-xs text-center text-gray-500">

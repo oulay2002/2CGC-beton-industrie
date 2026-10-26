@@ -169,7 +169,7 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
                 {/* Thought / Raisonnement */}
                 <div className="p-3 bg-slate-900/90 rounded-lg text-xs text-slate-300 border border-slate-800/80">
                   <p className="text-slate-400 font-semibold mb-1 text-[11px] flex items-center gap-1">
-                    ⚙️ Règle appliquée :
+                    Règle appliquée :
                   </p>
                   <p className="italic">{log.thought}</p>
                 </div>

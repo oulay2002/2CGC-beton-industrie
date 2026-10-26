@@ -6,6 +6,7 @@ import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
 import { getCommandes, Commande } from '@/lib/commandes-store';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
+import { ClipboardList, Eye, FileText, RefreshCw, ShoppingCart, Truck, Users } from 'lucide-react';
 
 const STATUT_LABELS: Record<string, { label: string; couleur: string }> = {
   livree: { label: 'Livrée', couleur: 'bg-green-100 text-green-800' },
@@ -132,9 +133,7 @@ function ClientDashboardInner() {
           <div className="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Titre et description supervision */}
             <div className="flex items-center gap-3 w-full md:w-auto">
-              <div className="w-10 h-10 rounded-xl bg-[#FFD700] text-[#002B5B] flex items-center justify-center font-black text-xl shadow flex-shrink-0">
-                👁️
-              </div>
+              <Eye className="w-5 h-5 w-10 h-10 rounded-xl bg-[#FFD700] text-[#002B5B] flex items-center justify-center font-black shadow flex-shrink-0" />
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-black uppercase tracking-wider bg-[#FFD700]/20 text-[#FFD700] px-2 py-0.5 rounded border border-[#FFD700]/40">
@@ -169,7 +168,7 @@ function ClientDashboardInner() {
                   >
                     {clients.map((c) => (
                       <option key={c.email} value={c.email}>
-                        🏢 {c.entreprise} — {c.nom} ({c.tarifSpecial || 0}% remise)
+                        {c.entreprise} — {c.nom} ({c.tarifSpecial || 0}% remise)
                       </option>
                     ))}
                   </select>
@@ -184,7 +183,7 @@ function ClientDashboardInner() {
                 className="mt-4 md:mt-0 bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] px-3.5 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow"
                 title="Gérer les comptes clients"
               >
-                <span>👥</span>
+                <Users className="w-4 h-4" />
                 <span>Gérer les comptes</span>
               </Link>
             </div>
@@ -198,7 +197,7 @@ function ClientDashboardInner() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#002B5B]/10 text-[#002B5B]">
-                {user.role === 'dirigeant' ? '👁️ Vue Client simulée' : 'Espace Client B2B'}
+                {user.role === 'dirigeant' ? 'Vue Client simulée' : 'Espace Client B2B'}
               </span>
               {clientActif.tarifSpecial ? (
                 <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
@@ -218,7 +217,7 @@ function ClientDashboardInner() {
 
           {user.role === 'dirigeant' && (
             <div className="flex items-center gap-2 bg-[#F5F5F0] px-4 py-3 rounded-xl border border-gray-200 text-xs">
-              <span className="text-lg">🔄</span>
+              <RefreshCw className="w-5 h-5" />
               <div>
                 <div className="font-bold text-[#002B5B]">Bascule rapide</div>
                 <div className="text-gray-500">Données filtrées en temps réel</div>
@@ -229,25 +228,25 @@ function ClientDashboardInner() {
 
         {/* KPIs du client sélectionné */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-[#002B5B]">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-[#002B5B]">
             <div className="text-sm text-gray-500 mb-1">Points fidélité</div>
             <div className="text-3xl font-bold text-[#FFD700]">{(clientActif.pointsFidelite || 0).toLocaleString('fr-FR')}</div>
             <div className="text-xs text-gray-500 mt-1">≈ {formatFCFA((clientActif.pointsFidelite || 0) * 10)} de réduction</div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-[#FFD700]">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-[#FFD700]">
             <div className="text-sm text-gray-500 mb-1">Remise spéciale</div>
             <div className="text-3xl font-bold text-[#002B5B]">-{clientActif.tarifSpecial || 0}%</div>
             <div className="text-xs text-gray-500 mt-1">Négociée sur catalogue</div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-green-500">
             <div className="text-sm text-gray-500 mb-1">Commandes totales</div>
             <div className="text-3xl font-bold text-[#002B5B]">{commandesClient.length}</div>
             <div className="text-xs text-gray-500 mt-1">Depuis l'ouverture du compte</div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border border-blue-500">
             <div className="text-sm text-gray-500 mb-1">Volume d'achat</div>
             <div className="text-2xl font-bold text-[#002B5B]">{formatFCFA(totalDepenses)}</div>
             <div className="text-xs text-gray-500 mt-1">Total facturé</div>
@@ -258,7 +257,7 @@ function ClientDashboardInner() {
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-[#002B5B]">📦 Commandes de {clientActif.entreprise}</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-[#002B5B]">Commandes de {clientActif.entreprise}</h2>
               <p className="text-xs text-gray-500 mt-0.5">Historique des commandes et livraisons</p>
             </div>
             {commandesClient.length > 0 && (
@@ -270,7 +269,7 @@ function ClientDashboardInner() {
 
           {commandesClient.length === 0 ? (
             <div className="text-center py-10 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
-              <div className="text-4xl mb-2">📋</div>
+              <ClipboardList className="w-10 h-10 mb-2" />
               <h3 className="font-bold text-gray-700 text-base">Aucune commande pour ce client</h3>
               <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">
                 Ce compte client n'a pas encore passé de commande ou tous les bons ont été traités.
@@ -294,7 +293,7 @@ function ClientDashboardInner() {
                           <span>{cmd.id}</span>
                           {cmd.chauffeur && (
                             <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-normal">
-                              🚚 Chauffeur : {cmd.chauffeur}
+                              Chauffeur : {cmd.chauffeur}
                             </span>
                           )}
                         </div>
@@ -323,25 +322,25 @@ function ClientDashboardInner() {
         {user.role !== 'dirigeant' && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <Link href="/devis" className="bg-[#002B5B] text-white rounded-2xl p-4 sm:p-6 hover:bg-[#001d3d] transition-all hover:shadow-lg block">
-              <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-xl mb-3">📝</div>
+              <FileText className="w-5 h-5 w-12 h-12 rounded-xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center mb-3" />
               <h3 className="font-bold text-sm sm:text-lg mb-0.5 sm:mb-1">Nouveau devis</h3>
               <p className="text-xs sm:text-sm text-white/70">Créer une demande</p>
             </Link>
 
             <Link href="/client/reassort-rapide" className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-[#FFD700] hover:shadow-lg hover:border-[#002B5B] transition-all block">
-              <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-xl mb-3">🛒</div>
+              <ShoppingCart className="w-5 h-5 w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-3" />
               <h3 className="font-bold text-sm sm:text-lg text-[#002B5B] mb-0.5 sm:mb-1">Réassort rapide</h3>
               <p className="text-xs sm:text-sm text-gray-600">Commander en 1 clic</p>
             </Link>
 
             <Link href="/client/bons-commande" className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-              <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-xl mb-3">📋</div>
+              <ClipboardList className="w-5 h-5 w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-3" />
               <h3 className="font-bold text-sm sm:text-lg text-[#002B5B] mb-0.5 sm:mb-1">Bons de commande</h3>
               <p className="text-xs sm:text-sm text-gray-600">Télécharger les BC</p>
             </Link>
 
             <Link href="/client/bons-livraison" className="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 hover:border-[#002B5B] hover:shadow-lg transition-all block">
-              <div className="w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-xl mb-3">🚚</div>
+              <Truck className="w-5 h-5 w-12 h-12 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-3" />
               <h3 className="font-bold text-sm sm:text-lg text-[#002B5B] mb-0.5 sm:mb-1">Bons de livraison</h3>
               <p className="text-xs sm:text-sm text-gray-600">Suivi et réception</p>
             </Link>

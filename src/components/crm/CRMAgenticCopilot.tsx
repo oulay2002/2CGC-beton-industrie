@@ -85,7 +85,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
         {
           id: `err-${Date.now()}`,
           sender: 'agent',
-          text: '⚠️ Désolé, une erreur est survenue lors de l\'exécution de l\'action agentique.',
+          text: 'Désolé, une erreur est survenue lors de l\'exécution de l\'action agentique.',
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -220,7 +220,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
                 <div
                   className={`max-w-[88%] rounded-2xl p-3.5 text-sm ${
                     msg.sender === 'user'
-                      ? 'bg-amber-500 text-slate-950 font-medium rounded-br-none shadow-md'
+                      ? 'bg-amber-500 text-[#002B5B] font-medium rounded-br-none shadow-md'
                       : 'bg-slate-800/90 border border-slate-700/60 text-slate-100 rounded-bl-none shadow'
                   }`}
                 >
@@ -285,7 +285,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
               <button
                 type="submit"
                 disabled={loading || !prompt.trim()}
-                className="p-2.5 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-bold rounded-xl transition shadow-md"
+                className="p-2.5 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-[#002B5B] font-bold rounded-xl transition shadow-md"
               >
                 <Send className="w-4 h-4" />
               </button>

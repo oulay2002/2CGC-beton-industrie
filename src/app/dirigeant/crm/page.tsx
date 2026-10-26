@@ -18,18 +18,19 @@ import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
 import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
 import { scoreLead, triggerAutonomousRelance, sendLeadToFactory } from '@/lib/crm-agent-engine';
+import { Banknote, BarChart3, Bot, CheckCircle2, Download, Gift, Loader, Mail, MessageCircle, Package, PartyPopper, Phone, Rocket, ScrollText, Search, TrendingUp, Zap } from 'lucide-react';
 
 const COLONNES: { id: CRMLead['statut']; label: string; couleur: string; bg: string; dot: string }[] = [
   { id: 'nouveau', label: 'Nouveau', couleur: 'border-blue-400', bg: 'bg-blue-50', dot: 'bg-blue-500' },
   { id: 'contacte', label: 'Contacté', couleur: 'border-indigo-400', bg: 'bg-indigo-50', dot: 'bg-indigo-500' },
   { id: 'devis_envoye', label: 'Devis Envoyé', couleur: 'border-yellow-400', bg: 'bg-yellow-50', dot: 'bg-yellow-500' },
   { id: 'negociation', label: 'Négociation', couleur: 'border-purple-400', bg: 'bg-purple-50', dot: 'bg-purple-500' },
-  { id: 'gagne', label: '🎉 Gagné', couleur: 'border-green-400', bg: 'bg-green-50', dot: 'bg-green-500' },
+  { id: 'gagne', label: 'Gagné', couleur: 'border-green-400', bg: 'bg-green-50', dot: 'bg-green-500' },
   { id: 'perdu', label: 'Perdu', couleur: 'border-red-400', bg: 'bg-red-50', dot: 'bg-red-500' },
 ];
 
 const CANAL_ICONS: Record<string, string> = {
-  email: '📧', whatsapp: '💬', telephone: '📞', systeme: '⚙️',
+  email: '', whatsapp: '', telephone: '', systeme: '',
 };
 
 type Onglet = 'pipeline' | 'scraping' | 'sequences' | 'templates' | 'nouveau_lead';
@@ -80,9 +81,9 @@ export default function CRMDashboard() {
       // l'utilisateur devant une relance qui n'est jamais partie.
       if (res.lienWhatsApp) window.open(res.lienWhatsApp, '_blank');
       chargerDonnees();
-      afficherNotif(`⚙️ Automatisation : ${res.message}`, 'success');
+      afficherNotif(`Automatisation : ${res.message}`, 'success');
     } else {
-      afficherNotif(`⚠️ ${res.message}`, 'error');
+      afficherNotif(`${res.message}`, 'error');
     }
   };
 
@@ -90,9 +91,9 @@ export default function CRMDashboard() {
     const res = await sendLeadToFactory(lead.id);
     if (res.success) {
       await chargerDonnees();
-      afficherNotif(`🏭 Agent Usine : ${res.message}`, 'success');
+      afficherNotif(`Agent Usine : ${res.message}`, 'success');
     } else {
-      afficherNotif(`⚠️ ${res.message}`, 'error');
+      afficherNotif(`${res.message}`, 'error');
     }
   };
 
@@ -107,7 +108,7 @@ export default function CRMDashboard() {
     if (!user || user.role !== 'dirigeant') { router.push('/connexion'); return; }
     void chargerDonnees();
 
-    // ✅ Traitement automatique des séquences email J+0 en attente
+    // Traitement automatique des séquences email J+0 en attente
     const traiterJ0Auto = async () => {
       const today = new Date().toISOString().split('T')[0];
       const leads = await getLeads();
@@ -170,20 +171,20 @@ export default function CRMDashboard() {
       if (seqId) {
         marquerSequenceEnvoyee(lead.id, seqId, 'email');
       } else {
-        ajouterActivite(lead.id, `📧 Email "${templateKey}" envoyé manuellement`, 'email');
+        ajouterActivite(lead.id, `Email"${templateKey}" envoyé manuellement`, 'email');
         if (lead.statut === 'nouveau') {
           updateLeadStatut(lead.id, 'devis_envoye');
         }
       }
       chargerDonnees();
-      afficherNotif(`📧 Email envoyé à ${lead.nom} ! Le lead passe en "Devis Envoyé".`, 'success');
+      afficherNotif(`Email envoyé à ${lead.nom} ! Le lead passe en"Devis Envoyé".`, 'success');
     } else {
       afficherNotif('Erreur lors de l\'envoi (vérifiez RESEND_API_KEY)', 'error');
     }
   };
 
   const handleLancerAutomationsManuelles = async () => {
-    afficherNotif('⚡ Lancement des séquences automatiques J+0 et envoi des emails...', 'info');
+    afficherNotif('Lancement des séquences automatiques J+0 et envoi des emails...', 'info');
     const today = new Date().toISOString().split('T')[0];
     const leads = await getLeads();
     let nbEnvoyes = 0;
@@ -205,7 +206,7 @@ export default function CRMDashboard() {
       }
     }
     chargerDonnees();
-    afficherNotif(`✅ ${nbEnvoyes} email(s) envoyé(s) automatiquement ! Pipeline actualisé.`, 'success');
+    afficherNotif(`${nbEnvoyes} email(s) envoyé(s) automatiquement ! Pipeline actualisé.`, 'success');
   };
 
   const handleEnvoyerWhatsApp = (lead: CRMLead, templateKey: string, seqId?: string) => {
@@ -215,9 +216,9 @@ export default function CRMDashboard() {
     });
     window.open(lien, '_blank');
     if (seqId) marquerSequenceEnvoyee(lead.id, seqId, 'whatsapp');
-    else ajouterActivite(lead.id, `💬 WhatsApp "${templateKey}" envoyé manuellement`, 'whatsapp');
+    else ajouterActivite(lead.id, `WhatsApp"${templateKey}" envoyé manuellement`, 'whatsapp');
     chargerDonnees();
-    afficherNotif(`💬 WhatsApp ouvert pour ${lead.nom}`, 'info');
+    afficherNotif(`WhatsApp ouvert pour ${lead.nom}`, 'info');
   };
 
   const handleCreerLead = async () => {
@@ -233,18 +234,18 @@ export default function CRMDashboard() {
     await chargerDonnees();
     setFormNouveauLead({ nom: '', entreprise: '', email: '', telephone: '', produitInteresse: '', valeurEstimee: '', notes: '' });
     setOnglet('pipeline');
-    afficherNotif(`✅ Lead "${nouveauLead.nom}" créé ! Envoi de l'email de bienvenue...`, 'info');
+    afficherNotif(`Lead"${nouveauLead.nom}" créé ! Envoi de l'email de bienvenue...`, 'info');
 
-    // ✅ Déclenchement automatique de l'email J+0 (bienvenue)
+    // Déclenchement automatique de l'email J+0 (bienvenue)
     const seqJ0 = nouveauLead.sequences.find(s => s.template === 'bienvenue' && s.canal === 'email');
     if (seqJ0 && nouveauLead.email) {
       const ok = await envoyerEmail(nouveauLead, 'bienvenue');
       if (ok) {
         await marquerSequenceEnvoyee(nouveauLead.id, seqJ0.id, 'email');
         await chargerDonnees();
-        afficherNotif(`📧 Email de bienvenue envoyé automatiquement à ${nouveauLead.nom} !`, 'success');
+        afficherNotif(`Email de bienvenue envoyé automatiquement à ${nouveauLead.nom} !`, 'success');
       } else {
-        afficherNotif(`⚠️ Lead créé, mais l'email J+0 a échoué — vérifiez RESEND_API_KEY`, 'error');
+        afficherNotif(`Lead créé, mais l'email J+0 a échoué — vérifiez RESEND_API_KEY`, 'error');
       }
     }
   };
@@ -267,7 +268,7 @@ export default function CRMDashboard() {
         setProspectsScrapes(data.prospects);
         setSourcesScrapees(data.sourcesScrapees || []);
         setSelectionProspects(data.prospects.map((p: ProspectScrape) => p.id));
-        afficherNotif(`🎯 ${data.totalTrouves} prospects BTP qualifiés extraits !`, 'success');
+        afficherNotif(`${data.totalTrouves} prospects BTP qualifiés extraits !`, 'success');
       } else {
         afficherNotif('Erreur lors de l\'extraction des prospects', 'error');
       }
@@ -311,7 +312,7 @@ export default function CRMDashboard() {
     })));
 
     await chargerDonnees();
-    afficherNotif(`📥 ${importes.length} nouveaux prospects ajoutés au Pipeline CRM !`, 'success');
+    afficherNotif(`${importes.length} nouveaux prospects ajoutés au Pipeline CRM !`, 'success');
   };
 
   const handleCampagneEmailAuto = async () => {
@@ -325,7 +326,7 @@ export default function CRMDashboard() {
     handleImporterSelection();
 
     setEnvoiAutoEnCours(true);
-    afficherNotif(`🚀 Démarrage de la campagne email (${aEnvoyer.length} prospects BTP)...`, 'info');
+    afficherNotif(`Démarrage de la campagne email (${aEnvoyer.length} prospects BTP)...`, 'info');
     let succes = 0;
 
     for (const p of aEnvoyer) {
@@ -352,7 +353,7 @@ export default function CRMDashboard() {
 
     setEnvoiAutoEnCours(false);
     chargerDonnees();
-    afficherNotif(`✉️ ${succes}/${aEnvoyer.length} emails de prospection B2B envoyés ! Les prospects sont passés en "Devis Envoyé".`, 'success');
+    afficherNotif(`${succes}/${aEnvoyer.length} emails de prospection B2B envoyés ! Les prospects sont passés en"Devis Envoyé".`, 'success');
   };
 
   const handleLancerWhatsAppQueue = () => {
@@ -374,7 +375,7 @@ export default function CRMDashboard() {
       produit: p.produitInteresse,
     });
     window.open(lien, '_blank');
-    afficherNotif(`💬 WhatsApp ouvert pour ${p.entreprise} (${p.nom})`, 'info');
+    afficherNotif(`WhatsApp ouvert pour ${p.entreprise} (${p.nom})`, 'info');
   };
 
   // Calculs KPIs
@@ -394,7 +395,7 @@ export default function CRMDashboard() {
             <Link href="/dirigeant" className="text-[#FFD700] font-bold hover:underline text-sm">← Dashboard</Link>
             <span className="text-white/30 hidden sm:block">|</span>
             <div>
-              <h1 className="text-lg font-black">🤖 CRM Automatisé</h1>
+              <h1 className="text-lg font-black">CRM Automatisé</h1>
               <div className="text-xs text-white/60">{leads.length} leads · {gagnes.length} gagnés · {tauxConversion}% conversion</div>
             </div>
           </div>
@@ -404,7 +405,7 @@ export default function CRMDashboard() {
               className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer border border-amber-400/40"
               title="Consulter le journal des actions exécutées automatiquement"
             >
-              <span>📜</span>
+              <ScrollText className="w-4 h-4" />
               <span>Journal des automatisations</span>
             </button>
             <button
@@ -412,7 +413,7 @@ export default function CRMDashboard() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-400/30"
               title="Tester et simuler en direct les demandes de devis et commandes WhatsApp"
             >
-              <span>💬</span>
+              <MessageCircle className="w-4 h-4" />
               <span>Simulateur WhatsApp Live</span>
             </button>
             <button
@@ -420,12 +421,12 @@ export default function CRMDashboard() {
               className="bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer"
               title="Lancer l'envoi immédiat de toutes les séquences emails J+0 en attente"
             >
-              <span>⚡</span>
+              <Zap className="w-4 h-4" />
               <span>Lancer Automations J+0</span>
             </button>
             {metriques && metriques.sequencesEnAttente > 0 && (
               <div className="bg-red-500 text-white text-xs px-3 py-1.5 rounded-full font-bold animate-pulse">
-                🔔 {metriques.sequencesEnAttente} actions à traiter
+                {metriques.sequencesEnAttente} actions à traiter
               </div>
             )}
             <div className="text-sm text-white/70">{user.nom}</div>
@@ -435,10 +436,10 @@ export default function CRMDashboard() {
         {/* Onglets navigation */}
         <div className="px-6 flex gap-1 border-t border-white/10 overflow-x-auto">
           {([
-            { id: 'pipeline', label: '📊 Pipeline', badge: null },
-            { id: 'scraping', label: '🔍 Annuaire Prospects BTP', badge: null },
-            { id: 'sequences', label: '🤖 Séquences', badge: sequencesEnAttente.length || null },
-            { id: 'templates', label: '📋 Modèles', badge: null },
+            { id: 'pipeline', label: 'Pipeline', badge: null },
+            { id: 'scraping', label: 'Annuaire Prospects BTP', badge: null },
+            { id: 'sequences', label: 'Séquences', badge: sequencesEnAttente.length || null },
+            { id: 'templates', label: 'Modèles', badge: null },
             { id: 'nouveau_lead', label: '➕ Nouveau Lead', badge: null },
           ] as const).map(t => (
             <button
@@ -471,14 +472,14 @@ export default function CRMDashboard() {
       {/* ====== KPI BAR ====== */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 p-4 max-w-full">
         {[
-          { label: 'Pipeline actif', val: pipeline.length, color: 'border-blue-400', icon: '📊' },
-          { label: 'Valeur pipeline', val: formatFCFA(valeurPipeline), color: 'border-yellow-400', icon: '💰' },
-          { label: 'Revenus gagnés', val: formatFCFA(valeurGagnee), color: 'border-green-400', icon: '🎉' },
-          { label: 'Taux conversion', val: `${tauxConversion}%`, color: 'border-purple-400', icon: '📈' },
-          { label: 'Actions bot', val: metriques?.sequencesEnAttente ?? '...', color: 'border-red-400', icon: '🤖' },
+          { label: 'Pipeline actif', val: pipeline.length, color: 'border-blue-400', Icone: BarChart3 },
+          { label: 'Valeur pipeline', val: formatFCFA(valeurPipeline), color: 'border-yellow-400', Icone: Banknote },
+          { label: 'Revenus gagnés', val: formatFCFA(valeurGagnee), color: 'border-green-400', Icone: PartyPopper },
+          { label: 'Taux conversion', val: `${tauxConversion}%`, color: 'border-purple-400', Icone: TrendingUp },
+          { label: 'Actions bot', val: metriques?.sequencesEnAttente ?? '...', color: 'border-red-400', Icone: Bot },
         ].map((k, i) => (
-          <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border-l-4 ${k.color}`}>
-            <div className="w-9 h-9 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center text-lg mb-2">{k.icon}</div>
+          <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border ${k.color}`}>
+            <div className="w-9 h-9 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-2"><k.Icone className="w-4 h-4 text-[#002B5B]" /></div>
             <div className="text-xs text-gray-500 font-medium">{k.label}</div>
             <div className="text-lg font-black text-[#002B5B] mt-0.5">{k.val}</div>
           </div>
@@ -494,7 +495,7 @@ export default function CRMDashboard() {
               return (
                 <div key={col.id} className="flex-shrink-0 w-72">
                   {/* En-tête colonne */}
-                  <div className={`flex items-center justify-between px-4 py-3 rounded-t-2xl border-t-4 ${col.couleur} bg-white mb-0.5`}>
+                  <div className={`flex items-center justify-between px-4 py-3 rounded-t-2xl border ${col.couleur} bg-white mb-0.5`}>
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${col.dot}`} />
                       <h3 className="font-black text-[#002B5B] text-sm">{col.label}</h3>
@@ -524,8 +525,8 @@ export default function CRMDashboard() {
                             lead.source === 'whatsapp' ? 'bg-green-100 text-green-700' :
                             'bg-gray-100 text-gray-600'
                           }`}>
-                            {lead.source === 'chatbot' ? '🤖 Bot' : lead.source === 'devis_auto' ? '📄 Devis' :
-                             lead.source === 'whatsapp' ? '💬 WA' : '🌐 Web'}
+                            {lead.source === 'chatbot' ? 'Bot' : lead.source === 'devis_auto' ? 'Devis' :
+                             lead.source === 'whatsapp' ? 'WA' : 'Web'}
                           </span>
                         </div>
 
@@ -545,13 +546,13 @@ export default function CRMDashboard() {
                           return (
                             <div className="mb-2 flex items-center justify-between text-[10px] bg-slate-900 text-slate-100 px-2 py-1 rounded-lg border border-slate-700">
                               <span className="flex items-center gap-1 font-bold">
-                                <span>⚡ Priorité :</span>
+                                <span>Priorité :</span>
                                 <span className={aiScore.score >= 75 ? 'text-emerald-400 font-extrabold' : aiScore.score >= 50 ? 'text-amber-400 font-extrabold' : 'text-rose-400 font-extrabold'}>
                                   {aiScore.score}%
                                 </span>
                               </span>
                               <span className="text-[9px] text-slate-300 truncate max-w-[110px]" title={aiScore.recommandation}>
-                                {aiScore.priorite === 'haute' ? '🔥 Haute' : aiScore.priorite === 'moyenne' ? '⚡ Moyenne' : '💤 Faible'}
+                                {aiScore.priorite === 'haute' ? 'Haute' : aiScore.priorite === 'moyenne' ? 'Moyenne' : 'Faible'}
                               </span>
                             </div>
                           );
@@ -580,21 +581,21 @@ export default function CRMDashboard() {
                             className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/60 text-[10px] font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1"
                             title="Déclencher une relance automatique pour ce prospect"
                           >
-                            ⚙️ Relancer
+                            Relancer
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); handleEnvoyerEmail(lead, 'relance_j2'); }}
                             disabled={envoyant === `${lead.id}-relance_j2`}
                             className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-bold py-1.5 rounded-lg transition-colors disabled:opacity-50"
                           >
-                            {envoyant === `${lead.id}-relance_j2` ? '⏳' : '📧'} Email
+                            {envoyant === `${lead.id}-relance_j2` ? '' : ''} Email
                           </button>
                           {lead.telephone && lead.telephone !== 'Non renseigné' && (
                             <button
                               onClick={(e) => { e.stopPropagation(); handleEnvoyerWhatsApp(lead, 'relance'); }}
                               className="flex-1 bg-green-50 hover:bg-green-100 text-green-700 text-[10px] font-bold py-1.5 rounded-lg transition-colors"
                             >
-                              💬 WA
+                              WA
                             </button>
                           )}
                         </div>
@@ -647,7 +648,7 @@ export default function CRMDashboard() {
                       <div className="bg-slate-900 text-slate-100 rounded-2xl p-4 border border-amber-500/30 shadow-md space-y-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
-                            <span>⚙️ Score de priorité (calcul automatique)</span>
+                            <span>Score de priorité (calcul automatique)</span>
                           </div>
                           <span className="bg-amber-400/20 text-amber-300 font-black px-2.5 py-0.5 rounded-full text-xs border border-amber-400/30">
                             Score : {scoreData.score}% ({scoreData.priorite.toUpperCase()})
@@ -657,15 +658,15 @@ export default function CRMDashboard() {
                         <div className="flex gap-2 pt-2 border-t border-slate-800">
                           <button
                             onClick={() => handleAgentRelance(leadSelectionne)}
-                            className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black py-2 rounded-xl transition shadow"
+                            className="flex-1 bg-amber-500 hover:bg-amber-400 text-[#002B5B] text-xs font-black py-2 rounded-xl transition shadow"
                           >
-                            ⚡ Lancer la relance automatique
+                            Lancer la relance automatique
                           </button>
                           <button
                             onClick={() => handleAgentUsine(leadSelectionne)}
                             className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black py-2 rounded-xl transition shadow"
                           >
-                            🏭 Transférer Usine Daloa
+                            Transférer Usine Daloa
                           </button>
                         </div>
                       </div>
@@ -675,13 +676,13 @@ export default function CRMDashboard() {
                   {/* Infos */}
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { label: 'Email', val: leadSelectionne.email, icon: '📧' },
-                      { label: 'Téléphone', val: leadSelectionne.telephone, icon: '📞' },
-                      { label: 'Valeur estimée', val: formatFCFA(leadSelectionne.valeurEstimee), icon: '💰' },
-                      { label: 'Produit', val: leadSelectionne.produitInteresse || '—', icon: '📦' },
+                      { label: 'Email', val: leadSelectionne.email, Icone: Mail },
+                      { label: 'Téléphone', val: leadSelectionne.telephone, Icone: Phone },
+                      { label: 'Valeur estimée', val: formatFCFA(leadSelectionne.valeurEstimee), Icone: Banknote },
+                      { label: 'Produit', val: leadSelectionne.produitInteresse || '—', Icone: Package },
                     ].map((inf, i) => (
                       <div key={i} className="bg-[#F5F5F0] rounded-xl p-3">
-                        <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">{inf.icon} {inf.label}</div>
+                        <div className="text-xs text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1.5"><inf.Icone className="w-3 h-3" />{inf.label}</div>
                         <div className="text-sm font-bold text-[#002B5B] break-all">{inf.val}</div>
                       </div>
                     ))}
@@ -713,7 +714,7 @@ export default function CRMDashboard() {
                           disabled={envoyant !== null}
                           className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-3 py-2.5 rounded-xl text-xs font-bold transition-colors disabled:opacity-50"
                         >
-                          {envoyant === `${leadSelectionne.id}-${templateKey}` ? '⏳' : '📧'}
+                          {envoyant === `${leadSelectionne.id}-${templateKey}` ? '' : ''}
                           Email {templateKey.replace(/_/g, ' ')}
                         </button>
                       ))}
@@ -723,7 +724,7 @@ export default function CRMDashboard() {
                           onClick={() => handleEnvoyerWhatsApp(leadSelectionne, templateKey)}
                           className="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 px-3 py-2.5 rounded-xl text-xs font-bold transition-colors"
                         >
-                          💬 WA {templateKey}
+                          WA {templateKey}
                         </button>
                       ))}
                     </div>
@@ -743,7 +744,7 @@ export default function CRMDashboard() {
                           }`}>
                             <div>
                               <div className="text-xs font-bold text-gray-700">
-                                {seq.canal === 'email' ? '📧' : '💬'} {seq.nom}
+                                {seq.canal === 'email' ? '' : ''} {seq.nom}
                               </div>
                               <div className="text-[10px] text-gray-500">Prévu : {seq.datePrevu}</div>
                             </div>
@@ -780,7 +781,7 @@ export default function CRMDashboard() {
                           </div>
                           <div className="flex-1">
                             <div className="text-gray-700 leading-tight">{act.action}</div>
-                            <div className="text-gray-400 text-[10px] mt-0.5">{act.date} · {act.automatique ? '⚙️ Auto' : '👤 Manuel'}</div>
+                            <div className="text-gray-400 text-[10px] mt-0.5">{act.date} · {act.automatique ? 'Auto' : 'Manuel'}</div>
                           </div>
                         </div>
                       ))}
@@ -798,26 +799,26 @@ export default function CRMDashboard() {
         <div className="p-4 max-w-4xl mx-auto">
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-6">
             <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
-              <h2 className="text-lg font-black text-[#002B5B]">🤖 Séquences automatiques à traiter</h2>
+              <h2 className="text-lg font-black text-[#002B5B]">Séquences automatiques à traiter</h2>
               <span className="bg-orange-100 text-orange-700 text-xs font-black px-3 py-1 rounded-full">{sequencesEnAttente.length} en attente</span>
             </div>
             <div className="divide-y divide-gray-50">
               {sequencesEnAttente.length === 0 ? (
                 <div className="text-center py-16 text-gray-400">
-                  <div className="text-5xl mb-4">✅</div>
+                  <CheckCircle2 className="w-12 h-12 mb-4" />
                   <p className="text-sm font-semibold">Tout est à jour ! Aucune séquence en attente.</p>
                 </div>
               ) : sequencesEnAttente.map(({ lead, sequence }, i) => (
                 <div key={i} className={`p-5 flex items-center justify-between gap-4 ${sequence.datePrevu < new Date().toISOString().split('T')[0] ? 'bg-red-50' : 'bg-orange-50'}`}>
                   <div className="flex items-center gap-4">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 ${sequence.canal === 'email' ? 'bg-blue-100' : 'bg-green-100'}`}>
-                      {sequence.canal === 'email' ? '📧' : '💬'}
+                      {sequence.canal === 'email' ? '' : ''}
                     </div>
                     <div>
                       <div className="font-black text-[#002B5B] text-sm">{lead.nom} — {sequence.nom}</div>
                       <div className="text-xs text-gray-500">{lead.email} · {lead.telephone}</div>
                       <div className={`text-xs font-bold mt-0.5 ${sequence.datePrevu < new Date().toISOString().split('T')[0] ? 'text-red-600' : 'text-orange-600'}`}>
-                        Prévu : {sequence.datePrevu} {sequence.datePrevu < new Date().toISOString().split('T')[0] ? '⚠️ EN RETARD' : ''}
+                        Prévu : {sequence.datePrevu} {sequence.datePrevu < new Date().toISOString().split('T')[0] ? 'EN RETARD' : ''}
                       </div>
                     </div>
                   </div>
@@ -828,14 +829,14 @@ export default function CRMDashboard() {
                         disabled={envoyant !== null}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors disabled:opacity-50"
                       >
-                        {envoyant ? '⏳...' : '📧 Envoyer maintenant'}
+                        {envoyant ? '...' : 'Envoyer maintenant'}
                       </button>
                     ) : (
                       <button
                         onClick={() => handleEnvoyerWhatsApp(lead, sequence.template, sequence.id)}
                         className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors"
                       >
-                        💬 Ouvrir WhatsApp
+                        Ouvrir WhatsApp
                       </button>
                     )}
                   </div>
@@ -870,7 +871,7 @@ export default function CRMDashboard() {
                         seq.statut === 'annulee' ? 'bg-gray-100 text-gray-500' :
                         'bg-orange-100 text-orange-700'
                       }`}>
-                        {seq.canal === 'email' ? '📧' : '💬'} {seq.nom} · {seq.datePrevu}
+                        {seq.canal === 'email' ? '' : ''} {seq.nom} · {seq.datePrevu}
                       </div>
                     ))}
                   </div>
@@ -887,7 +888,7 @@ export default function CRMDashboard() {
           {/* Templates Email */}
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-50">
-              <h2 className="text-lg font-black text-[#002B5B]">📧 Modèles Email</h2>
+              <h2 className="text-lg font-black text-[#002B5B]">Modèles Email</h2>
               <p className="text-xs text-gray-400 mt-1">Variables disponibles : {'{nom}'}, {'{produit}'}, {'{montant}'}, {'{date_expiration}'}</p>
             </div>
             <div className="divide-y divide-gray-50">
@@ -898,7 +899,7 @@ export default function CRMDashboard() {
                       <span className="bg-blue-100 text-blue-700 text-xs font-black px-2.5 py-1 rounded-full uppercase tracking-wider">{key}</span>
                     </div>
                   </div>
-                  <div className="font-bold text-[#002B5B] text-sm mb-2">✉ {tpl.sujet}</div>
+                  <div className="font-bold text-[#002B5B] text-sm mb-2">{tpl.sujet}</div>
                   <pre className="bg-[#F5F5F0] rounded-xl p-4 text-xs text-gray-600 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto font-sans">
                     {tpl.corps}
                   </pre>
@@ -910,7 +911,7 @@ export default function CRMDashboard() {
           {/* Templates WhatsApp */}
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-50">
-              <h2 className="text-lg font-black text-[#002B5B]">💬 Modèles WhatsApp</h2>
+              <h2 className="text-lg font-black text-[#002B5B]">Modèles WhatsApp</h2>
             </div>
             <div className="divide-y divide-gray-50">
               {Object.entries(TEMPLATES_WHATSAPP).map(([key, msg]) => (
@@ -926,7 +927,7 @@ export default function CRMDashboard() {
 
           {/* Statut API email — ACTIF */}
           <div className="bg-[#002B5B] rounded-3xl p-6 text-white">
-            <h2 className="text-lg font-black mb-4">⚙️ Configuration API Email — Resend</h2>
+            <h2 className="text-lg font-black mb-4">Configuration API Email — Resend</h2>
             <div className="grid sm:grid-cols-3 gap-4 mb-4">
               <div className="glass rounded-2xl p-4">
                 <div className="text-[#FFD700] font-bold text-xs uppercase tracking-wider mb-2">Fournisseur</div>
@@ -937,7 +938,7 @@ export default function CRMDashboard() {
                 <div className="text-[#FFD700] font-bold text-xs uppercase tracking-wider mb-2">Statut</div>
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-bold text-emerald-400">✅ Actif — Envois réels</span>
+                  <span className="font-bold text-emerald-400">Actif — Envois réels</span>
                 </div>
                 <div className="text-white/60 text-xs mt-1">RESEND_API_KEY configurée dans .env.local</div>
               </div>
@@ -948,7 +949,7 @@ export default function CRMDashboard() {
               </div>
             </div>
             <div className="bg-emerald-500/20 border border-emerald-400/30 rounded-2xl p-4 text-sm">
-              <div className="font-bold text-emerald-300 mb-1">🚀 Automation active</div>
+              <div className="font-bold text-emerald-300 mb-1">Automation active</div>
               <div className="text-white/70 text-xs leading-relaxed">
                 Les emails de bienvenue, relance J+2, offre J+7 et confirmations de commande sont envoyés <strong>automatiquement et en temps réel</strong> aux prospects et clients dès les événements déclencheurs.
               </div>
@@ -965,7 +966,7 @@ export default function CRMDashboard() {
           {/* Bandeau informatif — Automatisation */}
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl p-4 text-white">
             <div className="flex items-start gap-3">
-              <span className="text-2xl">🤖</span>
+              <Bot className="w-6 h-6" />
               <div>
                 <div className="font-black text-sm mb-1">Quatre relances programmées dès la création</div>
                 <div className="text-emerald-100 text-xs leading-relaxed">
@@ -974,13 +975,13 @@ export default function CRMDashboard() {
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-1.5">
                   {[
-                    { icon: '📧', label: 'Email bienvenue', timing: 'Immédiatement (J+0)' },
-                    { icon: '📧', label: 'Relance email', timing: 'Dans 2 jours (J+2)' },
-                    { icon: '💬', label: 'WhatsApp relance', timing: 'J+5 — à valider par vous' },
-                    { icon: '🎁', label: 'Offre spéciale', timing: 'Dans 7 jours (J+7)' },
+                    { Icone: Mail, label: 'Email bienvenue', timing: 'Immédiatement (J+0)' },
+                    { Icone: Mail, label: 'Relance email', timing: 'Dans 2 jours (J+2)' },
+                    { Icone: MessageCircle, label: 'WhatsApp relance', timing: 'J+5 — à valider par vous' },
+                    { Icone: Gift, label: 'Offre spéciale', timing: 'Dans 7 jours (J+7)' },
                   ].map((s, i) => (
                     <div key={i} className="bg-white/10 rounded-xl px-3 py-2">
-                      <div className="text-xs font-bold">{s.icon} {s.label}</div>
+                      <div className="text-xs font-bold flex items-center gap-1.5"><s.Icone className="w-3.5 h-3.5" />{s.label}</div>
                       <div className="text-[10px] text-emerald-200">{s.timing}</div>
                     </div>
                   ))}
@@ -1032,7 +1033,7 @@ export default function CRMDashboard() {
                 {envoyant ? (
                   <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg> Création + envoi email en cours...</>
                 ) : (
-                  <>🚀 Créer le lead + envoyer l'email de bienvenue</>
+                  <>Créer le lead + envoyer l'email de bienvenue</>
                 )}
               </button>
             </div>
@@ -1045,11 +1046,11 @@ export default function CRMDashboard() {
       {onglet === 'scraping' && (
         <div className="p-4 max-w-7xl mx-auto space-y-6">
           {/* Bannière explicative */}
-          <div className="bg-gradient-to-r from-[#001D3D] via-[#002B5B] to-[#08305d] rounded-3xl p-6 text-white shadow-xl border-t-4 border-[#FFD700]">
+          <div className="bg-gradient-to-r from-[#001D3D] via-[#002B5B] to-[#08305d] rounded-3xl p-6 text-white shadow-xl border border-[#FFD700]">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
               <div>
                 <div className="inline-flex items-center gap-2 bg-[#FFD700]/20 text-[#FFD700] px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border border-[#FFD700]/30 mb-2">
-                  <span>⚡</span>
+                  <Zap className="w-4 h-4" />
                   <span>Annuaire de prospects BTP — Côte d&apos;Ivoire</span>
                 </div>
                 <h2 className="text-2xl font-black text-white">Répertoire de prospects BTP, promoteurs et quincailleries</h2>
@@ -1065,9 +1066,9 @@ export default function CRMDashboard() {
               </div>
 
               <div className="flex flex-wrap gap-2 text-xs">
-                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">📍 Daloa & Abidjan</span>
-                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">💬 Numéros WhatsApp</span>
-                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">✉️ Contacts B2B</span>
+                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">Daloa & Abidjan</span>
+                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">Numéros WhatsApp</span>
+                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">Contacts B2B</span>
               </div>
             </div>
 
@@ -1084,11 +1085,11 @@ export default function CRMDashboard() {
                   className="w-full bg-white/10 text-white font-bold text-sm px-3.5 py-2.5 rounded-xl border border-white/20 focus:outline-none focus:border-[#FFD700]"
                 >
                   <option value="toutes" className="text-gray-900">🇨🇮 Toute la Côte d'Ivoire</option>
-                  <option value="daloa" className="text-gray-900">📍 Daloa (Haut-Sassandra)</option>
-                  <option value="abidjan" className="text-gray-900">📍 Abidjan (Cocody, Yopougon...)</option>
-                  <option value="san pedro" className="text-gray-900">📍 San Pedro (Bas-Sassandra)</option>
-                  <option value="bouake" className="text-gray-900">📍 Bouaké (Gbêkê)</option>
-                  <option value="yamoussoukro" className="text-gray-900">📍 Yamoussoukro (District)</option>
+                  <option value="daloa" className="text-gray-900">Daloa (Haut-Sassandra)</option>
+                  <option value="abidjan" className="text-gray-900">Abidjan (Cocody, Yopougon...)</option>
+                  <option value="san pedro" className="text-gray-900">San Pedro (Bas-Sassandra)</option>
+                  <option value="bouake" className="text-gray-900">Bouaké (Gbêkê)</option>
+                  <option value="yamoussoukro" className="text-gray-900">Yamoussoukro (District)</option>
                 </select>
               </div>
 
@@ -1102,12 +1103,12 @@ export default function CRMDashboard() {
                   onChange={(e) => setSecteurScrap(e.target.value)}
                   className="w-full bg-white/10 text-white font-bold text-sm px-3.5 py-2.5 rounded-xl border border-white/20 focus:outline-none focus:border-[#FFD700]"
                 >
-                  <option value="tous" className="text-gray-900">🏗️ Tous les secteurs BTP</option>
-                  <option value="btp" className="text-gray-900">🏢 Entreprises Générales & Gros Œuvre</option>
-                  <option value="promoteur" className="text-gray-900">🏡 Promoteurs Immobiliers</option>
-                  <option value="voirie" className="text-gray-900">🛣️ Voirie, VRD & Travaux Publics</option>
-                  <option value="architecte" className="text-gray-900">📐 Architectes & Bureaux d'Études</option>
-                  <option value="quincaillerie" className="text-gray-900">🏪 Quincailleries & Négoces Matériaux</option>
+                  <option value="tous" className="text-gray-900">Tous les secteurs BTP</option>
+                  <option value="btp" className="text-gray-900">Entreprises Générales & Gros Œuvre</option>
+                  <option value="promoteur" className="text-gray-900">Promoteurs Immobiliers</option>
+                  <option value="voirie" className="text-gray-900">Voirie, VRD & Travaux Publics</option>
+                  <option value="architecte" className="text-gray-900">Architectes & Bureaux d'Études</option>
+                  <option value="quincaillerie" className="text-gray-900">Quincailleries & Négoces Matériaux</option>
                 </select>
               </div>
 
@@ -1134,12 +1135,12 @@ export default function CRMDashboard() {
                 >
                   {scrapingEnCours ? (
                     <>
-                      <span className="animate-spin text-base">⏳</span>
+                      <Loader className="w-4 h-4 animate-spin" />
                       <span>Recherche en cours...</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-base">🚀</span>
+                      <Rocket className="w-4 h-4" />
                       <span>Rechercher dans l&apos;annuaire</span>
                     </>
                   )}
@@ -1152,7 +1153,7 @@ export default function CRMDashboard() {
           {sourcesScrapees.length > 0 && (
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2 text-gray-600">
-                <span className="font-bold text-[#002B5B]">🌐 Sources scannées :</span>
+                <span className="font-bold text-[#002B5B]">Sources scannées :</span>
                 <span className="text-gray-500">{sourcesScrapees.join(' • ')}</span>
               </div>
               <div className="font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
@@ -1178,7 +1179,7 @@ export default function CRMDashboard() {
                   </label>
                   <span className="text-gray-300">|</span>
                   <span className="text-xs font-extrabold text-[#002B5B] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                    💰 Potentiel sélection : {formatFCFA(
+                    Potentiel sélection : {formatFCFA(
                       prospectsScrapes
                         .filter(p => selectionProspects.includes(p.id))
                         .reduce((sum, p) => sum + p.valeurEstimee, 0)
@@ -1192,7 +1193,7 @@ export default function CRMDashboard() {
                     onClick={handleImporterSelection}
                     className="bg-[#002B5B] hover:bg-[#001D3D] text-white px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-sm"
                   >
-                    <span>📥</span>
+                    <Download className="w-4 h-4" />
                     <span>Importer dans le CRM ({selectionProspects.length})</span>
                   </button>
 
@@ -1204,12 +1205,12 @@ export default function CRMDashboard() {
                   >
                     {envoiAutoEnCours ? (
                       <>
-                        <span className="animate-spin">⏳</span>
+                        <Loader className="w-4 h-4 animate-spin" />
                         <span>Envoi en cours...</span>
                       </>
                     ) : (
                       <>
-                        <span>✉️</span>
+                        <Mail className="w-4 h-4" />
                         <span>Email Partenariat B2B</span>
                       </>
                     )}
@@ -1220,7 +1221,7 @@ export default function CRMDashboard() {
                     onClick={handleLancerWhatsAppQueue}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-sm"
                   >
-                    <span>💬</span>
+                    <MessageCircle className="w-4 h-4" />
                     <span>WhatsApp B2B ({selectionProspects.length})</span>
                   </button>
                 </div>
@@ -1260,7 +1261,7 @@ export default function CRMDashboard() {
 
                           <div className="flex flex-col items-end gap-1 flex-shrink-0">
                             <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                              ⭐ {p.scoreFiabilite}% match
+                              {p.scoreFiabilite}% match
                             </span>
                             {dejaDansCRM && (
                               <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
@@ -1272,10 +1273,10 @@ export default function CRMDashboard() {
 
                         {/* Interlocuteur & Titre */}
                         <div className="bg-[#F5F5F0] rounded-xl p-3 mb-3 text-xs space-y-1">
-                          <div className="font-bold text-[#002B5B]">👤 {p.nom}</div>
+                          <div className="font-bold text-[#002B5B]">{p.nom}</div>
                           <div className="text-gray-500">{p.poste}</div>
                           <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-gray-200/60 font-mono">
-                            <span className="text-emerald-700 font-bold">💬 {p.telephone}</span>
+                            <span className="text-emerald-700 font-bold">{p.telephone}</span>
                             <span className="text-gray-400">·</span>
                             <span className="text-blue-700 truncate max-w-[180px]">{p.email}</span>
                           </div>
@@ -1284,12 +1285,12 @@ export default function CRMDashboard() {
                         {/* Détails du besoin */}
                         <div className="space-y-1.5 text-xs text-gray-600 mb-4">
                           <div>
-                            <span className="font-bold text-[#002B5B]">🧱 Besoin détecté :</span>{' '}
+                            <span className="font-bold text-[#002B5B]">Besoin détecté :</span>{''}
                             <span className="text-gray-700">{p.produitInteresse}</span>
                           </div>
                           {p.chantiersEnCours && (
                             <div>
-                              <span className="font-bold text-amber-800">🏗️ Chantier :</span>{' '}
+                              <span className="font-bold text-amber-800">Chantier :</span>{''}
                               <span className="text-gray-700">{p.chantiersEnCours}</span>
                             </div>
                           )}
@@ -1307,7 +1308,7 @@ export default function CRMDashboard() {
                           className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-2 px-3 rounded-xl text-xs font-black transition-colors flex items-center justify-center gap-1"
                           title="Ouvrir WhatsApp avec proposition personnalisée"
                         >
-                          <span>💬</span>
+                          <MessageCircle className="w-4 h-4" />
                           <span>WhatsApp</span>
                         </button>
 
@@ -1331,7 +1332,7 @@ export default function CRMDashboard() {
                             if (ok) {
                               importerLeadsScrapes([mockLead]);
                               chargerDonnees();
-                              afficherNotif(`✉️ Email envoyé à ${p.nom} (${p.entreprise}) !`, 'success');
+                              afficherNotif(`Email envoyé à ${p.nom} (${p.entreprise}) !`, 'success');
                             } else {
                               afficherNotif('Erreur d\'envoi email (vérifiez la clé API)', 'error');
                             }
@@ -1339,7 +1340,7 @@ export default function CRMDashboard() {
                           className="bg-[#002B5B] hover:bg-[#001D3D] text-white py-2 px-3 rounded-xl text-xs font-black transition-colors flex items-center justify-center gap-1"
                           title="Envoyer la proposition de partenariat B2B par email"
                         >
-                          <span>✉️</span>
+                          <Mail className="w-4 h-4" />
                           <span>Email B2B</span>
                         </button>
                       </div>
@@ -1351,7 +1352,7 @@ export default function CRMDashboard() {
           ) : (
             /* État vide invitant au premier scan */
             <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 shadow-sm">
-              <div className="text-5xl mb-3">🔍</div>
+              <Search className="w-12 h-12 mb-3" />
               <h3 className="text-xl font-black text-[#002B5B]">Recherchez dans l’annuaire</h3>
               <p className="text-sm text-gray-500 mt-1 max-w-xl mx-auto">
                 Sélectionnez une zone, un corps de métier ou saisissez des mots-clés, puis lancez la recherche pour afficher les entreprises correspondantes du répertoire.
@@ -1365,7 +1366,7 @@ export default function CRMDashboard() {
                   }}
                   className="bg-[#002B5B] text-white font-bold text-xs px-5 py-3 rounded-xl hover:bg-[#001D3D] transition-all shadow"
                 >
-                  📍 Lancer un test sur Daloa (Chantiers & BTP locaux)
+                  Lancer un test sur Daloa (Chantiers & BTP locaux)
                 </button>
                 <button
                   onClick={() => {
@@ -1375,7 +1376,7 @@ export default function CRMDashboard() {
                   }}
                   className="bg-[#FFD700] text-[#002B5B] font-extrabold text-xs px-5 py-3 rounded-xl hover:bg-yellow-400 transition-all shadow"
                 >
-                  🚀 Scraper tous les prospects BTP en Côte d'Ivoire
+                  Scraper tous les prospects BTP en Côte d'Ivoire
                 </button>
               </div>
             </div>
@@ -1386,11 +1387,11 @@ export default function CRMDashboard() {
       {/* ====== MODAL FILE D'ATTENTE WHATSAPP AUTOMATISÉE ====== */}
       {modalWhatsAppQueue && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-t-4 border-emerald-500 space-y-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-emerald-500 space-y-4">
             {/* Header modal */}
             <div className="flex justify-between items-center pb-3 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">💬</span>
+                <MessageCircle className="w-6 h-6" />
                 <div>
                   <h3 className="font-black text-[#002B5B] text-base">Campagne WhatsApp B2B Assistée</h3>
                   <p className="text-xs text-gray-500">
@@ -1448,13 +1449,13 @@ export default function CRMDashboard() {
                         if (indexWhatsAppQueue < prospectsQueue.length - 1) {
                           setIndexWhatsAppQueue(prev => prev + 1);
                         } else {
-                          afficherNotif('🎉 Tous les messages WhatsApp de la sélection ont été traités !', 'success');
+                          afficherNotif('Tous les messages WhatsApp de la sélection ont été traités !', 'success');
                           setModalWhatsAppQueue(false);
                         }
                       }}
                       className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-4 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2"
                     >
-                      <span>💬 Envoyer ce message & passer au suivant</span>
+                      <span>Envoyer ce message & passer au suivant</span>
                       <span>→</span>
                     </button>
 

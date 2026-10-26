@@ -16,6 +16,7 @@ interface BonCommande {
 import { genererBonCommande } from '@/lib/generer-bons';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
+import { FileText } from 'lucide-react';
 
 
 const STATUT_LABELS: Record<string, { label: string; couleur: string }> = {
@@ -141,7 +142,7 @@ function BonsCommandePageInner() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#002B5B] mb-2">📋 Bons de Commande</h1>
+          <h1 className="text-3xl font-bold text-[#002B5B] mb-2">Bons de Commande</h1>
           <p className="text-gray-600">
             Téléchargez les bons de commande officiels pour <strong>{clientActif.entreprise || clientActif.nom}</strong> ({bonsFiltres.length} bon{bonsFiltres.length > 1 ? 's' : ''})
           </p>
@@ -149,7 +150,7 @@ function BonsCommandePageInner() {
 
         {bonsFiltres.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
-            <div className="text-5xl mb-3">📄</div>
+            <FileText className="w-12 h-12 mb-3" />
             <h3 className="text-lg font-bold text-gray-800 mb-1">Aucun bon de commande disponible</h3>
             <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
               Ce compte client n'a aucun bon de commande émis pour l'instant.
@@ -207,7 +208,7 @@ function BonsCommandePageInner() {
                       onClick={() => telechargerBon(bon)}
                       className="w-full bg-[#FFD700] text-[#002B5B] py-4 rounded-lg font-bold hover:bg-yellow-400 transition-colors min-h-[44px] cursor-pointer shadow-sm flex items-center justify-center gap-2"
                     >
-                      <span>📄</span> Télécharger le bon de commande officiel (PDF)
+                      <FileText className="w-4 h-4" /> Télécharger le bon de commande officiel (PDF)
                     </button>
                   </div>
                 </div>
