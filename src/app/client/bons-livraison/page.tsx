@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useMemo, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
 import { getCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
@@ -29,7 +29,21 @@ function BonsLivraisonPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [clientActif, setClientActif] = useState<CompteUtilisateur | null>(null);
+  // Valeur derivee, calculee au rendu : la stocker via un effet ajoutait un
+  // rendu et un instant d'affichage vide.
+  const clientActif = useMemo<CompteUtilisateur | null>(() => {
+    if (!user) return null;
+    if (user.role !== 'dirigeant') return user as CompteUtilisateur;
+
+    const tousClients = getUtilisateurs().filter((u) => u.role === 'client');
+    const emailParam = searchParams.get('email');
+    return (
+      (emailParam &&
+        tousClients.find((c) => c.email.toLowerCase() === emailParam.toLowerCase())) ||
+      tousClients[0] ||
+      (user as CompteUtilisateur)
+    );
+  }, [user, searchParams, getUtilisateurs]);
   const [toutesCommandes, setToutesCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
@@ -43,18 +57,8 @@ function BonsLivraisonPageInner() {
     if (isLoading) return;
     if (!user || (user.role !== 'client' && user.role !== 'dirigeant')) {
       router.push('/connexion');
-      return;
     }
-
-    if (user.role === 'dirigeant') {
-      const tousClients = getUtilisateurs().filter(u => u.role === 'client');
-      const emailParam = searchParams.get('email');
-      const cible = (emailParam && tousClients.find(c => c.email.toLowerCase() === emailParam.toLowerCase())) || tousClients[0] || user;
-      setClientActif(cible);
-    } else {
-      setClientActif(user);
-    }
-  }, [user, isLoading, router, searchParams, getUtilisateurs]);
+  }, [user, isLoading, router]);
 
   if (isLoading) {
     return (
@@ -105,7 +109,7 @@ function BonsLivraisonPageInner() {
         entreprise: clientActif.entreprise || clientActif.nom,
         email: clientActif.email,
         telephone: clientActif.telephone || '+225 07 00 00 00',
-        adresse: 'Chantier Daloa / Abidjan',
+        adresse: clientActif.adresse || 'Adresse de livraison non renseignée',
       },
       articles: bon.articles,
       type: 'livraison',

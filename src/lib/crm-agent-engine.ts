@@ -410,7 +410,7 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
   reply: string;
   thought: string;
   actionTaken?: string;
-  dataDetails?: any;
+  dataDetails?: unknown;
 }> {
   const promptLower = userPrompt.toLowerCase();
 

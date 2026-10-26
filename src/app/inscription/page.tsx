@@ -15,6 +15,7 @@ export default function InscriptionPage() {
     entreprise: '',
     email: '',
     telephone: '',
+    adresse: '',
     motDePasse: '',
     motDePasseConfirm: '',
   });
@@ -47,6 +48,7 @@ export default function InscriptionPage() {
       nom: form.nom,
       email: form.email,
       telephone: form.telephone,
+      adresse: form.adresse,
       entreprise: form.entreprise || 'Particulier',
       motDePasse: form.motDePasse,
       role: 'client',
@@ -256,6 +258,24 @@ export default function InscriptionPage() {
                   onChange={e => update('telephone', e.target.value)}
                   placeholder="+225 07 XX XX XX XX"
                   required
+                  className="w-full border-2 border-gray-200 rounded-2xl pl-10 pr-4 py-3.5 text-sm focus:border-[#FFD700] focus:outline-none bg-white transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Adresse de livraison — reprise par défaut sur les bons */}
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                Adresse de livraison{' '}
+                <span className="text-gray-400 normal-case font-normal">(chantier ou dépôt)</span>
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📍</span>
+                <input
+                  type="text"
+                  value={form.adresse}
+                  onChange={e => update('adresse', e.target.value)}
+                  placeholder="Ex : Zone Industrielle, lot 14 — Daloa"
                   className="w-full border-2 border-gray-200 rounded-2xl pl-10 pr-4 py-3.5 text-sm focus:border-[#FFD700] focus:outline-none bg-white transition-colors"
                 />
               </div>

@@ -51,7 +51,7 @@ export default function GestionUtilisateurs() {
   const [filtreRole, setFiltreRole] = useState<'tous' | 'client' | 'interne'>('tous');
 
   const [form, setForm] = useState({
-    nom: '', entreprise: '', email: '', telephone: '',
+    nom: '', entreprise: '', email: '', telephone: '', adresse: '',
     role: 'client' as UserRole, vehicule: '', permis: '',
     motDePasse: '',
   });
@@ -128,6 +128,7 @@ export default function GestionUtilisateurs() {
       entreprise: c.entreprise,
       email: c.email,
       telephone: c.telephone,
+      adresse: c.adresse,
       role: 'client' as UserRole,
       motDePasse: c.password || genererMotDePasse(c.nom),
       tarifSpecial: c.tarifSpecial,
@@ -186,6 +187,7 @@ export default function GestionUtilisateurs() {
       nom: form.nom,
       email: form.email,
       telephone: form.telephone,
+      adresse: form.role === 'client' ? form.adresse : undefined,
       entreprise: form.entreprise || '2CGC',
       motDePasse: form.motDePasse,
       role: form.role,
@@ -218,7 +220,7 @@ export default function GestionUtilisateurs() {
 
     setLoading(false);
     setShowForm(false);
-    setForm({ nom: '', entreprise: '', email: '', telephone: '', role: 'client', vehicule: '', permis: '', motDePasse: '' });
+    setForm({ nom: '', entreprise: '', email: '', telephone: '', adresse: '', role: 'client', vehicule: '', permis: '', motDePasse: '' });
     setMotDePasseGenere('');
     charger();
   };
@@ -559,6 +561,15 @@ export default function GestionUtilisateurs() {
                 { field: 'entreprise', label: 'Entreprise', placeholder: form.role === 'client' ? 'BTP Horizon SARL' : '2CGC', icon: '🏢', required: false },
                 { field: 'email', label: 'Email *', placeholder: `prenom@${form.role === 'client' ? 'email.com' : '2cgc-industrie.com'}`, icon: '📧', required: true },
                 { field: 'telephone', label: 'Téléphone WhatsApp', placeholder: '+225 07 XX XX XX XX', icon: '📞', required: false },
+                ...(form.role === 'client'
+                  ? [{
+                      field: 'adresse',
+                      label: 'Adresse de livraison',
+                      placeholder: 'Ex : Zone Industrielle, lot 14 — Daloa',
+                      icon: '📍',
+                      required: false,
+                    }]
+                  : []),
               ].map(({ field, label, placeholder, icon, required }) => (
                 <div key={field}>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{label}</label>

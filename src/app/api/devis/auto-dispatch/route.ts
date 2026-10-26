@@ -485,8 +485,14 @@ export async function POST(req: NextRequest) {
         : `Facture proforma ${reference} transmise automatiquement par email et enregistrée sur WhatsApp.`,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    // Le detail reste dans les journaux serveur : renvoyer error.message a
+    // l'appelant divulgue des informations internes (chemins, requetes SQL,
+    // noms de variables d'environnement) a un point d'entree public.
     console.error('Erreur dans /api/devis/auto-dispatch:', error);
-    return NextResponse.json({ error: 'Erreur lors du traitement automatique du devis', details: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Erreur lors du traitement automatique du devis' },
+      { status: 500 }
+    );
   }
 }

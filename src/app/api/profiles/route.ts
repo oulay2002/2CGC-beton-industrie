@@ -19,6 +19,7 @@ interface ProfilPayload {
   nom?: unknown;
   entreprise?: unknown;
   telephone?: unknown;
+  adresse?: unknown;
   role?: unknown;
   motDePasse?: unknown;
   pointsFidelite?: unknown;
@@ -96,6 +97,7 @@ export async function POST(req: NextRequest) {
     nom: texte(body.nom),
     entreprise: texte(body.entreprise),
     telephone: texte(body.telephone, 40),
+    adresse: texte(body.adresse, 400) || null,
     role,
     points_fidelite: nombre(body.pointsFidelite),
     tarif_special: nombre(body.tarifSpecial),
@@ -143,7 +145,9 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await admin
     .from('profiles')
-    .select('email, nom, entreprise, telephone, role, points_fidelite, tarif_special, vehicule, permis')
+    .select(
+      'email, nom, entreprise, telephone, adresse, role, points_fidelite, tarif_special, vehicule, permis'
+    )
     .order('email');
 
   if (error) {
