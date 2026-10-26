@@ -104,9 +104,13 @@ export default function Navigation({ lang, dict, entrepriseLinks }: NavigationPr
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
+  // Le menu mobile se referme a chaque navigation. Ajuste pendant le rendu :
+  // un effet ferait clignoter le menu ouvert le temps d un rendu.
+  const [cheminPrecedent, setCheminPrecedent] = useState(pathname);
+  if (cheminPrecedent !== pathname) {
+    setCheminPrecedent(pathname);
     setMenuMobileOpen(false);
-  }, [pathname]);
+  }
 
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href + "/");
 

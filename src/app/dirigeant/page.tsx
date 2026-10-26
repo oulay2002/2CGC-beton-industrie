@@ -387,7 +387,7 @@ export default function DirigeantDashboard() {
                     <td className="py-3 px-4 font-bold text-[#002B5B]">{cmd.id}</td>
                     <td className="py-3 px-4 text-sm">
                       <Link 
-                        href={`/client?email=${encodeURIComponent((cmd.client as any).email || 'client@btp-afrique.com')}`}
+                        href={`/client?email=${encodeURIComponent(cmd.client.email || 'client@btp-afrique.com')}`}
                         className="font-bold text-[#002B5B] hover:text-blue-600 hover:underline flex items-center gap-1"
                         title="Ouvrir la vue de ce client"
                       >

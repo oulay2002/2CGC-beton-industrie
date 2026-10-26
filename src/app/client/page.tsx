@@ -43,6 +43,8 @@ function ClientDashboardInner() {
 
     if (user.role === 'dirigeant') {
       const tousClients = getUtilisateurs().filter(u => u.role === 'client');
+      // Garde d'acces et lecture du contexte d'authentification, apres le montage.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setClients(tousClients);
 
       const emailParam = searchParams.get('email');

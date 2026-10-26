@@ -57,13 +57,26 @@ export default function GestionUtilisateurs() {
     motDePasse: '',
   });
 
+  // « Nouveaux (7j) » depend de l heure courante. Le calculer pendant le rendu
+  // ferait diverger le HTML du serveur de celui du navigateur, et le compte
+  // changerait a chaque re-rendu. Il est donc etabli une fois, au moment ou
+  // les donnees arrivent, et conserve tel quel.
+  const [recents, setRecents] = useState<number | null>(null);
+
   const charger = useCallback(() => {
-    setUtilisateurs(getUtilisateurs());
+    const liste = getUtilisateurs();
+    const seuil = Date.now() - 7 * 86400000;
+    setUtilisateurs(liste);
+    setRecents(liste.filter(
+      (u) => new Date(u.dateCreation || '2026-01-01').getTime() >= seuil,
+    ).length);
   }, [getUtilisateurs]);
 
   useEffect(() => {
     if (isLoading) return;
     if (!user || user.role !== 'dirigeant') { router.push('/connexion'); return; }
+    // Garde d'acces et chargement des comptes, apres le montage.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     charger();
   }, [user, isLoading, router, charger]);
 
@@ -264,10 +277,7 @@ export default function GestionUtilisateurs() {
     total: utilisateurs.length,
     clients: utilisateurs.filter(u => u.role === 'client').length,
     internes: utilisateurs.filter(u => u.role !== 'client').length,
-    recents: utilisateurs.filter(u => {
-      const d = new Date(u.dateCreation || '2026-01-01');
-      return (Date.now() - d.getTime()) < 7 * 86400000;
-    }).length,
+    recents,
   };
 
   return (
@@ -370,7 +380,7 @@ export default function GestionUtilisateurs() {
           <div key={i} className={`bg-white rounded-2xl p-4 shadow-sm border ${k.color}`}>
             <div className="w-9 h-9 rounded-xl bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm flex items-center justify-center mb-2"><k.Icone className="w-4 h-4 text-[#002B5B]" /></div>
             <div className="text-xs text-gray-400">{k.label}</div>
-            <div className="text-2xl font-black text-[#002B5B]">{k.val}</div>
+            <div className="text-2xl font-black text-[#002B5B]">{k.val ?? '—'}</div>
           </div>
         ))}
       </div>
@@ -558,13 +568,13 @@ export default function GestionUtilisateurs() {
 
               {/* Champs */}
               {[
-                { field: 'nom', label: 'Nom complet *', placeholder: 'M. Traoré Seydou', Icone: User, required: true },
-                { field: 'entreprise', label: 'Entreprise', placeholder: form.role === 'client' ? 'BTP Horizon SARL' : '2CGC', Icone: Building2, required: false },
-                { field: 'email', label: 'Email *', placeholder: `prenom@${form.role === 'client' ? 'email.com' : '2cgc-industrie.com'}`, Icone: Mail, required: true },
-                { field: 'telephone', label: 'Téléphone WhatsApp', placeholder: '+225 07 XX XX XX XX', Icone: Phone, required: false },
+                { field: 'nom' as const, label: 'Nom complet *', placeholder: 'M. Traoré Seydou', Icone: User, required: true },
+                { field: 'entreprise' as const, label: 'Entreprise', placeholder: form.role === 'client' ? 'BTP Horizon SARL' : '2CGC', Icone: Building2, required: false },
+                { field: 'email' as const, label: 'Email *', placeholder: `prenom@${form.role === 'client' ? 'email.com' : '2cgc-industrie.com'}`, Icone: Mail, required: true },
+                { field: 'telephone' as const, label: 'Téléphone WhatsApp', placeholder: '+225 07 XX XX XX XX', Icone: Phone, required: false },
                 ...(form.role === 'client'
                   ? [{
-                      field: 'adresse',
+                      field: 'adresse' as const,
                       label: 'Adresse de livraison',
                       placeholder: 'Ex : Zone Industrielle, lot 14 — Daloa',
                       Icone: MapPin,
@@ -578,7 +588,7 @@ export default function GestionUtilisateurs() {
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Icone className="w-4 h-4" /></span>
                     <input
                       type={field === 'email' ? 'email' : 'text'}
-                      value={(form as any)[field]}
+                      value={form[field]}
                       onChange={e => update(field, e.target.value)}
                       placeholder={placeholder}
                       required={required}

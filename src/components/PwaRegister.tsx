@@ -27,6 +27,8 @@ export default function PwaRegister() {
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
 
     if (isAppStandalone) {
+      // Lecture de matchMedia : indisponible au rendu serveur, sinon l'hydratation diverge.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsStandalone(true);
       return;
     }

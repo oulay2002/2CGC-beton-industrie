@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Send, Phone, CheckCircle, RefreshCw, X, MessageSquare, ShoppingCart, FileText, Bot } from 'lucide-react';
 import { WhatsAppResponsePayload } from '@/lib/whatsapp-service';
+import { heureCourte, maintenant } from '@/lib/horodatage';
 
 interface MessageChat {
   id: string;
@@ -29,7 +30,7 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
       id: 'welcome',
       sender: 'bot',
       text: `👋 *BIENVENUE CHEZ 2CGC BTP DALOA*\n\nJe suis le service d'automatisation officiel 2CGC. Demandez-moi un devis, une proforma ou passez votre commande directement en ligne !`,
-      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      time: heureCourte(),
     },
   ]);
 
@@ -40,10 +41,10 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
     if (!text.trim() || loading) return;
 
     const userMsg: MessageChat = {
-      id: `usr-${Date.now()}`,
+      id: `usr-${maintenant()}`,
       sender: 'user',
       text: text,
-      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      time: heureCourte(),
     };
 
     setMessages(prev => [...prev, userMsg]);
@@ -64,10 +65,10 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
       const data: WhatsAppResponsePayload = await res.json();
 
       const botMsg: MessageChat = {
-        id: `bot-${Date.now()}`,
+        id: `bot-${maintenant()}`,
         sender: 'bot',
         text: data.replyText || 'Une erreur est survenue.',
-        time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        time: heureCourte(),
         payload: data,
       };
 
@@ -81,10 +82,10 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
       setMessages(prev => [
         ...prev,
         {
-          id: `err-${Date.now()}`,
+          id: `err-${maintenant()}`,
           sender: 'bot',
           text: '❌ Erreur de réseau ou de serveur lors du traitement du message WhatsApp.',
-          time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+          time: heureCourte(),
         },
       ]);
     } finally {

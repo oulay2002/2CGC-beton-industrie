@@ -78,6 +78,8 @@ export default function EspaceIdentifiantsCollaborateurs() {
       router.push('/connexion');
       return;
     }
+    // Garde d'acces et chargement du trousseau, apres le montage.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     charger();
   }, [user, isLoading, router, charger]);
 
@@ -434,14 +436,14 @@ export default function EspaceIdentifiantsCollaborateurs() {
 
           <div className="flex flex-wrap gap-1.5 w-full sm:w-auto">
             {[
-              { id: 'tous', label: `Tous (${collaborateurs.length})` },
-              { id: 'chef_usine', label: `Usine (${stats.chefsUsine})` },
-              { id: 'chauffeur', label: `Chauffeurs (${stats.chauffeurs})` },
-              { id: 'dirigeant', label: `Direction (${stats.dirigeants})` },
+              { id: 'tous' as const, label: `Tous (${collaborateurs.length})` },
+              { id: 'chef_usine' as const, label: `Usine (${stats.chefsUsine})` },
+              { id: 'chauffeur' as const, label: `Chauffeurs (${stats.chauffeurs})` },
+              { id: 'dirigeant' as const, label: `Direction (${stats.dirigeants})` },
             ].map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setFiltreRole(tab.id as any)}
+                onClick={() => setFiltreRole(tab.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   filtreRole === tab.id
                     ? 'bg-[#002B5B] text-[#FFD700] shadow'

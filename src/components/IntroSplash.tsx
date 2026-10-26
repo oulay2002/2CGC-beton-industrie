@@ -14,6 +14,8 @@ export default function IntroSplash() {
     const forceIntro = typeof window !== "undefined" && window.location.search.includes("intro=1");
 
     if (hasSeen && !forceIntro) {
+      // Lecture de sessionStorage : indisponible au rendu serveur, sinon l'hydratation diverge.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(false);
       return;
     }

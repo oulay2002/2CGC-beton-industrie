@@ -9,6 +9,7 @@ import { creerLeadDepuisDevis } from "@/lib/crm-data";
 import { ajouterCommandeDepuisDevis } from "@/lib/commandes-store";
 import { TVA_RATE } from "@/lib/utils";
 import { Blocks, Cog, Download, Factory, FileText, HardHat, Landmark, Lock, Mail, MapPin, MessageCircle, Route, Scale, Truck, User, Zap } from 'lucide-react';
+import { dateCourante, maintenant } from '@/lib/horodatage';
 
 interface DevisClientProps {
   lang: Locale;
@@ -145,6 +146,8 @@ function DevisInner({ lang }: { lang: Locale }) {
         (p) => p.id === produitParam || p.nom.toLowerCase().includes(produitParam.toLowerCase())
       );
       if (produitTrouve) {
+        // Amorce du devis depuis les parametres d'URL : lisibles seulement apres le montage.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCategorieOuverte(produitTrouve.categorie);
         setLignes([{ ...produitTrouve, quantite: quantiteParam }]);
         setMessage({
@@ -203,7 +206,7 @@ function DevisInner({ lang }: { lang: Locale }) {
     }
 
     const totalCO2 = lignes.reduce((sum, l) => sum + l.quantite * l.co2, 0);
-    const reference = `DEV-${Date.now().toString().slice(-6)}`;
+    const reference = `DEV-${maintenant().toString().slice(-6)}`;
 
     const lignesPDF = [
       ...lignes.map((l) => ({
@@ -242,7 +245,7 @@ function DevisInner({ lang }: { lang: Locale }) {
 
     const dataDevis: DevisData = {
       reference,
-      date: new Date().toISOString(),
+      date: dateCourante().toISOString(),
       typeDoc: "proforma",
       client: {
         nom: clientInfo.nom,

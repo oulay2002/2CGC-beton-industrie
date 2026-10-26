@@ -20,11 +20,15 @@ function ConnexionPageInner() {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<'email' | 'password' | null>(null);
 
-  useEffect(() => {
+  // Bascule entre les deux modes : on vide le formulaire pendant le rendu
+  // plutot que dans un effet, qui imposerait un second rendu pour rien.
+  const [modePrecedent, setModePrecedent] = useState(mode);
+  if (modePrecedent !== mode) {
+    setModePrecedent(mode);
     setEmail('');
     setPassword('');
     setError('');
-  }, [mode]);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

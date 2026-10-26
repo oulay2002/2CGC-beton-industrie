@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Bot, Lightbulb, Mail, MessageCircle, Phone, Send, X, Zap } from 'lucide-react';
+import { dateCourante, delaiEntre, maintenant } from '@/lib/horodatage';
 
 interface Message {
   id: number;
@@ -141,7 +142,7 @@ export default function ChatBot() {
       id: 1,
       text: "Bonjour ! Bienvenue au service commercial et technique de **2CGC (Cheickna Construction & Génie Civil)** à Daloa.\n\nPosez-moi votre question sur nos matériaux, nos délais de livraison ou **échangez en direct avec la Direction** via les touches d'appel et WhatsApp ci-dessus.",
       sender: 'bot',
-      timestamp: new Date(),
+      timestamp: dateCourante(),
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -163,10 +164,10 @@ export default function ChatBot() {
     if (!texte.trim()) return;
 
     const userMessage: Message = {
-      id: Date.now(),
+      id: maintenant(),
       text: texte,
       sender: 'user',
-      timestamp: new Date(),
+      timestamp: dateCourante(),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -177,14 +178,14 @@ export default function ChatBot() {
     setTimeout(() => {
       const reponse = trouverReponse(texte);
       const botMessage: Message = {
-        id: Date.now() + 1,
+        id: maintenant() + 1,
         text: reponse,
         sender: 'bot',
-        timestamp: new Date(),
+        timestamp: dateCourante(),
       };
       setMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
-    }, 800 + Math.random() * 700);
+    }, delaiEntre(800, 1500));
   };
 
   const handleSubmit = (e: React.FormEvent) => {

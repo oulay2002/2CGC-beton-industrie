@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   History, 
   X, 
@@ -21,19 +21,18 @@ interface CRMAgenticLogsModalProps {
 }
 
 export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProps) {
-  const [logs, setLogs] = useState<AgentActionLog[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAction, setFilterAction] = useState<string>('all');
 
-  const reloadLogs = () => {
-    setLogs(getAgentLogs());
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      reloadLogs();
-    }
-  }, [isOpen]);
+  // Le journal se lit directement depuis le magasin : le garder aussi en etat
+  // local obligeait a le resynchroniser par un effet a chaque ouverture, donc
+  // a un second rendu. Le compteur sert au bouton d actualisation.
+  const [rafraichissements, setRafraichissements] = useState(0);
+  const logs: AgentActionLog[] = useMemo(
+    () => (isOpen ? getAgentLogs() : []),
+    [isOpen, rafraichissements],
+  );
+  const reloadLogs = () => setRafraichissements((n) => n + 1);
 
   if (!isOpen) return null;
 
