@@ -2,8 +2,19 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
-import { getCommandes, Commande } from '@/lib/commandes-store';
+import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
+import { getCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
+
+/** Bon de livraison derive d'une commande livree ou en cours. */
+interface BonLivraisonDerive {
+  id: string;
+  date: string;
+  dateLivraison: string;
+  statut: string;
+  chauffeur: string;
+  immatriculation: string;
+  articles: CommandeArticle[];
+}
 import { genererBonLivraison } from '@/lib/generer-bons';
 import Link from 'next/link';
 
@@ -18,7 +29,7 @@ function BonsLivraisonPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [clientActif, setClientActif] = useState<any>(null);
+  const [clientActif, setClientActif] = useState<CompteUtilisateur | null>(null);
   const [toutesCommandes, setToutesCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
@@ -57,7 +68,7 @@ function BonsLivraisonPageInner() {
 
   // Filtrer les bons de livraison réels pour ce client (commandes en cours de livraison ou livrées)
   const commandesLivraisonDuClient = toutesCommandes.filter(cmd => {
-    const cEmail = (cmd.client as any).email?.toLowerCase();
+    const cEmail = cmd.client.email?.toLowerCase();
     const cNom = cmd.client.nom?.toLowerCase();
     const cEnt = cmd.client.entreprise?.toLowerCase();
     const targetEmail = clientActif.email?.toLowerCase();
@@ -81,7 +92,7 @@ function BonsLivraisonPageInner() {
     articles: cmd.articles,
   }));
 
-  const telechargerBon = (bon: any) => {
+  const telechargerBon = (bon: BonLivraisonDerive) => {
     genererBonLivraison({
       reference: bon.id,
       date: bon.date,
@@ -94,7 +105,7 @@ function BonsLivraisonPageInner() {
         entreprise: clientActif.entreprise || clientActif.nom,
         email: clientActif.email,
         telephone: clientActif.telephone || '+225 07 00 00 00',
-        adresse: clientActif.adresse || 'Chantier Daloa / Abidjan',
+        adresse: 'Chantier Daloa / Abidjan',
       },
       articles: bon.articles,
       type: 'livraison',
@@ -193,7 +204,7 @@ function BonsLivraisonPageInner() {
 
                     <h3 className="font-bold text-[#002B5B] mb-3">Articles à livrer</h3>
                     <div className="space-y-2 mb-6">
-                      {bon.articles.map((article: any, idx: number) => (
+                      {bon.articles.map((article: CommandeArticle, idx: number) => (
                         <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
                           <div className="font-semibold text-gray-800">{article.nom}</div>
                           <div className="font-bold text-[#002B5B]">Quantité : {article.quantite}</div>

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { getCommandes, saveCommandes, Commande } from '@/lib/commandes-store';
+import { getCommandes, saveCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
 import { genererBonLivraison } from '@/lib/generer-bons';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
@@ -13,7 +13,7 @@ export default function ChauffeurDashboard() {
   const { user, logout, isLoading } = useAuth();
   const router = useRouter();
   const [commandesList, setCommandesList] = useState<Commande[]>([]);
-  const [livraisonActive, setLivraisonActive] = useState<any>(null);
+  const [livraisonActive, setLivraisonActive] = useState<Commande | null>(null);
   const [signatureData, setSignatureData] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -62,7 +62,7 @@ export default function ChauffeurDashboard() {
   const mesLivraisonsTerminees = commandesList.filter(c => (c.chauffeur === nomChauffeurCible || user.role === 'dirigeant') && c.statut === 'livree');
 
   // Générateur de lien WhatsApp de suivi chantier pour le client
-  const genererLienWhatsAppSuivi = (cmd: any, statutEtape: 'depart' | 'arrivee' | 'livre') => {
+  const genererLienWhatsAppSuivi = (cmd: Commande, statutEtape: 'depart' | 'arrivee' | 'livre') => {
     const numClient = (cmd.client.telephone || '').replace(/[^0-9]/g, '');
     const cleanTel = numClient.startsWith('225') ? numClient : `225${numClient}`;
     
@@ -94,14 +94,14 @@ export default function ChauffeurDashboard() {
     return `https://wa.me/${cleanTel}?text=${encodeURIComponent(texte)}`;
   };
 
-  const notifierDepart = (cmd: any) => {
+  const notifierDepart = (cmd: Commande) => {
     const lien = genererLienWhatsAppSuivi(cmd, 'depart');
     window.open(lien, '_blank');
     setNotificationStatus(`Notification WhatsApp "Camion en route" générée pour ${cmd.client.entreprise}`);
     setTimeout(() => setNotificationStatus(null), 5000);
   };
 
-  const notifierArrivee = (cmd: any) => {
+  const notifierArrivee = (cmd: Commande) => {
     const lien = genererLienWhatsAppSuivi(cmd, 'arrivee');
     window.open(lien, '_blank');
     setNotificationStatus(`Notification "Arrivée sur chantier" transmise pour ${cmd.client.entreprise}`);
@@ -161,6 +161,13 @@ export default function ChauffeurDashboard() {
   };
 
   const validerLivraison = () => {
+    // Le typage a révélé ce manque : la fonction déréférençait `livraisonActive`
+    // sans vérifier qu'une livraison était bien sélectionnée. Le `any` d'origine
+    // masquait un plantage possible de l'écran chauffeur en pleine tournée.
+    if (!livraisonActive) {
+      alert("⚠️ Aucune livraison sélectionnée. Rouvrez la commande à émarger.");
+      return;
+    }
     if (!signatureData) {
       alert('⚠️ Veuillez faire signer le réceptionnaire du chantier avec le doigt ou un stylet sur le pad tactile.');
       return;
@@ -285,7 +292,7 @@ export default function ChauffeurDashboard() {
                           <div className="flex items-center gap-2">
                             <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">À LIVRER</span>
                             <span className="text-xs bg-blue-50 text-[#002B5B] font-bold px-2.5 py-1 rounded-full border border-blue-100">
-                              {cmd.articles.reduce((s: number, a: any) => s + a.quantite, 0)} pièces
+                              {cmd.articles.reduce((s: number, a: CommandeArticle) => s + a.quantite, 0)} pièces
                             </span>
                           </div>
                         </div>
@@ -300,7 +307,7 @@ export default function ChauffeurDashboard() {
                         </div>
 
                         <div className="space-y-1 mb-5">
-                          {cmd.articles.map((article: any, idx: number) => (
+                          {cmd.articles.map((article: CommandeArticle, idx: number) => (
                             <div key={idx} className="flex justify-between text-sm py-1.5 border-b border-gray-100">
                               <span className="text-gray-700 font-medium">{article.nom}</span>
                               <span className="font-bold text-[#002B5B]">{article.quantite} unités</span>
@@ -379,7 +386,7 @@ export default function ChauffeurDashboard() {
               <div className="mb-6">
                 <h3 className="font-bold text-[#002B5B] mb-3">Articles livrés :</h3>
                 <div className="space-y-2">
-                  {livraisonActive.articles.map((article: any, idx: number) => (
+                  {livraisonActive.articles.map((article: CommandeArticle, idx: number) => (
                     <div key={idx} className="flex justify-between py-2 border-b border-gray-100">
                       <span>{article.nom}</span>
                       <span className="font-bold">{article.quantite} unités</span>

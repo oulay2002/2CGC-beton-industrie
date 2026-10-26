@@ -1,4 +1,18 @@
-// src/lib/rate-limit.ts — Rate Limiter par adresse IP (protection anti-bruteforce, anti-bot et anti-DDoS)
+// src/lib/rate-limit.ts — Limitation de débit par adresse IP.
+//
+// PORTÉE RÉELLE, À NE PAS SURESTIMER
+// Le compteur vit dans la mémoire de l'instance. Sur Vercel, plusieurs
+// instances servent le trafic en parallèle et sont recyclées : un attaquant
+// réparti sur N instances obtient N fois le quota, et un redémarrage remet les
+// compteurs à zéro. Ce module est donc une première barrière contre les abus
+// accidentels et les scripts naïfs — pas une garantie.
+//
+// Les protections sur lesquelles on peut réellement compter :
+//   - force brute sur la connexion : verrouillage de compte en base
+//     (failed_login_count / locked_until), partagé entre toutes les instances,
+//     cf. src/app/api/auth/login/route.ts ;
+//   - abus volumétrique : règles de limitation du pare-feu Vercel, appliquées
+//     en amont des fonctions, cf. docs/PARE_FEU.md.
 
 interface RateLimitRecord {
   count: number;

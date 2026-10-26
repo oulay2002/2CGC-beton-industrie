@@ -5,6 +5,13 @@ export interface SessionPayload {
   email: string;
   role: 'client' | 'dirigeant' | 'chef_usine' | 'chauffeur';
   nom?: string;
+  /**
+   * Vrai tant que le compte utilise le mot de passe provisoire remis par la
+   * direction. Porté par le jeton signé, et non par un simple état navigateur :
+   * le proxy peut ainsi bloquer l'accès à toutes les pages privées sans que
+   * l'utilisateur puisse contourner l'écran en saisissant une autre URL.
+   */
+  mdp?: boolean;
   exp: number; // Timestamp unix (secondes)
 }
 
@@ -144,7 +151,9 @@ export async function verifySessionToken(token: string | undefined | null): Prom
     }
 
     return payload;
-  } catch (error) {
+  } catch {
+    // Jeton malforme, signature illisible ou JSON invalide : dans tous les cas
+    // la session est refusee, sans distinguer la cause a l appelant.
     return null;
   }
 }

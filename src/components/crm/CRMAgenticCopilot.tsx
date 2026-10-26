@@ -43,8 +43,8 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
     {
       id: 'msg-init',
       sender: 'agent',
-      text: 'Bonjour M. KEITA ! Je suis votre Agent IA Commercial 2CGC. Comment puis-je optimiser vos ventes aujourd\'hui ?',
-      thought: 'Moteur d\'agent initialisé. Surveillance continue des opportunités CRM activée.',
+      text: "Bonjour ! Je suis l'assistant du CRM 2CGC. Je déclenche des automatisations sur votre pipeline : relances, scoring des prospects, prévisions. Que souhaitez-vous exécuter ?",
+      thought: "Assistant initialisé. Les règles de relance et de scoring sont prêtes.",
       timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -66,7 +66,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
     setLoading(true);
 
     try {
-      // Traitement via le moteur agentique
+      // Traitement par le moteur d'automatisations
       const res = await processCopilotPrompt(query);
 
       const agentMsg: Message = {
@@ -110,7 +110,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
               <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
             </span>
           </div>
-          <span className="text-white text-sm font-black">Copilot Agentique IA</span>
+          <span className="text-white text-sm font-black">Assistant CRM</span>
           <span className="bg-amber-400/20 text-amber-300 text-xs px-2 py-0.5 rounded-full border border-amber-400/40">
             2CGC
           </span>
@@ -129,14 +129,14 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
               </div>
               <div>
                 <h3 className="font-bold text-white text-base flex items-center gap-2">
-                  Copilot Agentique CRM
-                  <span className="text-[10px] bg-amber-500/20 text-amber-300 font-semibold px-2 py-0.5 rounded-full border border-amber-500/30">
-                    Gemini 3.6
+                  Assistant CRM
+                  <span className="text-[10px] bg-slate-700/60 text-slate-300 font-semibold px-2 py-0.5 rounded-full border border-slate-600/50">
+                    Automatisations
                   </span>
                 </h3>
                 <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Agent commercial autonome actif
+                  Règles de relance et de scoring actives
                 </p>
               </div>
             </div>
@@ -231,12 +231,12 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
                       : 'bg-slate-800/90 border border-slate-700/60 text-slate-100 rounded-bl-none shadow'
                   }`}
                 >
-                  {/* Pense-bête Raisonnement Agentique */}
+                  {/* Règle déclenchée par la demande */}
                   {msg.thought && (
                     <div className="mb-2 p-2 bg-slate-900/80 rounded-lg text-xs border border-amber-500/20 text-amber-200/90">
                       <div className="font-semibold text-[11px] text-amber-400 flex items-center gap-1 mb-0.5">
                         <Sparkles className="w-3 h-3" />
-                        Raisonnement Agentique :
+                        Règle appliquée :
                       </div>
                       <p className="italic text-slate-300">{msg.thought}</p>
                     </div>
@@ -267,7 +267,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
             {loading && (
               <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 w-fit text-xs text-amber-400 animate-pulse">
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>L'Agent IA évalue les données du CRM et exécute les actions...</span>
+                <span>Analyse du pipeline et exécution des actions...</span>
               </div>
             )}
           </div>
@@ -285,7 +285,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
                 type="text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Demandez une action agentique..."
+                placeholder="Demandez une automatisation..."
                 disabled={loading}
                 className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500/60"
               />

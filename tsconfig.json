@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // Les tests sont lances par `node --test`, qui exige l extension .ts
+    // explicite dans les imports. Sans effet sur le build Next.js.
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [

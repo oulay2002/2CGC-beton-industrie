@@ -15,12 +15,12 @@ export async function envoyerEmail(lead: CRMLead, templateKey: string): Promise<
 
   const dateExpiration = new Date(Date.now() + 7 * 86400000).toLocaleDateString('fr-FR');
 
-  let sujet = template.sujet
+  const sujet = template.sujet
     .replace(/{nom}/g, lead.nom)
     .replace(/{entreprise}/g, lead.entreprise || 'votre entreprise')
     .replace(/{produit}/g, lead.produitInteresse || 'nos produits');
 
-  let corps = template.corps
+  const corps = template.corps
     .replace(/{nom}/g, lead.nom)
     .replace(/{entreprise}/g, lead.entreprise || 'votre entreprise')
     .replace(/{produit}/g, lead.produitInteresse || 'nos produits')

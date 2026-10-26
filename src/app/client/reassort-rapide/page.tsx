@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
 import { getCommandes, ajouterCommandeDepuisDevis, Commande } from '@/lib/commandes-store';
 import { genererBonCommande } from '@/lib/generer-bons';
 import Link from 'next/link';
@@ -33,7 +33,7 @@ function ReassortRapidePageInner() {
   const searchParams = useSearchParams();
 
   const [panier, setPanier] = useState<ProduitReassort[]>([]);
-  const [clientActif, setClientActif] = useState<any>(null);
+  const [clientActif, setClientActif] = useState<CompteUtilisateur | null>(null);
   const [toutesCommandes, setToutesCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ function ReassortRapidePageInner() {
 
   // Filtrer l'historique spécifique à ce client pour calculer ses produits fréquents
   const commandesClient = toutesCommandes.filter(cmd => {
-    const cEmail = (cmd.client as any).email?.toLowerCase();
+    const cEmail = cmd.client.email?.toLowerCase();
     const cNom = cmd.client.nom?.toLowerCase();
     const cEnt = cmd.client.entreprise?.toLowerCase();
     const targetEmail = clientActif.email?.toLowerCase();
@@ -144,7 +144,7 @@ function ReassortRapidePageInner() {
         entreprise: clientActif.entreprise || clientActif.nom,
         email: clientActif.email,
         telephone: clientActif.telephone || '+225 07 00 00 00',
-        adresse: clientActif.adresse || 'Daloa / Enlèvement Chantier',
+        adresse: 'Daloa / Enlèvement Chantier',
       },
       articles,
     });
@@ -157,7 +157,7 @@ function ReassortRapidePageInner() {
         entreprise: clientActif.entreprise || clientActif.nom,
         email: clientActif.email,
         telephone: clientActif.telephone || '+225 07 00 00 00',
-        adresse: clientActif.adresse || 'Abidjan / Daloa',
+        adresse: 'Abidjan / Daloa',
       },
       articles,
       total,

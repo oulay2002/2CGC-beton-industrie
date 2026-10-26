@@ -62,7 +62,7 @@ export default function CRMDashboard() {
     nom: '', entreprise: '', email: '', telephone: '', produitInteresse: '', valeurEstimee: '', notes: '',
   });
 
-  // État Agentique IA
+  // État de l'assistant CRM
   const [modalAgentLogsOpen, setModalAgentLogsOpen] = useState(false);
 
   const handleAgentRelance = async (lead: CRMLead) => {
@@ -71,7 +71,7 @@ export default function CRMDashboard() {
     setEnvoyant(null);
     if (res.success) {
       chargerDonnees();
-      afficherNotif(`🤖 Agent IA : ${res.message}`, 'success');
+      afficherNotif(`⚙️ Automatisation : ${res.message}`, 'success');
     } else {
       afficherNotif(`⚠️ ${res.message}`, 'error');
     }
@@ -263,7 +263,7 @@ export default function CRMDashboard() {
         afficherNotif('Erreur lors de l\'extraction des prospects', 'error');
       }
     } catch {
-      afficherNotif('Impossible de contacter le service de scraping', 'error');
+      afficherNotif("Impossible de charger l'annuaire des prospects", 'error');
     } finally {
       setScrapingEnCours(false);
     }
@@ -298,7 +298,7 @@ export default function CRMDashboard() {
       valeurEstimee: p.valeurEstimee,
       ville: p.ville,
       source: 'scraping_btp',
-      notes: `Extrait via scraping [${p.source}]. Chantier: ${p.chantiersEnCours || 'N/A'}. Score de fiabilité: ${p.scoreFiabilite}%.`,
+      notes: `Importé depuis l'annuaire prospects [${p.source}]. Chantier: ${p.chantiersEnCours || 'N/A'}. Indice de fiabilité: ${p.scoreFiabilite}%.`,
     })));
 
     await chargerDonnees();
@@ -393,10 +393,10 @@ export default function CRMDashboard() {
             <button
               onClick={() => setModalAgentLogsOpen(true)}
               className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition-all cursor-pointer border border-amber-400/40"
-              title="Consulter le journal d'audit des actions exécutées par l'Agent IA"
+              title="Consulter le journal des actions exécutées automatiquement"
             >
               <span>📜</span>
-              <span>Audit Agentique IA</span>
+              <span>Journal des automatisations</span>
             </button>
             <button
               onClick={() => setModalWhatsAppSimulateur(true)}
@@ -427,7 +427,7 @@ export default function CRMDashboard() {
         <div className="px-6 flex gap-1 border-t border-white/10 overflow-x-auto">
           {([
             { id: 'pipeline', label: '📊 Pipeline', badge: null },
-            { id: 'scraping', label: '🔍 Scraping & Prospection', badge: 'PRO' },
+            { id: 'scraping', label: '🔍 Annuaire Prospects BTP', badge: null },
             { id: 'sequences', label: '🤖 Séquences', badge: sequencesEnAttente.length || null },
             { id: 'templates', label: '📋 Modèles', badge: null },
             { id: 'nouveau_lead', label: '➕ Nouveau Lead', badge: null },
@@ -569,7 +569,7 @@ export default function CRMDashboard() {
                           <button
                             onClick={(e) => { e.stopPropagation(); handleAgentRelance(lead); }}
                             className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/60 text-[10px] font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1"
-                            title="Laisser l'Agent IA relancer ce prospect"
+                            title="Déclencher une relance automatique pour ce prospect"
                           >
                             🤖 Relance IA
                           </button>
@@ -638,7 +638,7 @@ export default function CRMDashboard() {
                       <div className="bg-slate-900 text-slate-100 rounded-2xl p-4 border border-amber-500/30 shadow-md space-y-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
-                            <span>🧠 Analyse Agentique IA Gemini</span>
+                            <span>⚙️ Score de priorité (calcul automatique)</span>
                           </div>
                           <span className="bg-amber-400/20 text-amber-300 font-black px-2.5 py-0.5 rounded-full text-xs border border-amber-400/30">
                             Score : {scoreData.score}% ({scoreData.priorite.toUpperCase()})
@@ -1040,18 +1040,24 @@ export default function CRMDashboard() {
               <div>
                 <div className="inline-flex items-center gap-2 bg-[#FFD700]/20 text-[#FFD700] px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border border-[#FFD700]/30 mb-2">
                   <span>⚡</span>
-                  <span>Moteur de Prospection & Scraping Intelligent BTP</span>
+                  <span>Annuaire de prospects BTP — Côte d&apos;Ivoire</span>
                 </div>
-                <h2 className="text-2xl font-black text-white">Extraction & Qualification de Prospects en Côte d'Ivoire</h2>
+                <h2 className="text-2xl font-black text-white">Répertoire de prospects BTP, promoteurs et quincailleries</h2>
                 <p className="text-sm text-white/80 mt-1 max-w-3xl">
-                  Scrapez automatiquement les registres professionnels, marchés publics et chantiers pour détecter les entreprises de BTP, promoteurs et quincailleries ayant besoin de blocs bétons, pavés et bordures 2CGC.
+                  Recherchez par zone, corps de métier ou mots-clés dans un répertoire d&apos;entreprises
+                  susceptibles d&apos;avoir besoin de blocs bétons, pavés et bordures 2CGC, puis importez-les
+                  dans votre pipeline en un clic.
+                </p>
+                <p className="text-xs text-white/60 mt-2 max-w-3xl border-l-2 border-[#FFD700]/50 pl-3">
+                  Répertoire constitué manuellement et livré avec la plateforme. Il n&apos;interroge aucune
+                  source externe en temps réel : les coordonnées sont à vérifier avant tout démarchage.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2 text-xs">
                 <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">📍 Daloa & Abidjan</span>
-                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">💬 Numéros WhatsApp vérifiés</span>
-                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">✉️ Emails B2B certifiés</span>
+                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">💬 Numéros WhatsApp</span>
+                <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">✉️ Contacts B2B</span>
               </div>
             </div>
 
@@ -1119,12 +1125,12 @@ export default function CRMDashboard() {
                   {scrapingEnCours ? (
                     <>
                       <span className="animate-spin text-base">⏳</span>
-                      <span>Scraping en direct...</span>
+                      <span>Recherche en cours...</span>
                     </>
                   ) : (
                     <>
                       <span className="text-base">🚀</span>
-                      <span>Lancer le Scraping</span>
+                      <span>Rechercher dans l&apos;annuaire</span>
                     </>
                   )}
                 </button>
@@ -1465,7 +1471,7 @@ export default function CRMDashboard() {
         onRefreshData={chargerDonnees}
       />
 
-      {/* Copilot Agentique IA & Modal Audit */}
+      {/* Assistant CRM & journal des automatisations */}
       <CRMAgenticCopilot
         onRefreshLeads={chargerDonnees}
         onOpenLogsModal={() => setModalAgentLogsOpen(true)}

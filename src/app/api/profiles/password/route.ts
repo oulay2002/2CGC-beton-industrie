@@ -10,7 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminClient } from '@/lib/supabase/admin';
-import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
+import { verifySessionToken, createSessionToken, COOKIE_NAME } from '@/lib/session';
 import { hacherMotDePasse, verifierMotDePasse, motifRejetMotDePasse } from '@/lib/password';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
@@ -60,9 +60,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Service indisponible.' }, { status: 503 });
   }
 
-  // Changement de son propre mot de passe : l'ancien doit etre prouve, sinon un
-  // cookie vole suffirait a verrouiller le compte de son proprietaire.
-  if (estSoiMeme && !estDirigeant) {
+  // Changement de son propre mot de passe : l'ancien doit être prouvé, quel que
+  // soit le rôle — sinon un cookie volé suffirait à verrouiller le compte de
+  // son propriétaire. Un dirigeant qui réinitialise le compte d'un TIERS en est
+  // dispensé, c'est le propre d'une réinitialisation administrative.
+  if (estSoiMeme) {
     const { data: compte } = await admin
       .from('profiles')
       .select('password_hash')
@@ -91,5 +93,27 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Echec de la mise a jour.' }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true });
+  const response = NextResponse.json({ success: true });
+
+  // L'utilisateur vient de choisir son propre mot de passe : on réémet la
+  // session sans le drapeau « provisoire », sinon le proxy continuerait de le
+  // renvoyer indéfiniment vers l'écran de changement.
+  if (estSoiMeme) {
+    const token = await createSessionToken({
+      email: session.email,
+      role: session.role,
+      nom: session.nom,
+    });
+    response.cookies.set({
+      name: COOKIE_NAME,
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 86400 * 7,
+    });
+  }
+
+  return response;
 }

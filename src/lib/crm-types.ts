@@ -270,9 +270,38 @@ _2CGC — Quartier Commerce, Daloa_`,
 // HELPERS PURS
 // =============================================
 
-/** Identifiant métier lisible, repris dans les emails et les échanges WhatsApp. */
+/**
+ * Identifiant métier lisible, repris dans les emails et les échanges WhatsApp.
+ *
+ * La version précédente concaténait 5 chiffres d'horodatage et UN chiffre
+ * aléatoire : deux leads créés dans la même milliseconde n'avaient que dix
+ * identifiants possibles. Comme cet identifiant est la clé primaire de
+ * `prospects_crm`, une collision ne levait aucune erreur — l'upsert écrasait
+ * le lead existant. L'import en masse depuis l'annuaire, qui crée les leads en
+ * boucle, perdait donc des prospects en silence.
+ *
+ * On garde un préfixe temporel pour l'ordre de lecture, suivi de cinq
+ * caractères tirés au sort dans un alphabet sans I, O, 0 ni 1 : l'identifiant
+ * est dicté au téléphone et recopié à la main.
+ */
 export function genererIdLead(): string {
-  return `LEAD-${Date.now().toString().slice(-5)}${Math.floor(Math.random() * 10)}`;
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const octets = new Uint8Array(5);
+
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(octets);
+  } else {
+    for (let i = 0; i < octets.length; i++) octets[i] = Math.floor(Math.random() * 256);
+  }
+
+  const suffixe = Array.from(octets)
+    .map((o) => alphabet[o % alphabet.length])
+    .join('');
+
+  // Base 36 sur l'horodatage : compact, et les identifiants restent triables.
+  const horodatage = Date.now().toString(36).toUpperCase().slice(-4);
+
+  return `LEAD-${horodatage}${suffixe}`;
 }
 
 function jourISO(decalageJours = 0): string {

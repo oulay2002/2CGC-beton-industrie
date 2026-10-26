@@ -1,6 +1,5 @@
 // src/lib/generer-bons.ts — Moteur de Génération de Bons de Commande (BC) & Bons de Livraison (BL) 2CGC
 import jsPDF from 'jspdf';
-// @ts-ignore
 import autoTable from 'jspdf-autotable';
 import { LOGO_2CGC_BASE64 } from '@/lib/logo-base64';
 import { nombreEnLettres } from './generer-pdf';

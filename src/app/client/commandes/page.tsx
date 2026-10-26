@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
-import { getCommandes, Commande } from '@/lib/commandes-store';
+import { getCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
 import { genererPDF } from '@/lib/generer-pdf';
 import Link from 'next/link';
 
@@ -23,7 +23,7 @@ function CommandesPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [clientActif, setClientActif] = useState<any>(null);
+  const [clientActif, setClientActif] = useState<CompteUtilisateur | null>(null);
   const [toutesCommandes, setToutesCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function CommandesPageInner() {
 
   // Filtrer uniquement les commandes appartenant au client actif
   const commandesFiltrees = toutesCommandes.filter(cmd => {
-    const cEmail = (cmd.client as any).email?.toLowerCase();
+    const cEmail = cmd.client.email?.toLowerCase();
     const cNom = cmd.client.nom?.toLowerCase();
     const cEnt = cmd.client.entreprise?.toLowerCase();
     const targetEmail = clientActif.email?.toLowerCase();
@@ -74,7 +74,7 @@ function CommandesPageInner() {
            (cEnt && targetEnt && cEnt === targetEnt);
   });
 
-  const handleTelechargerFacture = (cmd: any) => {
+  const handleTelechargerFacture = (cmd: Commande) => {
     const totalHT = Math.round(cmd.total / 1.18);
     const tva = cmd.total - totalHT;
 
@@ -89,7 +89,7 @@ function CommandesPageInner() {
         telephone: cmd.client.telephone || clientActif.telephone,
         adresse: cmd.client.adresse || 'Abidjan / Daloa',
       },
-      lignes: cmd.articles.map((a: any) => ({
+      lignes: cmd.articles.map((a: CommandeArticle) => ({
         nom: a.nom,
         quantite: a.quantite,
         prix: a.prix,

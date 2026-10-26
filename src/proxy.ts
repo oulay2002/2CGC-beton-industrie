@@ -21,6 +21,9 @@ function getLocale(request: NextRequest): Locale {
 // ─── Routes protégées par rôle ────────────────────────────────────────────────
 const ROLE_PROTECTED = ['/dirigeant', '/usine', '/chauffeur', '/client'];
 
+// Écran de changement de mot de passe imposé au premier accès.
+const PAGE_CHANGEMENT_MDP = '/changer-mot-de-passe';
+
 import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
 
 export async function proxy(request: NextRequest) {
@@ -53,6 +56,15 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
+    // Mot de passe provisoire : aucune page privée n'est accessible tant qu'il
+    // n'a pas été changé. La vérification est ici, et non dans un composant,
+    // pour qu'elle ne puisse pas être contournée en saisissant une autre URL.
+    if (session.mdp) {
+      const url = new URL(PAGE_CHANGEMENT_MDP, request.url);
+      url.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(url);
+    }
+
     const userRole = session.role;
 
     if (pathname.startsWith('/dirigeant') && userRole !== 'dirigeant') {
@@ -72,7 +84,11 @@ export async function proxy(request: NextRequest) {
   }
 
   // 3. Routes d'authentification (non traduites)
-  if (pathname.startsWith('/connexion') || pathname.startsWith('/inscription')) {
+  if (
+    pathname.startsWith('/connexion') ||
+    pathname.startsWith('/inscription') ||
+    pathname.startsWith(PAGE_CHANGEMENT_MDP)
+  ) {
     return NextResponse.next();
   }
 

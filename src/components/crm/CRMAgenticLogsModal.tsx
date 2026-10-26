@@ -60,13 +60,13 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
             </div>
             <div>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Journal d'Audit Agentique CRM
+                Journal des automatisations CRM
                 <span className="text-xs bg-emerald-500/20 text-emerald-300 font-normal px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                   Traçabilité 100%
                 </span>
               </h2>
               <p className="text-xs text-slate-400">
-                Historique transparent des décisions, pensées et actions exécutées par l'Agent IA 2CGC.
+                Historique des relances, scorages et conversions déclenchés automatiquement.
               </p>
             </div>
           </div>
@@ -169,7 +169,7 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
                 {/* Thought / Raisonnement */}
                 <div className="p-3 bg-slate-900/90 rounded-lg text-xs text-slate-300 border border-slate-800/80">
                   <p className="text-slate-400 font-semibold mb-1 text-[11px] flex items-center gap-1">
-                    🧠 Raisonnement Agentique :
+                    ⚙️ Règle appliquée :
                   </p>
                   <p className="italic">{log.thought}</p>
                 </div>
