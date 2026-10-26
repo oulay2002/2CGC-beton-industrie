@@ -13,6 +13,8 @@ import {
   Building2,
   Layers,
   Compass,
+  HardHat,
+  Mail,
 } from "lucide-react";
 import type { Locale } from "@/lib/dictionaries";
 import { type ZoneData, ZONES } from "@/lib/zones-data";
@@ -206,7 +208,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
         <div className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-gray-100 grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#002B5B] bg-[#002B5B]/5 px-3 py-1 rounded-full">
-              <span>🏗️</span>
+              <HardHat className="w-4 h-4" />
               <span>{isEn ? "Local Expertise" : "Approvisionnement Local"}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-[#002B5B] leading-tight">
@@ -388,7 +390,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
               href={`/${lang}/contact`}
               className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-xl font-bold text-xs transition-colors"
             >
-              <span>✉️</span> {isEn ? "Contact Sales Team" : "Parler à un Conseiller"}
+              <Mail className="w-4 h-4" /> {isEn ? "Contact Sales Team" : "Parler à un Conseiller"}
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { Apple, Smartphone, Zap } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -121,7 +122,7 @@ export default function PwaRegister() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-black text-white flex items-center gap-1.5">
-                <span>📲</span> Installer l'application 2CGC
+                <Smartphone className="w-4 h-4" /> Installer l'application 2CGC
               </h4>
               <button
                 onClick={handleDismiss}
@@ -140,7 +141,7 @@ export default function PwaRegister() {
                 onClick={handleInstallClick}
                 className="bg-brand-gold text-[#002B5B] text-xs font-black px-4 py-2 rounded-xl shadow hover:shadow-[#FFD700]/40 transition-all flex items-center gap-1.5"
               >
-                <span>⚡</span> Installer l'app
+                <Zap className="w-3.5 h-3.5" /> Installer l'app
               </button>
               <button
                 onClick={handleDismiss}
@@ -156,11 +157,11 @@ export default function PwaRegister() {
         {showIosGuide && (
           <div className="mt-3 pt-3 border-t border-white/10 text-xs text-amber-200 bg-black/20 p-2.5 rounded-xl space-y-1">
             <div className="font-bold flex items-center gap-1">
-              <span>🍏</span> Pour installer sur iPhone / iPad :
+              <Apple className="w-3.5 h-3.5" /> Pour installer sur iPhone / iPad :
             </div>
             <ol className="list-decimal list-inside space-y-0.5 text-white/90">
               <li>Appuyez sur le bouton <strong>Partager</strong> en bas de Safari (icône <span className="font-mono">⎋</span> ou carré avec flèche).</li>
-              <li>Faites défiler et sélectionnez <strong>« Sur l'écran d'accueil »</strong> (icône ➕).</li>
+              <li>Faites défiler et sélectionnez <strong>« Sur l'écran d'accueil »</strong> (icône +).</li>
               <li>Confirmez en cliquant sur <strong>Ajouter</strong> en haut à droite.</li>
             </ol>
           </div>

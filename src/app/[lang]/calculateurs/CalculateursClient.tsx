@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import { Blocks, Rocket, Timer } from 'lucide-react';
 
 interface CalculateursClientProps {
   lang: Locale;
@@ -18,7 +19,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
       description: isEn
         ? "Determine exactly how many blocks, bricks, or pavers you need for your wall or roadway surfaces, with automatic calculation of the breakage safety factor."
         : "Déterminez exactement le nombre de briques, agglos ou pavés nécessaires pour vos surfaces murales ou de voirie, avec intégration automatique du coefficient de casse.",
-      icone: "🧱",
+      Icone: Blocks,
       caracteristiques: isEn
         ? [
             "Account for openings (doors and windows)",
@@ -41,7 +42,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
       description: isEn
         ? "Accurately assess the installation time required according to building area, team size (masons + helpers), and site conditions."
         : "Évaluez précisément le temps de pose requis selon la surface à bâtir, le nombre de maçons mobilisés et les conditions du chantier.",
-      icone: "⏱️",
+      Icone: Timer,
       caracteristiques: isEn
         ? [
             "Real execution paces observed on Ivorian construction sites",
@@ -102,7 +103,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                {isEn ? "🛠️ Free Tools for Builders" : "🛠️ Outils Gratuits pour les Bâtisseurs"}
+                {isEn ? "Free Tools for Builders" : "Outils Gratuits pour les Bâtisseurs"}
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "2CGC Daloa Engineering & Ratios" : "Ingénierie & Ratios 2CGC Daloa"}
@@ -110,7 +111,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
             </div>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
+          <h1 className="sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
             {isEn ? (
               <>
                 Online Construction <br />
@@ -143,7 +144,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <div className="w-16 h-16 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 flex items-center justify-center text-4xl transition-all backdrop-blur-sm">
-                    {calc.icone}
+                    <calc.Icone className="w-8 h-8 text-[#002B5B]" />
                   </div>
                   <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#002B5B]/10 border border-[#002B5B]/15 text-[#002B5B] backdrop-blur-sm">
                     {calc.badge}
@@ -172,7 +173,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
                 href={calc.lien}
                 className="w-full bg-[#002B5B] group-hover:bg-[#FFD700] text-white group-hover:text-[#002B5B] py-4 rounded-2xl font-black text-sm text-center transition-all duration-300 flex items-center justify-center gap-2 shadow-md"
               >
-                <span>🚀</span> {isEn ? "Launch calculator" : "Lancer le calculateur"}
+                <Rocket className="w-4 h-4" /> {isEn ? "Launch calculator" : "Lancer le calculateur"}
               </Link>
             </div>
           ))}
@@ -221,7 +222,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
             href={`/${lang}/devis`}
             className="flex-shrink-0 bg-brand-gold text-[#002B5B] px-8 py-4 rounded-2xl font-black text-sm shadow-xl hover:shadow-[#FFD700]/30 transition-all"
           >
-            {isEn ? "🧮 Configure my quote" : "🧮 Configurer mon devis"}
+            {isEn ? "Configure my quote" : "Configurer mon devis"}
           </Link>
         </section>
       </div>

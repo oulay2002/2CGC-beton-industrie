@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import { Award, Calculator, Cog, FileText, FlaskConical, Gem, Phone, Timer, Trophy, Truck } from 'lucide-react';
 
 interface PourquoiNousChoisirClientProps {
   lang: Locale;
@@ -12,7 +13,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
 
   const atoutsTechniques = [
     {
-      icone: "💎",
+      Icone: Gem,
       titre: isEn ? "Mechanical Resistance B60 & B50" : "Résistance Mécanique B60 & B50",
       description: isEn
         ? "Our concrete products achieve certified compressive strengths up to 60 bars (B60), ensuring the safety of load-bearing structures even for multi-story buildings."
@@ -20,7 +21,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
       tag: isEn ? "BTP Standard" : "Norme BTP",
     },
     {
-      icone: "⚙️",
+      Icone: Cog,
       titre: isEn ? "High-Pressure Hydraulic Press" : "Presse Industrielle Haute Pression",
       description: isEn
         ? "Robotic hydraulic compaction eliminating air pockets and microcracks. Razor-sharp, regular edges save significant time and mortar during wall elevation."
@@ -28,7 +29,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
       tag: isEn ? "Technology" : "Technologie",
     },
     {
-      icone: "🧪",
+      Icone: FlaskConical,
       titre: isEn ? "Selected & Screened Aggregates" : "Agrégats Sélectionnés & Tamisés",
       description: isEn
         ? "Washed river sand and calibrated gravels free of organic matter. Optimized batching formulation with high-grade CPJ 42.5 Portland cement."
@@ -36,7 +37,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
       tag: isEn ? "Raw Materials" : "Matières premières",
     },
     {
-      icone: "⏱️",
+      Icone: Timer,
       titre: isEn ? "Controlled Curing & Drying" : "Cure & Séchage Contrôlés",
       description: isEn
         ? "Sheltered watering and maturation process preventing rapid desiccation under the Ivorian tropical climate and maximizing ultimate structural strength."
@@ -44,7 +45,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
       tag: isEn ? "Continuous Quality" : "Qualité continue",
     },
     {
-      icone: "🚚",
+      Icone: Truck,
       titre: isEn ? "Turnkey Site Delivery" : "Livraison Chantier Clé en Main",
       description: isEn
         ? "Operational truck fleet 6 days a week delivering directly to construction sites in Daloa and across Ivory Coast with careful crane unloading."
@@ -52,7 +53,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
       tag: isEn ? "Logistics" : "Logistique",
     },
     {
-      icone: "📄",
+      Icone: FileText,
       titre: isEn ? "Tax Compliance & 18% VAT" : "Transparence Fiscale & TVA 18%",
       description: isEn
         ? "Company officially registered in the Daloa RCCM, providing valid proformas and invoices with 18% VAT for easy accounting recovery by construction firms."
@@ -119,7 +120,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                ⭐ {isEn ? "Competitive Advantages" : "Les Avantages Compétitifs"}
+                <Award className="w-3.5 h-3.5" />{isEn ? "Competitive Advantages" : "Les Avantages Compétitifs"}
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "Industrial Standards • Daloa Plant" : "Normes Industrielles • Usine de Daloa"}
@@ -150,7 +151,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
             <span className="text-xs font-black text-[#002B5B] uppercase tracking-widest bg-[#002B5B]/5 px-3 py-1.5 rounded-full">
               {isEn ? "Industrial Rigor" : "Exigence Industrielle"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#002B5B] tracking-tight mt-3">
+            <h2 className="sm:text-4xl font-black text-[#002B5B] tracking-tight mt-3">
               {isEn ? "6 Guaranteed Performance Pillars" : "6 piliers de performance garantis"}
             </h2>
           </div>
@@ -164,7 +165,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
                 <div>
                   <div className="flex items-center justify-between mb-5">
                     <div className="w-14 h-14 bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 rounded-2xl flex items-center justify-center text-3xl transition-all backdrop-blur-sm">
-                      {atout.icone}
+                      <atout.Icone className="w-7 h-7 text-[#002B5B]" />
                     </div>
                     <span className="text-[11px] font-bold text-[#002B5B] bg-[#002B5B]/10 border border-[#002B5B]/15 px-2.5 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
                       {atout.tag}
@@ -205,7 +206,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
                   </th>
                   <th className="py-4 px-4 text-[#002B5B] bg-[#FFD700]/10 rounded-t-xl w-1/3">
                     <span className="flex items-center gap-1.5 text-sm font-black">
-                      <span>🏆</span> {isEn ? "2CGC Industrial Production" : "Production Industrielle 2CGC"}
+                      <Trophy className="w-4 h-4" /> {isEn ? "2CGC Industrial Production" : "Production Industrielle 2CGC"}
                     </span>
                   </th>
                   <th className="py-4 px-4 text-gray-400 w-1/3">
@@ -258,13 +259,13 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
                 href={`/${lang}/devis`}
                 className="bg-brand-gold text-[#002B5B] px-8 py-4 rounded-2xl font-black text-sm text-center shadow-xl hover:shadow-[#FFD700]/30 hover:-translate-y-0.5 transition-all"
               >
-                🧮 {isEn ? "Get my online quotation" : "Obtenir mon devis en ligne"}
+                <Calculator className="w-4 h-4" />{isEn ? "Get my online quotation" : "Obtenir mon devis en ligne"}
               </Link>
               <Link
                 href={`/${lang}/contact`}
                 className="border-2 border-white/30 hover:bg-white/10 text-white px-6 py-4 rounded-2xl font-bold text-sm text-center transition-colors"
               >
-                📞 {isEn ? "Contact our team" : "Contacter nos équipes"}
+                <Phone className="w-4 h-4" />{isEn ? "Contact our team" : "Contacter nos équipes"}
               </Link>
             </div>
           </div>

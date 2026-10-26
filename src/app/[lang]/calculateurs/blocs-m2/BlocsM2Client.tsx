@@ -106,7 +106,7 @@ export default function BlocsM2Client({ lang }: BlocsM2ClientProps) {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-[#FFD700] uppercase tracking-wider">
-                {isEn ? "📐 On-Site Precision Tool" : "📐 Outil de Précision Chantier"}
+                {isEn ? "On-Site Precision Tool" : "Outil de Précision Chantier"}
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "Technical Calculator • 2CGC CHEICKNA" : "Calculateur Technique • 2CGC CHEICKNA"}
@@ -279,7 +279,7 @@ export default function BlocsM2Client({ lang }: BlocsM2ClientProps) {
                 </Link>
               ) : (
                 <div className="w-full py-4 px-6 rounded-xl bg-white/10 text-gray-300 text-center font-semibold text-sm border border-white/20">
-                  {isEn ? "👆 Enter a length and height on the left" : "👆 Saisissez une longueur et une hauteur ci-contre"}
+                  {isEn ? "Enter a length and height on the left" : "Saisissez une longueur et une hauteur ci-contre"}
                 </div>
               )}
               <p className="text-center text-xs text-gray-300 font-normal">

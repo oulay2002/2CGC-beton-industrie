@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import posthog from 'posthog-js';
-import { Package, Truck, FileText, Award, MapPin, Phone } from 'lucide-react';
+import { AlertTriangle, Award, Building2, CheckCircle2, Eye, EyeOff, FileText, Lock, Mail, MapPin, Package, Phone, Truck, User, XCircle } from 'lucide-react';
 
 export default function InscriptionPage() {
   const { register } = useAuth();
@@ -97,8 +97,8 @@ export default function InscriptionPage() {
       <main className="min-h-screen bg-[#F5F5F0] flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-3xl shadow-xl p-10 text-center">
-            <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
-              ✅
+            <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-emerald-600" />
             </div>
             <h1 className="text-2xl font-black text-[#002B5B] mb-3">Compte créé !</h1>
             <p className="text-gray-500 text-sm mb-2">
@@ -114,7 +114,7 @@ export default function InscriptionPage() {
               <div className="space-y-2 text-sm">
                 <div><span className="text-gray-500">Email :</span> <strong className="text-[#002B5B]">{form.email}</strong></div>
                 <div><span className="text-gray-500">Mot de passe :</span> <strong className="text-[#002B5B]">{form.motDePasse}</strong></div>
-                <div><span className="text-gray-500">Rôle :</span> <strong className="text-[#002B5B]">👤 Client</strong></div>
+                <div><span className="text-gray-500">Rôle :</span> <strong className="text-[#002B5B] inline-flex items-center gap-1.5"><User className="w-4 h-4" />Client</strong></div>
               </div>
             </div>
 
@@ -211,7 +211,7 @@ export default function InscriptionPage() {
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Nom complet *</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><User className="w-4 h-4" /></span>
                 <input
                   type="text"
                   value={form.nom}
@@ -227,7 +227,7 @@ export default function InscriptionPage() {
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Entreprise / Société <span className="text-gray-400 normal-case font-normal">(optionnel)</span></label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🏢</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Building2 className="w-4 h-4" /></span>
                 <input
                   type="text"
                   value={form.entreprise}
@@ -242,7 +242,7 @@ export default function InscriptionPage() {
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email *</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📧</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Mail className="w-4 h-4" /></span>
                 <input
                   type="email"
                   value={form.email}
@@ -258,7 +258,7 @@ export default function InscriptionPage() {
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Téléphone WhatsApp *</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📞</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Phone className="w-4 h-4" /></span>
                 <input
                   type="tel"
                   value={form.telephone}
@@ -277,7 +277,7 @@ export default function InscriptionPage() {
                 <span className="text-gray-400 normal-case font-normal">(chantier ou dépôt)</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📍</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><MapPin className="w-4 h-4" /></span>
                 <input
                   type="text"
                   value={form.adresse}
@@ -292,7 +292,7 @@ export default function InscriptionPage() {
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Mot de passe * <span className="text-gray-400 normal-case font-normal">(min. 6 caractères)</span></label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔒</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Lock className="w-4 h-4" /></span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={form.motDePasse}
@@ -302,7 +302,7 @@ export default function InscriptionPage() {
                   className="w-full border-2 border-gray-200 rounded-2xl pl-10 pr-12 py-3.5 text-sm focus:border-[#FFD700] focus:outline-none bg-white transition-colors"
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#002B5B] text-xs transition-colors">
-                  {showPassword ? '🙈' : '👁'}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
@@ -311,7 +311,7 @@ export default function InscriptionPage() {
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Confirmer le mot de passe *</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔒</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Lock className="w-4 h-4" /></span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={form.motDePasseConfirm}
@@ -328,7 +328,7 @@ export default function InscriptionPage() {
                 />
                 {form.motDePasseConfirm && (
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm">
-                    {form.motDePasse === form.motDePasseConfirm ? '✅' : '❌'}
+                    {form.motDePasse === form.motDePasseConfirm ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <XCircle className="w-4 h-4 text-red-500" />}
                   </span>
                 )}
               </div>
@@ -337,7 +337,7 @@ export default function InscriptionPage() {
             {/* Erreur */}
             {error && (
               <div className="flex items-start gap-3 bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
-                <span>⚠️</span><span>{error}</span>
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>{error}</span>
               </div>
             )}
 
@@ -355,7 +355,7 @@ export default function InscriptionPage() {
                   </svg>
                   Création du compte...
                 </>
-              ) : '✅ Créer mon compte client'}
+              ) : 'Créer mon compte client'}
             </button>
 
             <p className="text-center text-xs text-gray-400 leading-relaxed">

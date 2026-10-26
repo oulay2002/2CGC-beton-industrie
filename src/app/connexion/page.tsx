@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, ROUTES_PAR_ROLE } from '@/lib/auth-context';
 import Link from 'next/link';
+import { AlertTriangle, Factory, HardHat, KeyRound, Lightbulb, MapPin, Shield, Truck, User, Warehouse } from 'lucide-react';
 
 function ConnexionPageInner() {
   const router = useRouter();
@@ -117,8 +118,8 @@ function ConnexionPageInner() {
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-lg flex-shrink-0 text-amber-400">
-                    🏭
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center flex-shrink-0 text-amber-400">
+                    <Factory className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-white text-sm font-bold">Pilotage Usine &amp; Centrales</div>
@@ -127,8 +128,8 @@ function ConnexionPageInner() {
                 </div>
 
                 <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-lg flex-shrink-0 text-blue-400">
-                    🚛
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center flex-shrink-0 text-blue-400">
+                    <Truck className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-white text-sm font-bold">Flotte &amp; Dispatch Chantiers</div>
@@ -152,8 +153,8 @@ function ConnexionPageInner() {
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-[#FFD700]/10 border border-[#FFD700]/30 flex items-center justify-center text-lg flex-shrink-0 text-[#FFD700]">
-                    🏗️
+                  <div className="w-10 h-10 rounded-xl bg-[#FFD700]/10 border border-[#FFD700]/30 flex items-center justify-center flex-shrink-0 text-[#FFD700]">
+                    <HardHat className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-white text-sm font-bold">Centrale à Béton Haute Performance</div>
@@ -162,8 +163,8 @@ function ConnexionPageInner() {
                 </div>
 
                 <div className="flex items-start gap-3.5 bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 rounded-2xl">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-lg flex-shrink-0 text-blue-400">
-                    🚚
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center flex-shrink-0 text-blue-400">
+                    <Warehouse className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-white text-sm font-bold">Logistique &amp; Camions-Grues Intégrés</div>
@@ -177,7 +178,7 @@ function ConnexionPageInner() {
 
         {/* Footer Gauche */}
         <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-white/40">
-          <div>📍 Quartier Commerce, BP 129 Daloa</div>
+          <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 shrink-0" />Quartier Commerce, BP 129 Daloa</div>
           <div className="flex items-center gap-1 text-emerald-400 font-semibold">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -218,7 +219,7 @@ function ConnexionPageInner() {
             {mode === 'equipe' ? (
               <>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200 mb-2">
-                  🔐 Portail Collaborateurs &amp; Direction
+                  <KeyRound className="w-3 h-3" />Portail Collaborateurs &amp; Direction
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black text-[#002B5B] tracking-tight">
                   Accès Équipe 2CGC
@@ -230,7 +231,7 @@ function ConnexionPageInner() {
             ) : (
               <>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-blue-50 text-[#002B5B] border border-blue-200 mb-2">
-                  👤 Espace Entreprises &amp; Clients B2B
+                  <User className="w-3 h-3" />Espace Entreprises &amp; Clients B2B
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black text-[#002B5B] tracking-tight">
                   Espace Client 2CGC
@@ -277,7 +278,7 @@ function ConnexionPageInner() {
 
                 {mode === 'equipe' && (
                   <div className="mt-2 flex items-center gap-1.5 text-[11px] text-blue-900 font-semibold bg-blue-50/80 px-2.5 py-1.5 rounded-xl border border-blue-100">
-                    <span>💡</span>
+                    <Lightbulb className="w-3.5 h-3.5 shrink-0" />
                     <span>Format officiel : <strong className="font-bold text-[#002B5B]">@2cgc-industrie.com</strong></span>
                   </div>
                 )}
@@ -354,7 +355,7 @@ function ConnexionPageInner() {
               {/* Message d'Erreur */}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-2">
-                  <span className="text-base">⚠️</span>
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
@@ -375,7 +376,7 @@ function ConnexionPageInner() {
                   </>
                 ) : mode === 'equipe' ? (
                   <>
-                    <span>🔐</span>
+                    <KeyRound className="w-4 h-4" />
                     <span>Accéder au Portail Collaborateur</span>
                     <span className="text-base">→</span>
                   </>
@@ -393,7 +394,7 @@ function ConnexionPageInner() {
               {mode === 'equipe' ? (
                 <div className="space-y-1">
                   <p className="text-xs text-gray-600 font-semibold flex items-center justify-center gap-1.5">
-                    <span>🛡️</span>
+                    <Shield className="w-3.5 h-3.5" />
                     <span>Accès strictement réservé au personnel 2CGC</span>
                   </p>
                   <p className="text-[11px] text-gray-400">

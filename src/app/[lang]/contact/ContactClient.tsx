@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
 import { ajouterLeadManuellement } from "@/lib/crm-data";
 import posthog from "posthog-js";
+import { AlertTriangle, Bus, Car, CheckCircle2, CircleParking, Clock, Landmark, Mail, MapPin, Phone } from 'lucide-react';
 
 interface ContactClientProps {
   lang: Locale;
@@ -164,7 +165,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
           </Link>
 
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest block w-fit">
-            {isEn ? "📞 Immediate Attention & Fast Response" : "📞 Écoute & Réactivité Immédiate"}
+            {isEn ? "Immediate Attention & Fast Response" : "Écoute & Réactivité Immédiate"}
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 tracking-tight leading-tight">
@@ -203,14 +204,14 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               </div>
 
               <h2 className="text-xl font-black text-[#002B5B] mb-4">
-                {isEn ? "📞 Direct Contacts" : "📞 Coordonnées Directes"}
+                {isEn ? "Direct Contacts" : "Coordonnées Directes"}
               </h2>
 
               <div className="space-y-4">
                 {/* Téléphones */}
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-[#002B5B]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl">📞</span>
+                    <Phone className="w-5 h-5 text-[#002B5B]" />
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">
@@ -234,7 +235,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                 {/* Email */}
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl">📧</span>
+                    <Mail className="w-5 h-5 text-[#002B5B]" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">
@@ -253,7 +254,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                 {/* Adresse */}
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl">📍</span>
+                    <MapPin className="w-5 h-5 text-[#002B5B]" />
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">
@@ -274,7 +275,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                 {/* Horaires */}
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl">🕐</span>
+                    <Clock className="w-5 h-5 text-[#002B5B]" />
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">
@@ -290,7 +291,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               {/* Bloc Identité Juridique & Bancaire */}
               <div className="mt-6 pt-5 border-t border-gray-200 text-xs space-y-2 text-gray-600 bg-gray-50 p-4 rounded-xl">
                 <div className="font-bold text-[#002B5B] uppercase tracking-wider text-[11px] mb-2 flex items-center gap-1.5">
-                  <span>🏛️</span> {isEn ? "Legal & Tax Details" : "Mentions Légales & Fiscales"}
+                  <Landmark className="w-4 h-4" /> {isEn ? "Legal & Tax Details" : "Mentions Légales & Fiscales"}
                 </div>
                 <div>
                   <strong>{isEn ? "Status:" : "Statut :"}</strong>{" "}
@@ -323,7 +324,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
             {/* Carte rapide */}
             <div className="bg-[#002B5B] text-white rounded-2xl shadow-lg p-6">
               <h3 className="font-black text-lg mb-3 text-[#FFD700]">
-                {isEn ? "⚡ Quick Response" : "⚡ Réponse rapide"}
+                {isEn ? "Quick Response" : "Réponse rapide"}
               </h3>
               <p className="text-sm text-white/80 mb-4">
                 {isEn
@@ -387,7 +388,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               {messageEnvoye && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
                   <div className="flex items-center gap-2 text-green-800">
-                    <span className="text-2xl">✅</span>
+                    <CheckCircle2 className="w-6 h-6 text-green-600 shrink-0" />
                     <div>
                       <div className="font-bold">
                         {isEn ? "Message sent successfully!" : "Message envoyé avec succès !"}
@@ -405,7 +406,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               {erreur && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                   <div className="flex items-center gap-2 text-red-800">
-                    <span className="text-2xl">⚠️</span>
+                    <AlertTriangle className="w-6 h-6 text-red-600 shrink-0" />
                     <div>
                       <div className="font-bold">
                         {isEn ? "Error sending message" : "Erreur lors de l'envoi"}
@@ -583,7 +584,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
         <div className="mt-12">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="bg-[#002B5B] text-white p-6">
-              <h2 className="text-2xl font-black">{isEn ? "📍 Find Us" : "📍 Nous trouver"}</h2>
+              <h2 className="text-2xl font-black">{isEn ? "Find Us" : "Nous trouver"}</h2>
               <p className="text-white/70">
                 {isEn ? "Commercial District, Daloa, Ivory Coast" : "Quartier Commerce, Daloa, Côte d'Ivoire"}
               </p>
@@ -599,7 +600,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
             <div className="p-6 bg-[#F5F5F0]">
               <div className="grid md:grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center gap-2">
-                  <span className="text-[#FFD700] text-xl">🚗</span>
+                  <Car className="w-5 h-5 text-[#FFD700] shrink-0" />
                   <div>
                     <div className="font-bold text-[#002B5B]">
                       {isEn ? "From Downtown" : "Depuis le centre-ville"}
@@ -610,7 +611,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#FFD700] text-xl">🚌</span>
+                  <Bus className="w-5 h-5 text-[#FFD700] shrink-0" />
                   <div>
                     <div className="font-bold text-[#002B5B]">
                       {isEn ? "Public Transport" : "Transport en commun"}
@@ -621,7 +622,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#FFD700] text-xl">🅿️</span>
+                  <CircleParking className="w-5 h-5 text-[#FFD700] shrink-0" />
                   <div>
                     <div className="font-bold text-[#002B5B]">{isEn ? "Parking" : "Parking"}</div>
                     <div className="text-gray-600">

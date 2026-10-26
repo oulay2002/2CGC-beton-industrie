@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "@/lib/faq-data";
-import { Search, Blocks, Calculator, Truck, CreditCard } from "lucide-react";
+import { Blocks, Calculator, CreditCard, Mail, MessageCircle, Search, Truck } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
 
 const ICONES_CATEGORIE = {
@@ -64,7 +64,7 @@ export default function FaqClient({ lang }: FaqClientProps) {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                💬 {isEn ? "Frequently Asked Questions" : "Foire Aux Questions"}
+                <MessageCircle className="w-3.5 h-3.5" />{isEn ? "Frequently Asked Questions" : "Foire Aux Questions"}
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "Site Assistance • 2CGC CHEICKNA Daloa" : "Assistance Chantier • 2CGC CHEICKNA Daloa"}
@@ -174,13 +174,13 @@ export default function FaqClient({ lang }: FaqClientProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-all shadow-md"
               >
-                <span>💬</span> WhatsApp Direct
+                <MessageCircle className="w-4 h-4" /> WhatsApp Direct
               </a>
               <Link
                 href={`/${lang}/contact`}
                 className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-colors"
               >
-                <span>✉️</span> {isEn ? "Contact Form" : "Formulaire Contact"}
+                <Mail className="w-4 h-4" /> {isEn ? "Contact Form" : "Formulaire Contact"}
               </Link>
             </div>
           </div>

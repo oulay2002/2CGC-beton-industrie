@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { Bot, Lightbulb, Mail, MessageCircle, Phone, Send, X, Zap } from 'lucide-react';
 
 interface Message {
   id: number;
@@ -11,10 +12,10 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  "Contacter les dirigeants 📞",
+  "Contacter les dirigeants",
   "Quels sont vos produits ?",
   "Tarifs des briques & pavés",
-  "Télécharger Catalogue PDF 📥",
+  "Télécharger Catalogue PDF",
   "Comment obtenir un devis ?",
 ];
 
@@ -22,65 +23,65 @@ const SUGGESTIONS = [
 const CONNAISSANCES: { motsCles: string[]; reponse: string }[] = [
   {
     motsCles: ['bonjour', 'salut', 'hello', 'hi', 'coucou'],
-    reponse: "Bonjour et bienvenue chez 2CGC ! 👋 Je suis votre conseiller technique et commercial à Daloa. Comment puis-je vous accompagner aujourd'hui ? Dimensions des blocs, devis proforma, disponibilité des stocks ou livraison sur votre chantier ?",
+    reponse: "Bonjour et bienvenue chez 2CGC ! Je suis votre conseiller technique et commercial à Daloa. Comment puis-je vous accompagner aujourd'hui ? Dimensions des blocs, devis proforma, disponibilité des stocks ou livraison sur votre chantier ?",
   },
   {
     motsCles: ['pdf', 'télécharger', 'telecharger', 'brochure', 'fiche technique', 'document', 'fiche'],
-    reponse: "📄 **Catalogue Officiel 2CGC CHEICKNA (PDF) :**\n\nVous pouvez télécharger notre brochure complète avec les dimensions exactes, poids réels et tarifs HT de nos 24 produits :\n\n👉 [📥 Télécharger le Catalogue PDF (8 pages)](/catalogue-produits-2cgc.pdf)\n\nBesoin d'un devis immédiat ? Utilisez notre [configurateur de devis en ligne](/devis) !",
+    reponse: "**Catalogue Officiel 2CGC CHEICKNA (PDF) :**\n\nVous pouvez télécharger notre brochure complète avec les dimensions exactes, poids réels et tarifs HT de nos 24 produits :\n\n [ Télécharger le Catalogue PDF (8 pages)](/catalogue-produits-2cgc.pdf)\n\nBesoin d'un devis immédiat ? Utilisez notre [configurateur de devis en ligne](/devis) !",
   },
   {
     motsCles: ['produit', 'catalogue', 'gamme', 'matériaux', 'matériau'],
-    reponse: "🧱 **Notre gamme complète 2CGC (24 produits certifiés) :**\n\n• **Briques & Agglomérés** (260 à 570 FCFA/unité) - Formats 10, 12, 15 et 20 (Pleines & Creuses)\n• **Hourdis** (380 à 700 FCFA/unité) - Modèles Français (12, 15) et Américains (16, 20)\n• **Pavés Autobloquants** (6 500 à 7 500 FCFA/m²) - Modèles Z-7, Z-13, Z-14 et Z-6-s (différentes couleurs)\n\n👉 [Consulter le catalogue en ligne](/catalogue)\n👉 [📥 Télécharger le Catalogue PDF officiel](/catalogue-produits-2cgc.pdf)",
+    reponse: "**Notre gamme complète 2CGC (24 produits certifiés) :**\n\n• **Briques & Agglomérés** (260 à 570 FCFA/unité) - Formats 10, 12, 15 et 20 (Pleines & Creuses)\n• **Hourdis** (380 à 700 FCFA/unité) - Modèles Français (12, 15) et Américains (16, 20)\n• **Pavés Autobloquants** (6 500 à 7 500 FCFA/m²) - Modèles Z-7, Z-13, Z-14 et Z-6-s (différentes couleurs)\n\n [Consulter le catalogue en ligne](/catalogue)\n [ Télécharger le Catalogue PDF officiel](/catalogue-produits-2cgc.pdf)",
   },
   {
     motsCles: ['brique', 'briques', 'agglo', 'aggloméré', 'parpaing', 'bloc'],
-    reponse: "🧱 **Nos Briques & Agglomérés (dimensions & prix HT) :**\n\n• Brique 20 Pleine (36 kg) - **570 FCFA**\n• Brique 20 Creuse (18 kg) - **470 FCFA**\n• Brique 15 Pleine (28 kg) - **460 FCFA**\n• Brique 15 Creuse (16 kg) - **330 FCFA**\n• Brique 12 Pleine (20 kg) - **430 FCFA**\n• Brique 12 Creuse (14 kg) - **300 FCFA**\n• Brique 10 Creuse (12 kg) - **260 FCFA**\n\n📦 Stock disponible immédiatement à notre usine de Daloa !\n👉 [Télécharger les fiches techniques PDF](/catalogue-produits-2cgc.pdf)",
+    reponse: "**Nos Briques & Agglomérés (dimensions & prix HT) :**\n\n• Brique 20 Pleine (36 kg) - **570 FCFA**\n• Brique 20 Creuse (18 kg) - **470 FCFA**\n• Brique 15 Pleine (28 kg) - **460 FCFA**\n• Brique 15 Creuse (16 kg) - **330 FCFA**\n• Brique 12 Pleine (20 kg) - **430 FCFA**\n• Brique 12 Creuse (14 kg) - **300 FCFA**\n• Brique 10 Creuse (12 kg) - **260 FCFA**\n\n Stock disponible immédiatement à notre usine de Daloa !\n [Télécharger les fiches techniques PDF](/catalogue-produits-2cgc.pdf)",
   },
   {
     motsCles: ['hourdis', 'plancher'],
-    reponse: "🏗️ **Nos Hourdis pour plancher :**\n\n• Hourdis 15 Français (19 kg) - **430 FCFA**\n• Hourdis 12 Français (18 kg) - **380 FCFA**\n• Hourdis 16 Américain (17 kg) - **600 FCFA**\n• Hourdis 20 Américain - **700 FCFA**\n\n👉 [Voir les hourdis dans le catalogue](/catalogue)",
+    reponse: "**Nos Hourdis pour plancher :**\n\n• Hourdis 15 Français (19 kg) - **430 FCFA**\n• Hourdis 12 Français (18 kg) - **380 FCFA**\n• Hourdis 16 Américain (17 kg) - **600 FCFA**\n• Hourdis 20 Américain - **700 FCFA**\n\n [Voir les hourdis dans le catalogue](/catalogue)",
   },
   {
     motsCles: ['pavé', 'pave', 'autobloquant', 'terrasse', 'voirie'],
-    reponse: "🛣️ **Nos Pavés Autobloquants (prix / m²) :**\n\n• **Pavés Z-7** (Rouge, Bleu, Vert, Jaune, Mixte) : **7 500 FCFA/m²** (Gris : 6 500 FCFA/m²)\n• **Pavés Z-13 & Z-14** : **6 500 à 7 500 FCFA/m²** selon finition\n• **Pavés Z-6-s** : **6 500 à 7 500 FCFA/m²**\n\n👉 [Découvrir tous les pavés](/catalogue)",
+    reponse: "**Nos Pavés Autobloquants (prix / m²) :**\n\n• **Pavés Z-7** (Rouge, Bleu, Vert, Jaune, Mixte) : **7 500 FCFA/m²** (Gris : 6 500 FCFA/m²)\n• **Pavés Z-13 & Z-14** : **6 500 à 7 500 FCFA/m²** selon finition\n• **Pavés Z-6-s** : **6 500 à 7 500 FCFA/m²**\n\n [Découvrir tous les pavés](/catalogue)",
   },
   {
     motsCles: ['prix', 'tarif', 'coût', 'cout', 'combien', 'fcfa'],
-    reponse: "💰 **Tarifs indicatifs 2CGC (HT) :**\n\n• Briques : de **260 à 570 FCFA / unité**\n• Hourdis : de **380 à 700 FCFA / unité**\n• Pavés autobloquants : de **6 500 à 7 500 FCFA / m²**\n\n👉 [Télécharger le barème complet en PDF](/catalogue-produits-2cgc.pdf)\n👉 [Générer un devis instantané gratuit](/devis)",
+    reponse: "**Tarifs indicatifs 2CGC (HT) :**\n\n• Briques : de **260 à 570 FCFA / unité**\n• Hourdis : de **380 à 700 FCFA / unité**\n• Pavés autobloquants : de **6 500 à 7 500 FCFA / m²**\n\n [Télécharger le barème complet en PDF](/catalogue-produits-2cgc.pdf)\n [Générer un devis instantané gratuit](/devis)",
   },
   {
     motsCles: ['devis', 'estimation', 'calculer'],
-    reponse: "🧮 **Obtenir un devis est simple et gratuit !**\n\n3 étapes :\n1. Rendez-vous sur notre [configurateur de devis](/devis)\n2. Sélectionnez vos produits et quantités\n3. Téléchargez votre devis PDF instantanément\n\n **Alternative rapide :** Utilisez nos calculateurs gratuits :\n• [Calculateur de blocs/m²](/calculateurs/blocs-m2)\n• [Estimateur de temps de chantier](/calculateurs/temps-chantier)\n\n💼 **Client B2B ?** Connectez-vous pour bénéficier de tarifs négociés !",
+    reponse: "**Obtenir un devis est simple et gratuit !**\n\n3 étapes :\n1. Rendez-vous sur notre [configurateur de devis](/devis)\n2. Sélectionnez vos produits et quantités\n3. Téléchargez votre devis PDF instantanément\n\n **Alternative rapide :** Utilisez nos calculateurs gratuits :\n• [Calculateur de blocs/m²](/calculateurs/blocs-m2)\n• [Estimateur de temps de chantier](/calculateurs/temps-chantier)\n\n **Client B2B ?** Connectez-vous pour bénéficier de tarifs négociés !",
   },
   {
     motsCles: ['livraison', 'délai', 'delai', 'transport', 'camion'],
-    reponse: "🚚 **Service de livraison :**\n\n• **Délai standard :** 48-72h ouvrées après confirmation\n• **Tracking GPS** en temps réel\n• **Signature électronique** à la réception\n• **Livraison sur chantier** partout en Côte d'Ivoire\n\n📍 **Frais de livraison :**\n• Abidjan et environs : à partir de 80 000 FCFA\n• Intérieur du pays : selon distance (devis automatique)\n\n👉 [Estimer les frais de livraison](/devis)",
+    reponse: "**Service de livraison :**\n\n• **Délai standard :** 48-72h ouvrées après confirmation\n• **Tracking GPS** en temps réel\n• **Signature électronique** à la réception\n• **Livraison sur chantier** partout en Côte d'Ivoire\n\n **Frais de livraison :**\n• Abidjan et environs : à partir de 80 000 FCFA\n• Intérieur du pays : selon distance (devis automatique)\n\n [Estimer les frais de livraison](/devis)",
   },
   {
     motsCles: ['fidélité', 'fidelite', 'point', 'réduction', 'reduction', 'remise'],
-    reponse: "🎁 **Programme de Fidélité B2B :**\n\n✨ **Comment ça marche :**\n• 100 FCFA achetés = 1 point fidélité\n• 1 000 points = 10 000 FCFA de réduction\n• Parrainage = 500 points bonus\n\n💎 **Avantages clients B2B :**\n• Remise permanente de -10%\n• Livraison prioritaire\n• Réassort en 1 clic\n• Suivi personnalisé\n\n👉 [Créer un compte professionnel](/connexion)",
+    reponse: "**Programme de Fidélité B2B :**\n\n **Comment ça marche :**\n• 100 FCFA achetés = 1 point fidélité\n• 1 000 points = 10 000 FCFA de réduction\n• Parrainage = 500 points bonus\n\n **Avantages clients B2B :**\n• Remise permanente de -10%\n• Livraison prioritaire\n• Réassort en 1 clic\n• Suivi personnalisé\n\n [Créer un compte professionnel](/connexion)",
   },
   {
     motsCles: ['contact', 'téléphone', 'telephone', 'email', 'adresse', 'joindre', 'dirigeant', 'dirigeants', 'dg', 'directeur', 'whatsapp', 'mail', 'appel', 'appeler', 'keita'],
-    reponse: "📞 **Coordonnées Officielles 2CGC :**\n\n• **Lignes Directes Dirigeants :**\n  📞 [Appeler : +225 07 07 62 17 99](tel:+2250707621799) (KEITA BOUBACAR - DG)\n  📞 [Appeler : +225 07 07 85 76 29](tel:+2250707857629) (Direction Commerciale)\n  💬 [Écrire sur WhatsApp](https://wa.me/2250707621799?text=Bonjour%202CGC%2C%20je%20souhaite%20obtenir%20un%20devis%20rapide)\n\n• **Email officiel :**\n  📧 [cheicknaconstruction@gmail.com](mailto:cheicknaconstruction@gmail.com?subject=Demande%20d%27information%202CGC%20Daloa)\n\n• **Adresse Siège & Usine :** Quartier Commerce non loin de la Pharmacie Appaul, BP 129 Daloa\n• **Statut :** SARL Unipersonnel • Capital 1.000.000 FCFA • RCCM : CI DAL 2013 B. 20779 • CC N° : 8104005 C\n• **Banque :** BSIC Daloa — RIB : CI154 08521 029041500015 04\n• **Horaires :** Lun-Sam : 7h-18h",
+    reponse: "**Coordonnées Officielles 2CGC :**\n\n• **Lignes Directes Dirigeants :**\n [Appeler : +225 07 07 62 17 99](tel:+2250707621799) (KEITA BOUBACAR - DG)\n [Appeler : +225 07 07 85 76 29](tel:+2250707857629) (Direction Commerciale)\n [Écrire sur WhatsApp](https://wa.me/2250707621799?text=Bonjour%202CGC%2C%20je%20souhaite%20obtenir%20un%20devis%20rapide)\n\n• **Email officiel :**\n [cheicknaconstruction@gmail.com](mailto:cheicknaconstruction@gmail.com?subject=Demande%20d%27information%202CGC%20Daloa)\n\n• **Adresse Siège & Usine :** Quartier Commerce non loin de la Pharmacie Appaul, BP 129 Daloa\n• **Statut :** SARL Unipersonnel • Capital 1.000.000 FCFA • RCCM : CI DAL 2013 B. 20779 • CC N° : 8104005 C\n• **Banque :** BSIC Daloa — RIB : CI154 08521 029041500015 04\n• **Horaires :** Lun-Sam : 7h-18h",
   },
 
   {
     motsCles: ['paiement', 'payer', 'facture', 'modalité', 'rib', 'banque', 'bsic'],
-    reponse: "💳 **Modalités de paiement & Coordonnées Bancaires :**\n\n• **Banque Officielle :** BSIC Daloa (Banque Sahélo-Saharienne)\n• **RIB / Compte Bancaire :** `CI154 08521 029041500015 04`\n• **Ordre pour chèques :** 2CGC SARL\n• **Régime fiscal :** REEL SIMPLIFIE Centre des impôts de Daloa 2 (CC N° 8104005 C)\n• **Acompte standard :** 50% à la commande + solde avant déchargement\n\n📄 Facture Proforma officielle PDF générée en 1 clic sur le site !",
+    reponse: "**Modalités de paiement & Coordonnées Bancaires :**\n\n• **Banque Officielle :** BSIC Daloa (Banque Sahélo-Saharienne)\n• **RIB / Compte Bancaire :** `CI154 08521 029041500015 04`\n• **Ordre pour chèques :** 2CGC SARL\n• **Régime fiscal :** REEL SIMPLIFIE Centre des impôts de Daloa 2 (CC N° 8104005 C)\n• **Acompte standard :** 50% à la commande + solde avant déchargement\n\n Facture Proforma officielle PDF générée en 1 clic sur le site !",
   },
 
   {
     motsCles: ['qualité', 'norme', 'certification', 'iso'],
-    reponse: "✅ **Nos certifications et garanties :**\n\n• **ISO 9001** - Management de la qualité\n• **NF** - Normes françaises appliquées\n• **CE** - Conformité européenne\n• **Résistance B60** pour nos agglos porteurs\n\n **Traçabilité complète :**\n• Fiches techniques disponibles\n• Tests de résistance réguliers\n• Contrôle qualité à chaque étape\n\n🏭 Fabrication locale depuis 2010",
+    reponse: "**Nos certifications et garanties :**\n\n• **ISO 9001** - Management de la qualité\n• **NF** - Normes françaises appliquées\n• **CE** - Conformité européenne\n• **Résistance B60** pour nos agglos porteurs\n\n **Traçabilité complète :**\n• Fiches techniques disponibles\n• Tests de résistance réguliers\n• Contrôle qualité à chaque étape\n\n Fabrication locale depuis 2010",
   },
   {
     motsCles: ['merci', 'thanks', 'super', 'parfait', 'génial'],
-    reponse: "😊 Avec plaisir ! N'hésitez pas si vous avez d'autres questions. Je suis disponible 24h/24 pour vous aider.\n\n🌟 **Bonne journée et bon chantier !**",
+    reponse: "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. Je suis disponible 24h/24 pour vous aider.\n\n **Bonne journée et bon chantier !**",
   },
   {
     motsCles: ['au revoir', 'bye', 'à bientôt'],
-    reponse: "👋 À bientôt ! N'oubliez pas : pour tout devis urgent, appelez-nous au +225 07 07 62 17 99.\n\n🏗️ **2CGC - Votre partenaire de confiance !**",
+    reponse: "À bientôt ! N'oubliez pas : pour tout devis urgent, appelez-nous au +225 07 07 62 17 99.\n\n **2CGC - Votre partenaire de confiance !**",
   },
 ];
 
@@ -94,7 +95,7 @@ function trouverReponse(message: string): string {
     }
   }
   
-  return "🤔 Je n'ai pas bien compris votre question. Voici ce que je peux vous aider à faire :\n\n• 📦 Renseignements sur nos **produits** (agglos, pavés, bordures)\n• 💰 Informations sur les **tarifs**\n• 🚚 Détails sur la **livraison**\n• 🧮 Création d'un **devis**\n• 🎁 **Programme de fidélité**\n\n👉 Posez-moi une question plus précise ou consultez notre [catalogue](/catalogue) !";
+  return "Je n'ai pas bien compris votre question. Voici ce que je peux vous aider à faire :\n\n• Renseignements sur nos **produits** (agglos, pavés, bordures)\n• Informations sur les **tarifs**\n• Détails sur la **livraison**\n• Création d'un **devis**\n• **Programme de fidélité**\n\n Posez-moi une question plus précise ou consultez notre [catalogue](/catalogue) !";
 }
 
 function formaterTexte(texte: string): string {
@@ -138,7 +139,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Bonjour ! 👋 Bienvenue au service commercial et technique de **2CGC (Cheickna Construction & Génie Civil)** à Daloa.\n\nPosez-moi votre question sur nos matériaux, nos délais de livraison ou **échangez en direct avec la Direction** via les touches d'appel et WhatsApp ci-dessus.",
+      text: "Bonjour ! Bienvenue au service commercial et technique de **2CGC (Cheickna Construction & Génie Civil)** à Daloa.\n\nPosez-moi votre question sur nos matériaux, nos délais de livraison ou **échangez en direct avec la Direction** via les touches d'appel et WhatsApp ci-dessus.",
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -304,7 +305,7 @@ export default function ChatBot() {
         className="w-8 h-8 hover:bg-white/10 rounded-full flex items-center justify-center transition-colors text-white/80 hover:text-white font-bold"
         aria-label="Fermer"
       >
-        ✕
+        <X className="w-4 h-4" />
       </button>
     </div>
 
@@ -312,7 +313,7 @@ export default function ChatBot() {
     <div className="bg-[#001f42] text-white px-3 py-2 border-b border-white/10 flex-shrink-0">
       <div className="flex items-center justify-between mb-1.5">
         <div className="text-[10px] text-[#FFD700] font-black uppercase tracking-wider flex items-center gap-1">
-          <span className="animate-pulse">⚡</span> Direction 2CGC :
+          <Zap className="w-3 h-3 animate-pulse" /> Direction 2CGC :
         </div>
         <button
           type="button"
@@ -333,7 +334,7 @@ export default function ChatBot() {
           className="flex items-center justify-center gap-1 bg-[#25D366] hover:bg-[#20bd5a] text-white py-1.5 px-2 rounded-xl font-bold text-xs transition-all shadow-sm hover:scale-[1.02] active:scale-95"
           title="Écrire sur WhatsApp à 2CGC"
         >
-          <span className="text-sm">💬</span>
+          <MessageCircle className="w-3.5 h-3.5" />
           <span>WhatsApp</span>
         </a>
 
@@ -343,7 +344,7 @@ export default function ChatBot() {
           className="flex items-center justify-center gap-1 bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] py-1.5 px-2 rounded-xl font-black text-xs transition-all shadow-sm hover:scale-[1.02] active:scale-95"
           title="Appeler directement le DG (+225 07 07 62 17 99)"
         >
-          <span className="text-sm">📞</span>
+          <Phone className="w-3.5 h-3.5" />
           <span>Appeler</span>
         </a>
 
@@ -354,7 +355,7 @@ export default function ChatBot() {
           title="Envoyer un email officiel à 2CGC (cheicknaconstruction@gmail.com)"
 
         >
-          <span className="text-sm">📧</span>
+          <Mail className="w-3.5 h-3.5" />
           <span>Email</span>
         </a>
       </div>
@@ -377,14 +378,14 @@ export default function ChatBot() {
                 className="px-2 py-1 bg-[#25D366] hover:bg-emerald-500 rounded-xl text-[10px] font-bold text-white transition-colors flex items-center gap-0.5"
                 title="WhatsApp DG"
               >
-                💬 WA
+                <MessageCircle className="w-3 h-3" />WA
               </a>
               <a
                 href="tel:+2250707621799"
                 className="px-2 py-1 bg-[#FFD700] hover:bg-yellow-400 rounded-xl text-[10px] font-black text-[#002B5B] transition-colors flex items-center gap-0.5"
                 title="Appeler DG"
               >
-                📞 Appel
+                <Phone className="w-3 h-3" />Appel
               </a>
             </div>
           </div>
@@ -403,14 +404,14 @@ export default function ChatBot() {
                 className="px-2 py-1 bg-[#25D366] hover:bg-emerald-500 rounded-xl text-[10px] font-bold text-white transition-colors flex items-center gap-0.5"
                 title="WhatsApp Keita Dambou"
               >
-                💬 WA
+                <MessageCircle className="w-3 h-3" />WA
               </a>
               <a
                 href="tel:+2250707857629"
                 className="px-2 py-1 bg-[#FFD700] hover:bg-yellow-400 rounded-xl text-[10px] font-black text-[#002B5B] transition-colors flex items-center gap-0.5"
                 title="Appeler Keita Dambou"
               >
-                📞 Appel
+                <Phone className="w-3 h-3" />Appel
               </a>
             </div>
           </div>
@@ -426,8 +427,8 @@ export default function ChatBot() {
                 className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {message.sender === 'bot' && (
-                  <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center text-sm mr-2 flex-shrink-0">
-                    🤖
+                  <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                    <Bot className="w-4 h-4 text-[#002B5B]" />
                   </div>
                 )}
                 <div
@@ -451,8 +452,8 @@ export default function ChatBot() {
             {/* Indicateur de frappe */}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center text-sm mr-2 flex-shrink-0">
-                  🤖
+                <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                  <Bot className="w-4 h-4 text-[#002B5B]" />
                 </div>
                 <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-gray-200">
                   <div className="flex gap-1">
@@ -470,7 +471,7 @@ export default function ChatBot() {
           {/* Suggestions */}
           {messages.length <= 1 && (
             <div className="px-4 py-2 bg-white border-t border-gray-100">
-              <div className="text-xs text-gray-500 mb-2 font-bold">💡 Questions fréquentes :</div>
+              <div className="text-xs text-gray-500 mb-2 font-bold flex items-center gap-1.5"><Lightbulb className="w-3.5 h-3.5" />Questions fréquentes :</div>
               <div className="flex flex-wrap gap-2">
                 {SUGGESTIONS.map((suggestion, idx) => (
                   <button
@@ -502,7 +503,7 @@ export default function ChatBot() {
               className="w-12 h-12 bg-[#002B5B] hover:bg-[#003d80] disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0"
               aria-label="Envoyer"
             >
-              <span className="text-base font-black text-[#FFD700]">➤</span>
+              <Send className="w-4 h-4 text-[#FFD700]" />
             </button>
           </form>
 

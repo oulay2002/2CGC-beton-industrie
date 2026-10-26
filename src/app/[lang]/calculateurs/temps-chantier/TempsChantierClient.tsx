@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
 import posthog from "posthog-js";
+import { Lightbulb } from 'lucide-react';
 
 interface TempsChantierClientProps {
   lang: Locale;
@@ -83,7 +84,7 @@ export default function TempsChantierClient({ lang }: TempsChantierClientProps) 
             </div>
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-[#FFD700] uppercase tracking-wider">
-                {isEn ? "⏱️ Construction Planning & Ratios" : "⏱️ Planification & Ratios BTP"}
+                {isEn ? "Construction Planning & Ratios" : "Planification & Ratios BTP"}
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "Worksite Paces • 2CGC CHEICKNA" : "Cadences Chantier • 2CGC CHEICKNA"}
@@ -218,11 +219,11 @@ export default function TempsChantierClient({ lang }: TempsChantierClientProps) 
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-200 leading-relaxed">
                   {isEn ? (
                     <>
-                      💡 <strong>2CGC Tip:</strong> Thanks to the regular geometry of our concrete blocks and interlocking pavers, masons gain up to 20% productivity compared to artisanal blocks.
+                      <Lightbulb className="w-4 h-4 inline-block mr-1 -mt-0.5" /><strong>2CGC Tip:</strong> Thanks to the regular geometry of our concrete blocks and interlocking pavers, masons gain up to 20% productivity compared to artisanal blocks.
                     </>
                   ) : (
                     <>
-                      💡 <strong>Conseil 2CGC :</strong> Grâce à la géométrie régulière de nos blocs et pavés autobloquants, les poseurs gagnent jusqu'à 20% de productivité par rapport à des blocs artisanaux.
+                      <Lightbulb className="w-4 h-4 inline-block mr-1 -mt-0.5" /><strong>Conseil 2CGC :</strong> Grâce à la géométrie régulière de nos blocs et pavés autobloquants, les poseurs gagnent jusqu'à 20% de productivité par rapport à des blocs artisanaux.
                     </>
                   )}
                 </div>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { ClipboardList, KeyRound, Lock, Mail, Phone, TrendingUp, Truck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Politique de Confidentialité & RGPD | 2CGC Daloa',
@@ -25,7 +26,7 @@ export default function PolitiqueConfidentialitePage() {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                🔒 Protection des Données Personnelles
+                <Lock className="w-3.5 h-3.5" />Protection des Données Personnelles
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">Loi n° 2013-450 (CI) &amp; Conformité RGPD</div>
             </div>
@@ -94,19 +95,19 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <div className="grid sm:grid-cols-2 gap-4 pt-2">
               <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100">
-                <div className="font-bold text-[#002B5B] mb-1">📋 Émission de Devis &amp; Commandes</div>
+                <div className="font-bold text-[#002B5B] mb-1 flex items-center gap-2"><ClipboardList className="w-4 h-4" />Émission de Devis &amp; Commandes</div>
                 <div className="text-xs text-gray-600">Nom, Prénom, Société, Email, Téléphone WhatsApp, Adresse ou localisation du chantier pour le calcul du fret et la génération des proformas PDF.</div>
               </div>
               <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-100">
-                <div className="font-bold text-[#002B5B] mb-1">🚚 Gestion Logistique &amp; Livraison</div>
+                <div className="font-bold text-[#002B5B] mb-1 flex items-center gap-2"><Truck className="w-4 h-4" />Gestion Logistique &amp; Livraison</div>
                 <div className="text-xs text-gray-600">Coordonnées du chef de chantier récepteur, signature tactile d'émargement sur tablette chauffeur et suivi des rotations d'expédition.</div>
               </div>
               <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-100">
-                <div className="font-bold text-[#002B5B] mb-1">🔐 Comptes &amp; Accès Espace Client</div>
+                <div className="font-bold text-[#002B5B] mb-1 flex items-center gap-2"><KeyRound className="w-4 h-4" />Comptes &amp; Accès Espace Client</div>
                 <div className="text-xs text-gray-600">Identifiants de connexion hachés, historique des bons de commande, remises professionnelles accordées et cumul des points de fidélité.</div>
               </div>
               <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100">
-                <div className="font-bold text-[#002B5B] mb-1">📈 Analytics &amp; Amélioration Continue</div>
+                <div className="font-bold text-[#002B5B] mb-1 flex items-center gap-2"><TrendingUp className="w-4 h-4" />Analytics &amp; Amélioration Continue</div>
                 <div className="text-xs text-gray-600">Statistiques de navigation anonymisées (pages visitées, calculateurs de blocs utilisés, types d'appareils) pour optimiser l'expérience utilisateur.</div>
               </div>
             </div>
@@ -139,10 +140,10 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <a href="mailto:cheicknaconstruction@gmail.com?subject=Exercice%20Droit%20RGPD%202CGC" className="bg-[#002B5B] text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-[#003d80] transition-colors inline-flex items-center gap-2">
-                <span>📧</span> Par Email : cheicknaconstruction@gmail.com
+                <Mail className="w-4 h-4" /> Par Email : cheicknaconstruction@gmail.com
               </a>
               <a href="tel:+2250707621799" className="bg-[#FFD700] text-[#002B5B] px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-yellow-400 transition-colors inline-flex items-center gap-2">
-                <span>📞</span> Par Téléphone : +225 07 07 62 17 99 / +225 07 07 85 76 29
+                <Phone className="w-4 h-4" /> Par Téléphone : +225 07 07 62 17 99 / +225 07 07 85 76 29
               </a>
             </div>
 
@@ -159,7 +160,7 @@ export default function PolitiqueConfidentialitePage() {
               2CGC applique des mesures de sécurité techniques et organisationnelles rigoureuses : chiffrement des communications via protocole HTTPS/TLS, filtrage d'accès par contrôle de rôle (Middleware), et hébergement au sein d'infrastructures cloud hautement sécurisées.
             </p>
             <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl text-xs text-emerald-800 font-medium">
-              🔒 <strong>Garantie 2CGC :</strong> Vos coordonnées professionnelles et numéros WhatsApp ne sont jamais vendus, cédés, loués ou partagés à des tiers à des fins de prospection publicitaire.
+              <Lock className="w-4 h-4 inline-block mr-1 -mt-0.5" /><strong>Garantie 2CGC :</strong> Vos coordonnées professionnelles et numéros WhatsApp ne sont jamais vendus, cédés, loués ou partagés à des tiers à des fins de prospection publicitaire.
             </div>
           </section>
 

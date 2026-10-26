@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import { FlaskConical, Handshake, HardHat, Landmark, Phone, Ruler, User } from 'lucide-react';
 
 interface PartenairesClientProps {
   lang: Locale;
@@ -18,7 +19,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
       description: isEn
         ? "They entrust us with the continuous supply of blocks and beams for their residential, commercial and industrial programs."
         : "Ils nous confient l'approvisionnement continu en briques et hourdis de leurs programmes résidentiels, tertiaires et industriels.",
-      icone: "🏗️",
+      Icone: HardHat,
       exemples: [
         {
           nom: isEn
@@ -41,7 +42,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
       description: isEn
         ? "Prescription of our technical data sheets, verification of B50/B60 compressive strengths and compliance with Ivorian standards."
         : "Prescription de nos fiches techniques, vérification des résistances B50/B60 et respect des normes ivoiriennes.",
-      icone: "📐",
+      Icone: Ruler,
       exemples: [
         {
           nom: isEn
@@ -64,7 +65,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
       description: isEn
         ? "A rigorous supply chain of high-performance Portland cement and washed river aggregates for permanent consistency."
         : "Une chaîne d'approvisionnement stricte en ciment haute performance et agrégats lavés pour une constance absolue.",
-      icone: "🧪",
+      Icone: FlaskConical,
       exemples: [
         {
           nom: isEn ? "Approved National Cement Plants" : "Cimenteries Nationales Agréées",
@@ -85,7 +86,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
       description: isEn
         ? "Financial strength and strict accounting transparency serving our corporate clients and transactions."
         : "Solidité financière et transparence comptable au service de nos clients et de nos transactions.",
-      icone: "🏛️",
+      Icone: Landmark,
       exemples: [
         {
           nom: "BSIC Côte d'Ivoire — Agence Daloa",
@@ -155,7 +156,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                🤝 {isEn ? "Ecosystem & Trust" : "Écosystème & Confiance"}
+                <Handshake className="w-3.5 h-3.5" />{isEn ? "Ecosystem & Trust" : "Écosystème & Confiance"}
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "Professional Network • 2CGC CHEICKNA" : "Réseau Professionnel • 2CGC CHEICKNA"}
@@ -194,7 +195,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
             <span className="text-xs font-black text-[#002B5B] uppercase tracking-widest bg-[#002B5B]/5 px-3 py-1.5 rounded-full">
               {isEn ? "Our Network" : "Notre Réseau"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#002B5B] tracking-tight mt-3">
+            <h2 className="sm:text-4xl font-black text-[#002B5B] tracking-tight mt-3">
               {isEn ? "A Complete Chain of Trust" : "Une chaîne de confiance complète"}
             </h2>
           </div>
@@ -207,7 +208,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 flex items-center justify-center text-3xl backdrop-blur-sm">
-                    {cat.icone}
+                    <cat.Icone className="w-7 h-7 text-[#002B5B]" />
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-[#002B5B] leading-tight">{cat.titre}</h3>
@@ -274,13 +275,13 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
                 href={`/${lang}/inscription`}
                 className="flex-1 sm:flex-initial bg-[#002B5B] text-white px-6 py-3.5 rounded-xl font-black text-sm text-center hover:bg-[#FFD700] hover:text-[#002B5B] transition-all"
               >
-                👤 {isEn ? "Create B2B Account" : "Créer un compte B2B"}
+                <User className="w-4 h-4" />{isEn ? "Create B2B Account" : "Créer un compte B2B"}
               </Link>
               <Link
                 href={`/${lang}/contact`}
                 className="flex-1 sm:flex-initial border-2 border-gray-200 hover:border-[#002B5B] text-[#002B5B] px-6 py-3.5 rounded-xl font-bold text-sm text-center transition-colors"
               >
-                📞 {isEn ? "Contact Us" : "Nous contacter"}
+                <Phone className="w-4 h-4" />{isEn ? "Contact Us" : "Nous contacter"}
               </Link>
             </div>
           </div>

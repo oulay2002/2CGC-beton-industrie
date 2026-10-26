@@ -8,6 +8,7 @@ import { genererPDF, DevisData } from "@/lib/generer-pdf";
 import { creerLeadDepuisDevis } from "@/lib/crm-data";
 import { ajouterCommandeDepuisDevis } from "@/lib/commandes-store";
 import { TVA_RATE } from "@/lib/utils";
+import { Blocks, Cog, Download, Factory, FileText, HardHat, Landmark, Lock, Mail, MapPin, MessageCircle, Route, Scale, Truck, User, Zap } from 'lucide-react';
 
 interface DevisClientProps {
   lang: Locale;
@@ -76,9 +77,9 @@ function DevisInner({ lang }: { lang: Locale }) {
   const searchParams = useSearchParams();
 
   const CATEGORIES_DEVIS = [
-    { id: "agglos", label: isEn ? "Blocks & Aggregates" : "Briques & Agglomérés", icone: "🧱" },
-    { id: "hourdis", label: isEn ? "Floor Beams" : "Hourdis", icone: "🏗️" },
-    { id: "paves", label: isEn ? "Pavers" : "Pavés", icone: "🛣️" },
+    { id: "agglos", label: isEn ? "Blocks & Aggregates" : "Briques & Agglomérés", Icone: Blocks },
+    { id: "hourdis", label: isEn ? "Floor Beams" : "Hourdis", Icone: HardHat },
+    { id: "paves", label: isEn ? "Pavers" : "Pavés", Icone: Route },
   ];
 
   const ZONES_LIVRAISON_DALOA = [
@@ -444,7 +445,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                 </div>
                 <div>
                   <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                    {isEn ? "🧮 Official 2CGC Quotation & Proforma" : "🧮 Devis & Proforma Officiel 2CGC"}
+                    {isEn ? "Official 2CGC Quotation & Proforma" : "Devis & Proforma Officiel 2CGC"}
                   </div>
                   <div className="text-[11px] text-white/60 mt-0.5">
                     {isEn ? "BTP Standards & Daloa Factory Prices" : "Normes BTP & Tarifs Usine Daloa"}
@@ -466,7 +467,7 @@ function DevisInner({ lang }: { lang: Locale }) {
               download="Catalogue-2CGC-Produits-Officiel.pdf"
               className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-[#FFD700] border border-[#FFD700]/30 px-4 py-2.5 rounded-xl text-xs font-bold transition-all self-start sm:self-end flex-shrink-0"
             >
-              <span>📥</span> {isEn ? "Technical sheets & Weights (PDF)" : "Fiches techniques & Poids (PDF)"}
+              <Download className="w-4 h-4" /> {isEn ? "Technical sheets & Weights (PDF)" : "Fiches techniques & Poids (PDF)"}
             </a>
           </div>
         </div>
@@ -499,7 +500,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                         : "border-transparent text-gray-400 hover:text-[#002B5B]"
                     }`}
                   >
-                    <span>{cat.icone}</span>
+                    <cat.Icone className="w-4 h-4" />
                     <span className="hidden sm:inline">{cat.label}</span>
                   </button>
                 ))}
@@ -631,7 +632,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                     </p>
                   </div>
                   <span className="text-xs bg-blue-50 text-blue-800 font-bold px-3 py-1 rounded-full border border-blue-200">
-                    🚚 {isEn ? "2CGC Daloa Fleet" : "Flotte 2CGC Daloa"}
+                    <Truck className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />{isEn ? "2CGC Daloa Fleet" : "Flotte 2CGC Daloa"}
                   </span>
                 </div>
                 <div className="p-6 space-y-4">
@@ -646,7 +647,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xl">🚚</span>
+                        <Truck className="w-5 h-5" />
                         <span className="font-bold text-[#002B5B] text-sm">
                           {isEn ? "Delivery to Construction Site" : "Livraison sur Chantier"}
                         </span>
@@ -668,7 +669,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xl">🏭</span>
+                        <Factory className="w-5 h-5" />
                         <span className="font-bold text-[#002B5B] text-sm">
                           {isEn ? "Direct Factory Pickup (Daloa)" : "Retrait Direct Usine (Daloa)"}
                         </span>
@@ -696,7 +697,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                         >
                           {ZONES_LIVRAISON_DALOA.filter((z) => z.id !== "retrait_usine").map((z) => (
                             <option key={z.id} value={z.id}>
-                              📍 {z.label} (~{z.distanceKm} km) —{" "}
+                              <MapPin className="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" />{z.label} (~{z.distanceKm} km) —{" "}
                               {z.tarifParCamion === 0
                                 ? isEn
                                   ? "FREE (Offered)"
@@ -721,7 +722,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                         <div className="bg-[#F5F5F0] p-3 rounded-xl border border-gray-200 text-center">
                           <div className="text-xs text-gray-500">{isEn ? "Required fleet" : "Flotte requise"}</div>
                           <div className="text-base font-black text-blue-700">
-                            🚚 {camionsNecessaires} {isEn ? "Truck" : "Camion"}{camionsNecessaires > 1 ? "s" : ""}
+                            <Truck className="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" />{camionsNecessaires} {isEn ? "Truck" : "Camion"}{camionsNecessaires > 1 ? "s" : ""}
                           </div>
                         </div>
                         <div className="bg-[#FFD700]/15 p-3 rounded-xl border border-[#FFD700]/40 text-center">
@@ -776,7 +777,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><User className="w-4 h-4" /></span>
                       <input
                         type="text"
                         value={clientInfo.nom}
@@ -795,11 +796,11 @@ function DevisInner({ lang }: { lang: Locale }) {
                         <span className="text-red-500">*</span>
                       </span>
                       <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xl">
-                        💬 WhatsApp
+                        WhatsApp
                       </span>
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 text-sm">💬</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600"><MessageCircle className="w-4 h-4" /></span>
                       <input
                         type="tel"
                         value={clientInfo.telephone}
@@ -817,7 +818,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📧</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Mail className="w-4 h-4" /></span>
                       <input
                         type="email"
                         value={clientInfo.email}
@@ -834,7 +835,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       {isEn ? "City / Delivery District" : "Ville / Quartier de livraison"}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📍</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><MapPin className="w-4 h-4" /></span>
                       <input
                         type="text"
                         value={clientInfo.codePostal}
@@ -847,7 +848,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                 </div>
 
                 <div className="mt-4 flex items-center gap-2 text-xs text-gray-400">
-                  <span>🔒</span>
+                  <Lock className="w-4 h-4" />
                   <span>
                     {isEn
                       ? "Your information remains confidential and is used strictly for your quotation and order tracking."
@@ -862,7 +863,7 @@ function DevisInner({ lang }: { lang: Locale }) {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 sticky top-24 overflow-hidden">
               <div className="bg-[#002B5B] px-6 py-5">
-                <h2 className="text-lg font-black text-white">{isEn ? "📊 Summary" : "📊 Récapitulatif"}</h2>
+                <h2 className="text-lg font-black text-white">{isEn ? "Summary" : "Récapitulatif"}</h2>
                 <p className="text-white/50 text-xs mt-1">
                   {lignes.length} {isEn ? "product(s) selected" : `produit${lignes.length > 1 ? "s" : ""} sélectionné${lignes.length > 1 ? "s" : ""}`}
                 </p>
@@ -871,7 +872,7 @@ function DevisInner({ lang }: { lang: Locale }) {
               <div className="p-5">
                 {lignes.length === 0 ? (
                   <div className="text-center py-10 text-gray-400">
-                    <div className="text-4xl mb-3">📝</div>
+                    <FileText className="w-10 h-10 mx-auto mb-3 text-gray-300" />
                     <p className="text-sm">
                       {isEn ? "Add products to view summary" : "Ajoutez des produits pour voir le récapitulatif"}
                     </p>
@@ -900,7 +901,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       <div className="pt-2 border-t border-gray-200/70 text-xs space-y-1.5">
                         <div className="flex justify-between text-gray-600">
                           <span className="flex items-center gap-1">
-                            <span>⚖️</span> {isEn ? "Estimated weight:" : "Poids estimé :"}
+                            <Scale className="w-4 h-4" /> {isEn ? "Estimated weight:" : "Poids estimé :"}
                           </span>
                           <span className="font-bold text-[#002B5B]">
                             {poidsTotalTonnes} {isEn ? "Tons" : "Tonnes"} ({poidsTotalKg.toLocaleString("fr-FR")} kg)
@@ -911,7 +912,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                           <>
                             <div className="flex justify-between text-gray-600">
                               <span className="flex items-center gap-1">
-                                <span>🚛</span> {isEn ? "15T Rotations:" : "Rotations 15T :"}
+                                <Truck className="w-4 h-4" /> {isEn ? "15T Rotations:" : "Rotations 15T :"}
                               </span>
                               <span className="font-bold text-amber-800">
                                 {camionsNecessaires} {isEn ? "truck" : "camion"}{camionsNecessaires > 1 ? "s" : ""}
@@ -968,13 +969,13 @@ function DevisInner({ lang }: { lang: Locale }) {
                           </>
                         ) : (
                           <>
-                            <span>📄</span> {isEn ? "Download Proforma Invoice PDF" : "Télécharger Facture Proforma PDF (Officiel)"}
+                            <FileText className="w-4 h-4" /> {isEn ? "Download Proforma Invoice PDF" : "Télécharger Facture Proforma PDF (Officiel)"}
                           </>
                         )}
                       </button>
 
                       <div className="flex items-center justify-center gap-1.5 text-[11px] text-emerald-800 font-medium bg-emerald-50/80 border border-emerald-200/70 py-1.5 px-3 rounded-xl text-center">
-                        <span className="text-emerald-600">⚡</span>
+                        <Zap className="w-4 h-4 text-emerald-600" />
                         <span>
                           {isEn
                             ? "Automated CRM: Instant official Email & WhatsApp dispatch"
@@ -996,14 +997,14 @@ function DevisInner({ lang }: { lang: Locale }) {
                         rel="noopener noreferrer"
                         className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-3.5 rounded-2xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
                       >
-                        <span>💬</span> {isEn ? "Instant WhatsApp Chat with Sales" : "Échanger en direct sur WhatsApp"}
+                        <MessageCircle className="w-4 h-4" /> {isEn ? "Instant WhatsApp Chat with Sales" : "Échanger en direct sur WhatsApp"}
                       </a>
                     </div>
 
                     {/* Cartouche d'Identification Légale */}
                     <div className="mt-4 pt-3 border-t border-gray-200 text-[11px] text-gray-500 space-y-1 bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
                       <div className="font-bold text-[#002B5B] flex items-center gap-1.5 text-xs mb-1">
-                        <span>🏛️</span> {isEn ? "Official Banking & Corporate Details" : "Domiciliation Bancaire & Références Officielles"}
+                        <Landmark className="w-4 h-4" /> {isEn ? "Official Banking & Corporate Details" : "Domiciliation Bancaire & Références Officielles"}
                       </div>
                       <div>
                         <strong>{isEn ? "Beneficiary:" : "Bénéficiaire :"}</strong> CHEICKNA CONSTRUCTION &amp; GÉNIE CIVIL (2CGC)
@@ -1046,7 +1047,7 @@ export default function DevisClient({ lang }: DevisClientProps) {
       fallback={
         <div className="min-h-screen bg-[#F5F5F0] pt-32 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin text-4xl mb-4">⚙️</div>
+            <Cog className="w-10 h-10 mx-auto mb-4 animate-spin text-[#002B5B]" />
             <p className="text-gray-600 font-medium">
               {lang === "en" ? "Loading quotation configurator..." : "Chargement du configurateur de devis..."}
             </p>

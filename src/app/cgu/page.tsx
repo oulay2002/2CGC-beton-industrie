@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { MapPin, Scale, Truck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Conditions Générales d\'Utilisation (CGU) & CGV | 2CGC Daloa',
@@ -25,7 +26,7 @@ export default function CGUPage() {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                ⚖️ Cadre Contractuel &amp; Légal
+                <Scale className="w-3.5 h-3.5" />Cadre Contractuel &amp; Légal
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">Cheickna Construction &amp; Génie Civil (Daloa)</div>
             </div>
@@ -136,11 +137,11 @@ export default function CGUPage() {
             </p>
             <div className="grid sm:grid-cols-2 gap-4 pt-1">
               <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200">
-                <div className="font-bold text-[#002B5B] mb-1">📍 Retrait Direct Usine (Daloa)</div>
+                <div className="font-bold text-[#002B5B] mb-1 flex items-center gap-2"><MapPin className="w-4 h-4" />Retrait Direct Usine (Daloa)</div>
                 <div className="text-xs text-gray-600">Aucun frais de fret. Le chargement sur les camions du client est assuré gratuitement par les caristes et chariots élévateurs de l'usine 2CGC.</div>
               </div>
               <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200">
-                <div className="font-bold text-[#002B5B] mb-1">🚛 Livraison Flotte 2CGC</div>
+                <div className="font-bold text-[#002B5B] mb-1 flex items-center gap-2"><Truck className="w-4 h-4" />Livraison Flotte 2CGC</div>
                 <div className="text-xs text-gray-600">Le fret est calculé selon la distance kilométrique et le nombre de rotations de camions 15T requises. Le déchargement grue sur chantier est inclus sous réserve d'accès carrossable.</div>
               </div>
             </div>

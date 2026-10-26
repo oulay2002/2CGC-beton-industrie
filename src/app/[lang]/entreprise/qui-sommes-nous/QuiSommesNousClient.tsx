@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import { Building2, Calculator, Clock, Download, Factory, Handshake, Mail, MapPin, MessageCircle, Microscope, Package, Phone, Truck } from 'lucide-react';
 
 interface QuiSommesNousClientProps {
   lang: Locale;
@@ -12,28 +13,28 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
 
   const piliers = [
     {
-      icone: "🏭",
+      Icone: Factory,
       titre: isEn ? "Industrial Capacity" : "Capacité Industrielle",
       description: isEn
         ? "Automated production units in Daloa capable of churning out over 50,000 blocks and pavers per month to supply all construction sites."
         : "Unités de production automatisées à Daloa capables de débiter plus de 50 000 blocs et pavés par mois pour alimenter tous types de chantiers.",
     },
     {
-      icone: "🔬",
+      Icone: Microscope,
       titre: isEn ? "Certified Formulation & Batching" : "Formulation & Dosage Certifiés",
       description: isEn
         ? "Exclusive use of high-performance CPJ cement and washed, screened aggregates ensuring flawless B50 and B60 compressive strengths."
         : "Utilisation exclusive de ciment haute performance CPJ et d'agrégats lavés et criblés pour garantir des résistances B50 et B60 irréprochables.",
     },
     {
-      icone: "🚚",
+      Icone: Truck,
       titre: isEn ? "Dedicated Construction Logistics" : "Logistique Dédiée Chantier",
       description: isEn
         ? "Integrated truck fleet with secure crane unloading and strict adherence to pouring and masonry schedules for all clients."
         : "Flotte intégrée de camions avec déchargement sécurisé et respect rigoureux des plannings de coulage et d'élévation de nos clients.",
     },
     {
-      icone: "🤝",
+      Icone: Handshake,
       titre: isEn ? "Committed B2B Partner" : "Partenaire B2B Engagé",
       description: isEn
         ? "Tailored support for architects, structural engineers and developers with negotiated rates, official VAT invoicing and payment terms."
@@ -89,7 +90,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
             </div>
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-[#FFD700]">
-                🏢 Cheickna Construction &amp; Génie Civil
+                <Building2 className="w-3.5 h-3.5" />Cheickna Construction &amp; Génie Civil
               </div>
               <div className="text-[11px] text-white/60 mt-0.5">
                 {isEn ? "Approved Construction Company • Daloa, Ivory Coast" : "Société BTP agréée • Daloa, Côte d'Ivoire"}
@@ -129,7 +130,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
               key={i}
               className="text-center lg:text-left border-b lg:border-b-0 lg:border-r border-gray-100 pb-4 lg:pb-0 last:border-0"
             >
-              <div className="text-3xl sm:text-4xl font-black text-[#002B5B] mb-1">{c.valeur}</div>
+              <div className="sm:text-4xl font-black text-[#002B5B] mb-1">{c.valeur}</div>
               <div className="text-sm font-bold text-gray-800">{c.label}</div>
               <div className="text-xs text-gray-400 mt-0.5">{c.detail}</div>
             </div>
@@ -183,14 +184,14 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                 href={`/${lang}/catalogue`}
                 className="bg-[#002B5B] text-white px-6 py-3.5 rounded-2xl font-bold text-sm hover:bg-[#FFD700] hover:text-[#002B5B] transition-all duration-300 shadow-md flex items-center gap-2"
               >
-                <span>📦</span> {isEn ? "Explore our 24 products" : "Découvrir nos 24 produits"}
+                <Package className="w-4 h-4" /> {isEn ? "Explore our 24 products" : "Découvrir nos 24 produits"}
               </Link>
               <a
                 href="/catalogue-produits-2cgc.pdf"
                 download="Catalogue-2CGC-Produits-Officiel.pdf"
                 className="border-2 border-gray-300 hover:border-[#002B5B] text-[#002B5B] px-6 py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center gap-2"
               >
-                <span>📥</span> {isEn ? "Download catalogue (PDF)" : "Télécharger le catalogue (PDF)"}
+                <Download className="w-4 h-4" /> {isEn ? "Download catalogue (PDF)" : "Télécharger le catalogue (PDF)"}
               </a>
             </div>
           </div>
@@ -247,7 +248,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                 className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 backdrop-blur-sm flex items-center justify-center text-3xl mb-5 transition-all">
-                  {p.icone}
+                  <p.Icone className="w-7 h-7 text-[#002B5B]" />
                 </div>
                 <h3 className="text-xl font-black text-[#002B5B] mb-2">{p.titre}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{p.description}</p>
@@ -297,13 +298,13 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
                     >
-                      <span>💬</span> WhatsApp
+                      <MessageCircle className="w-4 h-4" /> WhatsApp
                     </a>
                     <a
                       href="tel:+2250707621799"
                       className="inline-flex items-center gap-1.5 bg-[#FFD700] hover:bg-yellow-400 text-[#002B5B] px-3.5 py-2 rounded-xl text-xs font-black transition-all shadow-sm"
                     >
-                      <span>📞</span> 07 07 62 17 99
+                      <Phone className="w-4 h-4" /> 07 07 62 17 99
                     </a>
                   </div>
                 </div>
@@ -334,13 +335,13 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
                     >
-                      <span>💬</span> WhatsApp
+                      <MessageCircle className="w-4 h-4" /> WhatsApp
                     </a>
                     <a
                       href="tel:+2250707857629"
                       className="inline-flex items-center gap-1.5 bg-[#002B5B] hover:bg-[#003d80] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
                     >
-                      <span>📞</span> 07 07 85 76 29
+                      <Phone className="w-4 h-4" /> 07 07 85 76 29
                     </a>
                   </div>
                 </div>
@@ -354,7 +355,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
               <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest">
-                📍 {isEn ? "Headquarters & Daloa Plant" : "Siège & Usine de Daloa"}
+                <MapPin className="w-4 h-4" />{isEn ? "Headquarters & Daloa Plant" : "Siège & Usine de Daloa"}
               </span>
               <h2 className="text-3xl font-black text-white">
                 {isEn ? "Meet us or visit our manufacturing plant" : "Venez nous rencontrer ou visitez notre usine"}
@@ -366,15 +367,15 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
               </p>
               <div className="pt-2 text-sm text-white/90 space-y-1.5">
                 <div>
-                  📍 <strong>Quartier Commerce</strong>{" "}
+                  <MapPin className="w-4 h-4 inline-block mr-1 -mt-0.5" /><strong>Quartier Commerce</strong>{" "}
                   {isEn ? "(near Pharmacie Appaul)" : "(non loin de la Pharmacie Appaul)"}, BP 129 Daloa
                 </div>
                 <div>
-                  📞 {isEn ? "Phones:" : "Téléphones :"} <strong>+225 07 07 62 17 99</strong> /{" "}
+                  <Phone className="w-4 h-4 inline-block mr-1 -mt-0.5" />{isEn ? "Phones:" : "Téléphones :"} <strong>+225 07 07 62 17 99</strong> /{" "}
                   <strong>+225 07 07 85 76 29</strong>
                 </div>
                 <div>
-                  📧{" "}
+                  <Mail className="w-4 h-4 inline-block mr-1 -mt-0.5" />{" "}
                   <a href="mailto:cheicknaconstruction@gmail.com" className="text-[#FFD700] underline">
                     cheicknaconstruction@gmail.com
                   </a>
@@ -383,7 +384,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                   SARL Unipersonnel • Capital: 1.000.000 FCFA • RCCM: CI DAL 2013 B. 20779 • CC N°: 8104005 C
                 </div>
                 <div>
-                  🕐 {isEn ? "Monday to Saturday:" : "Du Lundi au Samedi :"} <strong>7:00 AM – 6:00 PM</strong>
+                  <Clock className="w-4 h-4 inline-block mr-1 -mt-0.5" />{isEn ? "Monday to Saturday:" : "Du Lundi au Samedi :"} <strong>7:00 AM – 6:00 PM</strong>
                 </div>
               </div>
             </div>
@@ -402,13 +403,13 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                   href={`/${lang}/devis`}
                   className="flex-1 bg-brand-gold text-[#002B5B] py-3 px-5 rounded-xl font-black text-sm text-center shadow-lg hover:shadow-yellow-400/30 transition-all"
                 >
-                  🧮 {isEn ? "Configure Quote" : "Configurer mon devis"}
+                  <Calculator className="w-4 h-4" />{isEn ? "Configure Quote" : "Configurer mon devis"}
                 </Link>
                 <Link
                   href={`/${lang}/contact`}
                   className="flex-1 border border-white/40 hover:bg-white/10 text-white py-3 px-5 rounded-xl font-bold text-sm text-center transition-colors"
                 >
-                  ✉️ {isEn ? "Contact Form" : "Formulaire de contact"}
+                  <Mail className="w-4 h-4" />{isEn ? "Contact Form" : "Formulaire de contact"}
                 </Link>
               </div>
             </div>
