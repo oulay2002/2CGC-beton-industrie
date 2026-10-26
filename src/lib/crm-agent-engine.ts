@@ -214,7 +214,7 @@ export async function triggerAutonomousRelance(
     const templateKey = lead.statut === 'nouveau' ? 'bienvenue' : 'relance_j2';
     const template = TEMPLATES_EMAIL[templateKey];
     
-    let corps = messagePersonnalise || template.corps
+    const corps = messagePersonnalise || template.corps
       .replace(/{nom}/g, lead.nom)
       .replace(/{entreprise}/g, lead.entreprise || 'votre entreprise')
       .replace(/{produit}/g, lead.produitInteresse || 'nos matériaux')

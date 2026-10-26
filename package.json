@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test --conditions=react-server \"tests/*.test.ts\"",
+    "test:watch": "node --test --watch --conditions=react-server \"tests/*.test.ts\""
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

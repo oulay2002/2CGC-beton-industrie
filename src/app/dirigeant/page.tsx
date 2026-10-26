@@ -669,7 +669,7 @@ export default function DirigeantDashboard() {
         </div>
       )}
 
-      {/* Copilot Agentique IA & Modal Audit */}
+      {/* Assistant CRM & journal des automatisations */}
       <CRMAgenticCopilot
         onRefreshLeads={() => void getCommandes().then(setCommandes)}
         onOpenLogsModal={() => setModalLogsOpen(true)}

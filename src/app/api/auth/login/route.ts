@@ -155,16 +155,21 @@ export async function POST(req: NextRequest) {
     })
     .ilike('email', email);
 
+  const doitChanger = Boolean(compte.must_change_password);
+
   const token = await createSessionToken({
     email: compte.email,
     role: compte.role as SessionPayload['role'],
     nom: compte.nom ?? '',
+    // Le drapeau voyage dans le jeton signe : le proxy le lit a chaque
+    // requete et ne peut pas etre contourne cote navigateur.
+    mdp: doitChanger || undefined,
   });
 
   const isProd = process.env.NODE_ENV === 'production';
   const response = NextResponse.json({
     success: true,
-    doitChangerMotDePasse: Boolean(compte.must_change_password),
+    doitChangerMotDePasse: doitChanger,
     user: {
       email: compte.email,
       nom: compte.nom,

@@ -1,6 +1,5 @@
 // src/lib/import-export-clients.ts — Module d'import CSV/Excel & d'impression PDF/CSV de la base clients 2CGC
 import jsPDF from 'jspdf';
-// @ts-ignore
 import autoTable from 'jspdf-autotable';
 import { CompteUtilisateur, UserRole, genererMotDePasse } from './auth-context';
 

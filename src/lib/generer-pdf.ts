@@ -1,6 +1,5 @@
 // src/lib/generer-pdf.ts — Moteur de Génération de Devis & Factures Proforma 2CGC
 import jsPDF from 'jspdf';
-// @ts-ignore
 import autoTable from 'jspdf-autotable';
 import { LOGO_2CGC_BASE64 } from '@/lib/logo-base64';
 

@@ -2,8 +2,17 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
-import { getCommandes, Commande } from '@/lib/commandes-store';
+import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
+import { getCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
+
+/** Bon de commande derive d'une commande reelle du client. */
+interface BonCommande {
+  id: string;
+  date: string;
+  statut: string;
+  total: number;
+  articles: CommandeArticle[];
+}
 import { genererBonCommande } from '@/lib/generer-bons';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
@@ -20,7 +29,7 @@ function BonsCommandePageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [clientActif, setClientActif] = useState<any>(null);
+  const [clientActif, setClientActif] = useState<CompteUtilisateur | null>(null);
   const [toutesCommandes, setToutesCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
@@ -60,7 +69,7 @@ function BonsCommandePageInner() {
   // Filtrer les bons de commande selon le compte actif
   // On dérive les bons directement des commandes réelles du client actif
   const commandesDuClient = toutesCommandes.filter(cmd => {
-    const cEmail = (cmd.client as any).email?.toLowerCase();
+    const cEmail = cmd.client.email?.toLowerCase();
     const cNom = cmd.client.nom?.toLowerCase();
     const cEnt = cmd.client.entreprise?.toLowerCase();
     const targetEmail = clientActif.email?.toLowerCase();
@@ -80,7 +89,7 @@ function BonsCommandePageInner() {
     articles: cmd.articles,
   }));
 
-  const telechargerBon = (bon: any) => {
+  const telechargerBon = (bon: BonCommande) => {
     genererBonCommande({
       reference: bon.id,
       date: bon.date,
@@ -89,7 +98,7 @@ function BonsCommandePageInner() {
         entreprise: clientActif.entreprise || clientActif.nom,
         email: clientActif.email,
         telephone: clientActif.telephone || '+225 07 00 00 00',
-        adresse: clientActif.adresse || 'Zone Industrielle / Daloa',
+        adresse: 'Zone Industrielle / Daloa',
       },
       articles: bon.articles,
       total: bon.total,
@@ -175,7 +184,7 @@ function BonsCommandePageInner() {
                   <div className="p-6">
                     <h3 className="font-bold text-[#002B5B] mb-3">Articles commandés</h3>
                     <div className="space-y-2 mb-6">
-                      {bon.articles.map((article: any, idx: number) => (
+                      {bon.articles.map((article: CommandeArticle, idx: number) => (
                         <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
                           <div>
                             <div className="font-semibold text-gray-800">{article.nom}</div>

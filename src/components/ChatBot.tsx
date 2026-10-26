@@ -18,7 +18,7 @@ const SUGGESTIONS = [
   "Comment obtenir un devis ?",
 ];
 
-// Base de connaissances de l'IA
+// Base de connaissances : correspondance par mots-cles, sans modele de langage
 const CONNAISSANCES: { motsCles: string[]; reponse: string }[] = [
   {
     motsCles: ['bonjour', 'salut', 'hello', 'hi', 'coucou'],
@@ -124,9 +124,14 @@ function formaterTexte(texte: string): string {
 export default function ChatBot() {
   const pathname = usePathname();
 
-  // Afficher l'Assistant IA (BetoBot) uniquement sur la page d'accueil (/, /fr, /en)
+  // Le conseiller (BetoBot) ne s'affiche que sur la page d'accueil (/, /fr, /en).
+  // Le `return null` qui se trouvait ICI, AVANT les hooks ci-dessous, etait un
+  // bug : les hooks de React doivent etre appeles dans le meme ordre a chaque
+  // rendu. A la premiere navigation depuis l'accueil vers une autre page, le
+  // composant passait de 8 hooks a 0 et React levait « Rendered fewer hooks
+  // than expected », ecran blanc a la cle. La sortie anticipee est donc
+  // deplacee APRES les hooks, juste avant le rendu.
   const isHomePage = pathname === '/' || pathname === '/fr' || pathname === '/en';
-  if (!isHomePage) return null;
 
   const [isOpen, setIsOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
@@ -169,7 +174,7 @@ export default function ChatBot() {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulation de délai de réflexion IA
+    // Court délai avant reponse, pour un echange plus naturel
     setTimeout(() => {
       const reponse = trouverReponse(texte);
       const botMessage: Message = {
@@ -187,6 +192,10 @@ export default function ChatBot() {
     e.preventDefault();
     envoyerMessage(inputValue);
   };
+
+  // Sortie anticipée placée après tous les hooks : leur nombre et leur ordre
+  // restent identiques quelle que soit la page.
+  if (!isHomePage) return null;
 
   return (
     <>
@@ -238,7 +247,7 @@ export default function ChatBot() {
         {/* Bulle d'invite discrète desktop */}
         {!isOpen && (
           <div className="hidden lg:flex items-center gap-2 absolute right-full top-1/2 -translate-y-1/2 mr-3 bg-[#002B5B] text-white px-3.5 py-2 rounded-xl shadow-xl border border-white/15 text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-            <span className="font-bold text-[#FFD700]">Assistant IA 2CGC</span>
+            <span className="font-bold text-[#FFD700]">Conseiller 2CGC</span>
             <span className="text-white/70">• En ligne</span>
           </div>
         )}
@@ -286,7 +295,7 @@ export default function ChatBot() {
         </div>
         <div>
           <div className="font-bold text-base flex items-center gap-2">
-            <span>Assistant IA 2CGC</span>
+            <span>Conseiller 2CGC</span>
             <span className="text-[10px] bg-[#FFD700] text-[#002B5B] px-1.5 py-0.5 rounded-full font-black">2CGC</span>
           </div>
           <div className="text-[11px] text-white/70 flex items-center gap-1">
@@ -505,7 +514,7 @@ export default function ChatBot() {
           {/* Footer */}
           <div className="bg-gray-50 px-4 py-2 text-center border-t border-gray-100">
             <div className="text-[10px] text-gray-400">
-              Propulsé par BetoBot IA • 2CGC CHEICKNA Daloa © 2026
+              BetoBot • 2CGC CHEICKNA Daloa © 2026
             </div>
           </div>
         </div>

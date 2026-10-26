@@ -34,10 +34,18 @@ function ConnexionPageInner() {
     setLoading(false);
     if (result.success && result.role) {
       const redirectPath = searchParams.get('redirect');
-      if (redirectPath && redirectPath.startsWith('/')) {
-        router.push(redirectPath);
+      const destination =
+        redirectPath && redirectPath.startsWith('/')
+          ? redirectPath
+          : ROUTES_PAR_ROLE[result.role];
+
+      // Mot de passe encore provisoire : on envoie directement vers l'écran de
+      // changement. Le proxy l'imposerait de toute façon, mais autant éviter
+      // une redirection intermédiaire visible.
+      if (result.doitChangerMotDePasse) {
+        router.push(`/changer-mot-de-passe?redirect=${encodeURIComponent(destination)}`);
       } else {
-        router.push(ROUTES_PAR_ROLE[result.role]);
+        router.push(destination);
       }
     } else {
       setError(
