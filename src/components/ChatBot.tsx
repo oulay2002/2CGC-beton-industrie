@@ -134,7 +134,6 @@ export default function ChatBot() {
   const isHomePage = pathname === '/' || pathname === '/fr' || pathname === '/en';
 
   const [isOpen, setIsOpen] = useState(false);
-  const [hasUnread, setHasUnread] = useState(true);
   const [showDirigeantsPanel, setShowDirigeantsPanel] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -155,7 +154,6 @@ export default function ChatBot() {
 
   useEffect(() => {
     if (isOpen) {
-      setHasUnread(false);
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [isOpen]);
@@ -209,7 +207,7 @@ export default function ChatBot() {
         <span className="absolute inset-0 rounded-full bg-[#FFD700] opacity-25 animate-ping"></span>
         
         {/* Bouton principal avec Tête de Robot Animée */}
-        <div className="relative w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-[#002B5B] via-[#003d80] to-[#001D3D] rounded-2xl shadow-2xl flex items-center justify-center border-2 border-[#FFD700] group-hover:scale-105 transition-all duration-300 p-1.5 overflow-hidden animate-robot-pulse">
+        <div className="relative w-14 h-14 md:w-16 md:h-16 bg-[#002B5B] rounded-2xl shadow-2xl flex items-center justify-center border-2 border-[#FFD700] group-hover:scale-105 transition-all duration-300 p-1.5 overflow-hidden animate-robot-pulse">
           {/* Tête de Robot SVG Stylisée & Animée */}
           <svg className="w-10 h-10 md:w-11 md:h-11" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             {/* Antenne avec signal radio */}
@@ -252,12 +250,9 @@ export default function ChatBot() {
           </div>
         )}
 
-        {/* Badge notification */}
-        {!isOpen && hasUnread && (
-          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#FFD700] text-[#002B5B] rounded-full text-[11px] font-black flex items-center justify-center border-2 border-[#002B5B] shadow-md">
-            1
-          </span>
-        )}
+        {/* Une pastille « 1 » s'affichait ici au chargement, alors qu'aucun
+            message n'attendait : un compteur code en dur, destine a provoquer
+            le clic. On ne fabrique pas une urgence qui n'existe pas. */}
       </button>
 
      {/* Fenêtre de chat */}
@@ -271,7 +266,7 @@ export default function ChatBot() {
     `}</style>
 
     {/* Header */}
-    <div className="bg-gradient-to-r from-[#002B5B] to-[#003d80] text-white p-3.5 flex items-center justify-between flex-shrink-0">
+    <div className="bg-[#002B5B] text-white p-3.5 flex items-center justify-between flex-shrink-0">
       <div className="flex items-center gap-3">
         <div className="relative">
           <div className="w-11 h-11 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center p-1 shadow-lg border border-[#FFD700]/50 overflow-hidden flex-shrink-0">
@@ -379,14 +374,14 @@ export default function ChatBot() {
                 href="https://wa.me/2250707621799?text=Bonjour%20M.%20KEITA%20BOUBACAR%20(DG)%2C%20je%20vous%20contacte%20depuis%20le%20site%202CGC"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-2 py-1 bg-[#25D366] hover:bg-emerald-500 rounded-lg text-[10px] font-bold text-white transition-colors flex items-center gap-0.5"
+                className="px-2 py-1 bg-[#25D366] hover:bg-emerald-500 rounded-xl text-[10px] font-bold text-white transition-colors flex items-center gap-0.5"
                 title="WhatsApp DG"
               >
                 💬 WA
               </a>
               <a
                 href="tel:+2250707621799"
-                className="px-2 py-1 bg-[#FFD700] hover:bg-yellow-400 rounded-lg text-[10px] font-black text-[#002B5B] transition-colors flex items-center gap-0.5"
+                className="px-2 py-1 bg-[#FFD700] hover:bg-yellow-400 rounded-xl text-[10px] font-black text-[#002B5B] transition-colors flex items-center gap-0.5"
                 title="Appeler DG"
               >
                 📞 Appel
@@ -405,14 +400,14 @@ export default function ChatBot() {
                 href="https://wa.me/2250707857629?text=Bonjour%20M.%20Keita%20Dambou%2C%20je%20vous%20contacte%20depuis%20le%20site%202CGC"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-2 py-1 bg-[#25D366] hover:bg-emerald-500 rounded-lg text-[10px] font-bold text-white transition-colors flex items-center gap-0.5"
+                className="px-2 py-1 bg-[#25D366] hover:bg-emerald-500 rounded-xl text-[10px] font-bold text-white transition-colors flex items-center gap-0.5"
                 title="WhatsApp Keita Dambou"
               >
                 💬 WA
               </a>
               <a
                 href="tel:+2250707857629"
-                className="px-2 py-1 bg-[#FFD700] hover:bg-yellow-400 rounded-lg text-[10px] font-black text-[#002B5B] transition-colors flex items-center gap-0.5"
+                className="px-2 py-1 bg-[#FFD700] hover:bg-yellow-400 rounded-xl text-[10px] font-black text-[#002B5B] transition-colors flex items-center gap-0.5"
                 title="Appeler Keita Dambou"
               >
                 📞 Appel
@@ -461,9 +456,9 @@ export default function ChatBot() {
                 </div>
                 <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-gray-200">
                   <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></span>
                   </div>
                 </div>
               </div>

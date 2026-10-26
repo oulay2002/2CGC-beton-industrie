@@ -212,7 +212,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
               </div>
 
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-black mb-4 tracking-tight">
-                Catalogue <span className="text-gradient">2CGC BTP</span>
+                Catalogue <span className="text-[#FFD700]">2CGC BTP</span>
               </h1>
               <p className="text-white/70 text-sm sm:text-base max-w-xl leading-relaxed">
                 {t.desc}
@@ -223,7 +223,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
               <a
                 href="/catalogue-produits-2cgc.pdf"
                 download="Catalogue-2CGC-Produits-Officiel.pdf"
-                className="group relative inline-flex items-center gap-3 bg-gold-gradient text-[#002B5B] px-6 py-4 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-wider shadow-2xl hover:shadow-[#FFD700]/40 hover:-translate-y-0.5 transition-all duration-300"
+                className="group relative inline-flex items-center gap-3 bg-brand-gold text-[#002B5B] px-6 py-4 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-wider shadow-2xl hover:shadow-[#FFD700]/40 hover:-translate-y-0.5 transition-all duration-300"
               >
                 <Download className="w-5 h-5 text-[#002B5B]" />
                 <div className="text-left">
@@ -358,7 +358,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
               return (
                 <div
                   key={produit.id}
-                  className="card-hover bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
+                  className="card-hover bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
                   <div className="h-44 overflow-hidden bg-slate-50 p-4 flex items-center justify-center relative">
                     <img
@@ -428,7 +428,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
       {/* CTA Footer */}
       <section className="py-16 px-4">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-brand-gradient rounded-3xl p-10 text-white text-center relative overflow-hidden shadow-2xl border border-white/10">
+          <div className="bg-brand-gradient rounded-2xl p-10 text-white text-center relative overflow-hidden shadow-2xl border border-white/10">
             <div className="absolute inset-0 grid-pattern opacity-10" />
             <div className="relative z-10">
               <h2 className="text-2xl md:text-3xl font-black mb-3 tracking-tight">
@@ -439,7 +439,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
               </p>
               <Link
                 href={`/${lang}/devis`}
-                className="inline-flex items-center gap-2 bg-gold-gradient text-[#002B5B] px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider hover:shadow-xl hover:shadow-[#FFD700]/30 transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-brand-gold text-[#002B5B] px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider hover:shadow-xl hover:shadow-[#FFD700]/30 transition-all duration-300"
               >
                 <FileSpreadsheet className="w-4 h-4" />
                 <span>{t.ctaBtn}</span>

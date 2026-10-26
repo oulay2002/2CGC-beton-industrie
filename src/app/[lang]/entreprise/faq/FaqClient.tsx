@@ -4,7 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
 import { FAQ_ITEMS, FAQ_CATEGORIES } from "@/lib/faq-data";
+import { Search, Blocks, Calculator, Truck, CreditCard } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
+
+const ICONES_CATEGORIE = {
+  recherche: Search,
+  produits: Blocks,
+  devis: Calculator,
+  livraison: Truck,
+  paiement: CreditCard,
+} as const;
 
 interface FaqClientProps {
   lang: Locale;
@@ -66,7 +75,7 @@ export default function FaqClient({ lang }: FaqClientProps) {
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
             {isEn ? "All the Answers " : "Toutes les Réponses "}
             <br />
-            <span className="text-gradient">
+            <span className="text-[#FFD700]">
               {isEn ? "to your Technical Questions" : "à vos Questions Techniques"}
             </span>
           </h1>
@@ -95,7 +104,10 @@ export default function FaqClient({ lang }: FaqClientProps) {
                   : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-100"
               }`}
             >
-              <span>{cat.icon}</span>
+              {(() => {
+                const Icone = ICONES_CATEGORIE[cat.icone];
+                return <Icone className="w-4 h-4 shrink-0" aria-hidden="true" />;
+              })()}
               <span>{cat.label[lang]}</span>
             </button>
           ))}
@@ -108,7 +120,7 @@ export default function FaqClient({ lang }: FaqClientProps) {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200"
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
@@ -137,7 +149,7 @@ export default function FaqClient({ lang }: FaqClientProps) {
         </div>
 
         {/* Bandeau d'assistance personnalisé */}
-        <section className="bg-gradient-to-br from-[#002B5B] to-[#003d80] rounded-3xl p-8 sm:p-10 text-white shadow-2xl text-center sm:text-left relative overflow-hidden">
+        <section className="bg-[#002B5B] rounded-2xl p-8 sm:p-10 text-white shadow-2xl text-center sm:text-left relative overflow-hidden">
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2">
               <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest">

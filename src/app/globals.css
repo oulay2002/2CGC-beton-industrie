@@ -148,6 +148,11 @@ button, a, input, select, textarea {
    CLASSES UTILITAIRES DE DESIGN LUXE
    ========================================== */
 
+/* Deux utilitaires de texte en degrade vivaient ici (.text-gradient et
+   .text-gradient-navy). Le degrade sur les glyphes est decoratif : l'emphase
+   se porte par le poids et la taille. Leurs douze usages sont passes a un
+   aplat de la couleur de marque. */
+
 /* Motifs de fond */
 .grid-pattern {
   background-image:
@@ -210,20 +215,6 @@ button, a, input, select, textarea {
 }
 
 /* Textes & Dégradés de Marque */
-.text-gradient {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-gradient-navy {
-  background: linear-gradient(135deg, #002B5B 0%, #001D3D 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .bg-brand-gradient {
   background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-navy-light) 50%, var(--brand-navy-dark) 100%);
 }
@@ -232,8 +223,11 @@ button, a, input, select, textarea {
   background: linear-gradient(135deg, var(--brand-navy-dark) 0%, #001229 100%);
 }
 
-.bg-gold-gradient {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+/* Le bouton principal portait un fondu jaune -> orange. Deux couleurs la ou
+   la marque n'en a qu'une : l'aplat est plus assure, et le relief vient de
+   l'ombre, pas du degrade. */
+.bg-brand-gold {
+  background: var(--brand-gold);
 }
 
 .bg-gold-subtle {
@@ -274,6 +268,52 @@ button, a, input, select, textarea {
   outline: 2px solid var(--brand-gold);
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+/* ==========================================
+   SURFACES DESSINEES PAR LE NAVIGATEUR
+   Selection, curseur, soulignement, chiffres.
+   Laissees aux valeurs par defaut, elles n'appartiennent a aucune
+   identite : c'est l'un des details qui distingue une page composee
+   d'une page assemblee.
+   ========================================== */
+::selection {
+  background: var(--brand-gold);
+  color: var(--brand-navy);
+}
+::-moz-selection {
+  background: var(--brand-gold);
+  color: var(--brand-navy);
+}
+
+input,
+textarea,
+[contenteditable] {
+  caret-color: var(--brand-navy);
+}
+
+/* Sur fond sombre, le curseur navy devient invisible. */
+.bg-\[\#002B5B\] input,
+.bg-\[\#001D3D\] input,
+.bg-slate-900 input,
+.bg-slate-950 input {
+  caret-color: var(--brand-gold);
+}
+
+/* Les liens de texte courant respirent sous la ligne de base. */
+a:not([class*="bg-"]):not([class*="rounded"]) {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: from-font;
+}
+
+/* Prix, quantites et tonnages : chiffres de meme chasse, pour que les
+   colonnes s'alignent et que les montants ne dansent pas au survol. */
+.tabulaire,
+td,
+th,
+time {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
 }
 
 /* Grilles Footer */

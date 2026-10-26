@@ -33,7 +33,7 @@ export default function CGUPage() {
 
           <h1 className="text-4xl sm:text-5xl font-black mb-4 tracking-tight leading-tight">
             Conditions Générales <br />
-            <span className="text-gradient">d'Utilisation (CGU) &amp; de Vente</span>
+            <span className="text-[#FFD700]">d'Utilisation (CGU) &amp; de Vente</span>
           </h1>
 
           <p className="text-white/70 text-sm sm:text-base max-w-2xl leading-relaxed">

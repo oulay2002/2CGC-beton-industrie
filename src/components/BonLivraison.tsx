@@ -178,7 +178,7 @@ export default function BonLivraison({
         </div>
 
         {/* Véhicule et Chauffeur */}
-        <div className="bg-gradient-to-r from-[#002B5B] to-[#004080] text-white rounded-2xl p-5 shadow-sm">
+        <div className="bg-[#002B5B] text-white rounded-2xl p-5 shadow-sm">
           <div className="grid md:grid-cols-3 gap-4 items-center">
             <div className="flex items-center gap-3">
               <div className="text-2xl">🚚</div>

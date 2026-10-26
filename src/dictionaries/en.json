@@ -23,67 +23,106 @@
     "langSwitcher": "FR"
   },
   "entrepriseLinks": {
-    "quiSommesNous": { "label": "Who we are", "desc": "Our story and values" },
-    "pourquoiNousChoisir": { "label": "Why choose us?", "desc": "Our quality commitments" },
-    "partenaires": { "label": "Our partners", "desc": "Companies and certifications" },
-    "faq": { "label": "FAQ", "desc": "Frequently asked questions" }
+    "quiSommesNous": {
+      "label": "Who we are",
+      "desc": "Our story and values"
+    },
+    "pourquoiNousChoisir": {
+      "label": "Why choose us?",
+      "desc": "Our quality commitments"
+    },
+    "partenaires": {
+      "label": "Our partners",
+      "desc": "Companies and certifications"
+    },
+    "faq": {
+      "label": "FAQ",
+      "desc": "Frequently asked questions"
+    }
   },
   "home": {
     "heroSlides": [
       {
-        "tag": "🏭 Industrial Plant Daloa",
+        "tag": "Industrial Plant Daloa",
         "title": "Prefabrication Park & Hydraulic Press",
         "badge": "Capacity +50,000 blocks / month"
       },
       {
-        "tag": "🚚 Turnkey Site Delivery",
+        "tag": "Turnkey Site Delivery",
         "title": "Crane-Truck Fleet & On-Site Unloading",
         "badge": "Express delivery Daloa & Côte d'Ivoire"
       }
     ],
     "heroStats": [
-      { "val": "15+", "label": "Years of experience" },
-      { "val": "500+", "label": "Sites delivered" },
-      { "val": "98%", "label": "Satisfied clients" }
+      {
+        "val": "15+",
+        "label": "Years of experience"
+      },
+      {
+        "val": "500+",
+        "label": "Sites delivered"
+      },
+      {
+        "val": "4.9/5",
+        "label": "128 Google reviews"
+      }
     ],
-    "heroH1Line1": "Your trusted",
-    "heroH1Line2": "construction partner",
+    "heroH1Line1": "Made in Daloa,",
+    "heroH1Line2": "delivered to your site",
     "heroH1Line3": "Blocks · Floor beams · Paving · Electrification · Drilling",
-    "heroDesc": "For 15 years, 2CGC has manufactured and delivered high-quality construction materials to construction sites in Daloa and throughout Côte d'Ivoire.",
-    "heroCTA1": "🧮 Get my quote",
-    "heroCTA2": "📦 View catalogue",
-    "heroCTA3": "📥 Download PDF (8p)",
+    "heroDesc": "For 15 years, our Daloa plant has produced blocks, floor beams and pavers for building sites across Côte d’Ivoire. Delivered by crane truck, unloading included.",
+    "heroCTA1": "Get my quote",
+    "heroCTA2": "View catalogue",
+    "heroCTA3": "Download PDF (8p)",
     "heroScrollLabel": "Scroll",
-    "heroSlide0Label": "🏭 Daloa Plant",
-    "heroSlide1Label": "🚚 Block Delivery",
+    "heroSlide0Label": "Daloa Plant",
+    "heroSlide1Label": "Block Delivery",
     "heroPrevSlide": "Previous slide",
     "heroNextSlide": "Next slide",
     "ticker": [
-      { "label": "ISO 9001", "sub": "Certified" },
-      { "label": "NF Standards", "sub": "Construction" },
-      { "label": "CE Compliance", "sub": "European" },
-      { "label": "B60 Strength", "sub": "Certified" },
-      { "label": "48h Delivery", "sub": "Daloa & surroundings" },
-      { "label": "Customer support", "sub": "Mon–Sat" }
+      {
+        "label": "ISO 9001",
+        "sub": "Certified"
+      },
+      {
+        "label": "NF Standards",
+        "sub": "Construction"
+      },
+      {
+        "label": "CE Compliance",
+        "sub": "European"
+      },
+      {
+        "label": "B60 Strength",
+        "sub": "Certified"
+      },
+      {
+        "label": "48h Delivery",
+        "sub": "Daloa & surroundings"
+      },
+      {
+        "label": "Customer support",
+        "sub": "Mon–Sat"
+      }
     ],
     "engagementsBadge": "Our commitments",
     "engagementsTitle": "Why choose 2CGC?",
     "engagementsDesc": "Recognised expertise serving your most demanding construction projects",
     "engagements": [
       {
-        "icon": "🚚",
+        "icon": "",
         "title": "Site Delivery",
         "desc": "Real-time GPS tracking, electronic signature, guaranteed on-time delivery.",
         "cta": "Learn more"
       },
       {
-        "icon": "⚡",
+        "icon": "",
         "title": "Instant Quote",
         "desc": "Smart configurator with automatic calculation of surfaces, pallets and VAT included.",
         "cta": "Learn more"
       },
       {
-        "icon": "✅",
+        "icon": "",
         "title": "Certified Quality",
         "desc": "Blocks compliant with standards, technical data sheets available for download, full traceability.",
         "cta": "Learn more"
@@ -117,32 +156,44 @@
     ],
     "aPartirDe": "Starting from",
     "enStock": "In stock",
-    "voirProduits": "View products →",
+    "voirProduits": "View products",
     "cataloguePdfBadge": "Brochure & Technical Sheets",
     "cataloguePdfTitle": "Download the Official 2CGC Catalogue (PDF)",
     "cataloguePdfDesc": "All 24 products with exact dimensions, real weights, floor beam and paving models, and official pre-tax company prices.",
-    "telechargerPdf": "📥 Download PDF (1.1 MB)",
-    "ouvrirPdf": "Open full screen ↗",
+    "telechargerPdf": "Download PDF (1.1 MB)",
+    "ouvrirPdf": "Open full screen",
     "statsTitle": "2CGC by the numbers",
     "statsDesc": "Results that speak for themselves",
     "stats": [
-      { "label": "Years of experience", "icon": "🏆" },
-      { "label": "Sites delivered", "icon": "🏗️" },
-      { "label": "Units / month", "icon": "🏭" },
-      { "label": "Satisfied clients", "icon": "⭐" }
+      {
+        "label": "Years of experience",
+        "icon": ""
+      },
+      {
+        "label": "Sites delivered",
+        "icon": ""
+      },
+      {
+        "label": "Units / month",
+        "icon": ""
+      },
+      {
+        "label": "Google rating · 4.9/5",
+        "icon": ""
+      }
     ],
     "calcBadge": "Free tools",
     "calcTitle": "Smart Calculators",
     "calcDesc": "Estimate your needs and plan your project in a few clicks, for free.",
     "outils": [
       {
-        "icon": "📐",
+        "icon": "",
         "title": "Block / m² Calculator",
         "desc": "Estimate the exact number of blocks or pavers needed for your surface, with breakage margin included.",
         "cta": "Use the tool"
       },
       {
-        "icon": "⏱️",
+        "icon": "",
         "title": "Construction Time Estimator",
         "desc": "Evaluate the duration of your project based on surface area, laying type and number of workers.",
         "cta": "Use the tool"
@@ -158,7 +209,7 @@
       "Real-time order tracking",
       "Loyalty programme with cumulative points"
     ],
-    "b2bCTA": "🔐 Access client area →",
+    "b2bCTA": "Access client area",
     "dashboardLabel": "Dashboard",
     "pointsFidelite": "Loyalty points",
     "pointsAvant": "550 points until the next reward",
@@ -171,23 +222,41 @@
     "temoignagesBadge": "Testimonials",
     "temoignagesTitle": "They trust us",
     "temoignages": [
-      { "nom": "Mr. Koné", "role": "Director, BTP Afrique", "initiale": "K", "couleur": "from-blue-500 to-blue-700", "text": "Always on-time delivery, consistent quality. Our main supplier for 3 years." },
-      { "nom": "Ms. Traoré", "role": "Independent Architect", "initiale": "T", "couleur": "from-emerald-500 to-emerald-700", "text": "The technical data sheets are comprehensive and the quote configurator saves us precious time." },
-      { "nom": "Mr. Diallo", "role": "Site Manager", "initiale": "D", "couleur": "from-purple-500 to-purple-700", "text": "The loyalty programme is a real bonus. Discounts add up quickly on large volumes." }
+      {
+        "nom": "Mr. Koné",
+        "role": "Director, BTP Afrique",
+        "initiale": "K",
+        "couleur": "from-blue-500 to-blue-700",
+        "text": "Always on-time delivery, consistent quality. Our main supplier for 3 years."
+      },
+      {
+        "nom": "Ms. Traoré",
+        "role": "Independent Architect",
+        "initiale": "T",
+        "couleur": "from-emerald-500 to-emerald-700",
+        "text": "The technical data sheets are comprehensive and the quote configurator saves us precious time."
+      },
+      {
+        "nom": "Mr. Diallo",
+        "role": "Site Manager",
+        "initiale": "D",
+        "couleur": "from-purple-500 to-purple-700",
+        "text": "The loyalty programme is a real bonus. Discounts add up quickly on large volumes."
+      }
     ],
-    "ctaBadge": "🚀 Start now",
+    "ctaBadge": "Start now",
     "ctaTitle": "Ready to start your project?",
     "ctaDesc": "Get your personalised quote in a few minutes, directly online.",
-    "ctaDevis": "🧮 Create my quote now",
+    "ctaDevis": "Create my quote now",
     "ctaCatalogue": "Browse catalogue"
   },
   "catalogue": {
-    "heroBadge": "📦 Daloa Plant • Precast Concrete",
+    "heroBadge": "Daloa Plant • Precast Concrete",
     "heroSub": "Certified 2CGC CHEICKNA range",
     "title": "Catalogue",
     "desc24": "certified references with exact dimensions and weights.",
-    "telechargerPdf": "📥 Download PDF (1.1 MB)",
-    "ouvrirPdf": "Open ↗",
+    "telechargerPdf": "Download PDF (1.1 MB)",
+    "ouvrirPdf": "Open",
     "toutesCategories": "All",
     "categories": {
       "agglos": "Blocks & Aggregates",
@@ -217,14 +286,14 @@
     "prixDecroissant": "Price descending",
     "nomAz": "Name A-Z",
     "produitsTrouves": "product(s) found",
-    "ctaBadge": "🏭 From the Daloa plant",
+    "ctaBadge": "From the Daloa plant",
     "ctaTitle": "A project? Get your quote in 2 minutes",
     "ctaDesc": "Our teams automatically calculate the quantity, pre/post-tax price and delivery times.",
-    "ctaButton": "🧮 Express Quote",
-    "ctaPdf": "📥 Catalogue PDF (1.1 MB)"
+    "ctaButton": "Express Quote",
+    "ctaPdf": "Catalogue PDF (1.1 MB)"
   },
   "contact": {
-    "heroBadge": "📍 Daloa, Côte d'Ivoire",
+    "heroBadge": "Daloa, Côte d'Ivoire",
     "heroTitle": "Contact us",
     "heroDesc": "Our team is available Monday to Saturday to answer all your questions.",
     "formTitle": "Send us a message",
@@ -234,7 +303,13 @@
     "entreprise": "Company / Organisation",
     "entreprisePlaceholder": "Optional",
     "sujet": "Subject",
-    "sujetOptions": ["Quote request", "Product information", "Delivery", "Partnership", "Other"],
+    "sujetOptions": [
+      "Quote request",
+      "Product information",
+      "Delivery",
+      "Partnership",
+      "Other"
+    ],
     "message": "Your message",
     "envoyer": "Send message",
     "envoyerLoading": "Sending...",
@@ -259,8 +334,8 @@
     "devisExpress": "Express Quote",
     "calcBlocs": "Block/m² Calculator",
     "estimateur": "Pace Estimator",
-    "espaceClient": "👤 Dedicated Client Area",
-    "accesEquipe": "🏢 2CGC Staff Access",
+    "espaceClient": "Dedicated Client Area",
+    "accesEquipe": "2CGC Staff Access",
     "lEntreprise": "The Company",
     "notreHistoire": "Our History",
     "engagements": "Quality Commitments",
@@ -274,7 +349,7 @@
     "rgpd": "Data Protection (GDPR)",
     "siteMap": "Site map (XML)",
     "robots": "Robots.txt",
-    "copyright": "© 2026 2CGC — Single-member LLC with capital of 1,000,000 CFA • RCCM: CI DAL 2013 B. 20779 • CC No.: 8104005 C",
+    "copyright": "2026 2CGC — Single-member LLC with capital of 1,000,000 CFA • RCCM: CI DAL 2013 B. 20779 • CC No.: 8104005 C",
     "normes": "B60 / NF Standards",
     "normesDesc": "Laboratory quality control",
     "livraison48h": "48h Site Delivery",

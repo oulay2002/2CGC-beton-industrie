@@ -95,7 +95,7 @@ export default function Footer({ lang, dict }: FooterProps) {
               <div className="min-w-0">
                 <div className="font-black text-lg text-white tracking-tight leading-none flex items-center gap-1.5">
                   <span>2CGC</span>
-                  <span className="text-[9px] bg-[#FFD700]/20 text-[#FFD700] px-1.5 py-0.5 rounded font-mono font-bold tracking-normal border border-[#FFD700]/30">
+                  <span className="text-[9px] bg-[#FFD700]/20 text-[#FFD700] px-1.5 py-0.5 rounded-xl font-mono font-bold tracking-normal border border-[#FFD700]/30">
                     BTP
                   </span>
                 </div>
@@ -111,10 +111,10 @@ export default function Footer({ lang, dict }: FooterProps) {
 
             {/* Badges de conformité industrielle */}
             <div className="flex flex-wrap gap-2 pt-0.5">
-              <span className="text-[9px] xl:text-[10px] bg-white/5 border border-white/10 text-white/70 px-2 py-0.5 rounded font-mono whitespace-nowrap inline-block">
+              <span className="text-[9px] xl:text-[10px] bg-white/5 border border-white/10 text-white/70 px-2 py-0.5 rounded-xl font-mono whitespace-nowrap inline-block">
                 RCCM: CI DAL 2013 B. 20779
               </span>
-              <span className="text-[9px] xl:text-[10px] bg-white/5 border border-white/10 text-white/70 px-2 py-0.5 rounded font-mono whitespace-nowrap inline-block">
+              <span className="text-[9px] xl:text-[10px] bg-white/5 border border-white/10 text-white/70 px-2 py-0.5 rounded-xl font-mono whitespace-nowrap inline-block">
                 CC: 8104005 C
               </span>
             </div>
@@ -125,7 +125,7 @@ export default function Footer({ lang, dict }: FooterProps) {
                 href="https://wa.me/2250707621799?text=Bonjour%202CGC%2C%20je%20souhaite%20obtenir%20un%20devis%20rapide"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-white/10 hover:bg-[#25D366]/30 border border-white/15 hover:border-[#25D366]/50 backdrop-blur-md text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
+                className="w-8 h-8 bg-white/10 hover:bg-[#25D366]/30 border border-white/15 hover:border-[#25D366]/50 backdrop-blur-md text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
                 title="WhatsApp 2CGC"
                 aria-label="WhatsApp"
               >
@@ -137,7 +137,7 @@ export default function Footer({ lang, dict }: FooterProps) {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-white/10 hover:bg-[#1877F2]/30 border border-white/15 hover:border-[#1877F2]/50 backdrop-blur-md text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
+                className="w-8 h-8 bg-white/10 hover:bg-[#1877F2]/30 border border-white/15 hover:border-[#1877F2]/50 backdrop-blur-md text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
                 title="Facebook 2CGC"
                 aria-label="Facebook"
               >
@@ -149,7 +149,7 @@ export default function Footer({ lang, dict }: FooterProps) {
                 href="https://tiktok.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-white/10 hover:bg-white/25 border border-white/15 hover:border-white/40 backdrop-blur-md text-white rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
+                className="w-8 h-8 bg-white/10 hover:bg-white/25 border border-white/15 hover:border-white/40 backdrop-blur-md text-white rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm shrink-0"
                 title="TikTok 2CGC"
                 aria-label="TikTok"
               >

@@ -86,7 +86,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
     { value: 15, suffix: "+", ...dict.stats[0], icon: STATS_ICONS[0] },
     { value: 500, suffix: "+", ...dict.stats[1], icon: STATS_ICONS[1] },
     { value: 50000, suffix: "+", ...dict.stats[2], icon: STATS_ICONS[2] },
-    { value: 98, suffix: "%", ...dict.stats[3], icon: STATS_ICONS[3] },
+    { value: 128, suffix: "", ...dict.stats[3], icon: STATS_ICONS[3] },
   ];
 
   const ENGAGEMENTS_HREFS = [
@@ -161,7 +161,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
               </div>
 
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-[#FFD700] tracking-wide">
-                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                 <span>{heroSlides[currentSlide].tag}</span>
               </div>
 
@@ -174,7 +173,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
             {/* H1 Principal */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.04] mb-6 tracking-tight">
               {dict.heroH1Line1}
-              <span className="block text-gradient mt-1">{dict.heroH1Line2}</span>
+              <span className="block text-[#FFD700] mt-1">{dict.heroH1Line2}</span>
               <span className="block text-lg sm:text-2xl md:text-3xl font-normal text-white/70 mt-3 tracking-normal">
                 {dict.heroH1Line3}
               </span>
@@ -189,7 +188,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
             <div className="flex flex-col sm:flex-row sm:items-center sm:flex-nowrap gap-3 mb-12">
               <Link
                 href={`/${lang}/devis`}
-                className="group relative bg-gold-gradient text-[#002B5B] px-5 sm:px-6 py-3.5 rounded-2xl font-black text-sm sm:text-base hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden min-h-[50px] whitespace-nowrap shrink-0"
+                className="group relative bg-brand-gold text-[#002B5B] px-5 sm:px-6 py-3.5 rounded-2xl font-black text-sm sm:text-base hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden min-h-[50px] whitespace-nowrap shrink-0"
               >
                 <FileSpreadsheet className="w-4 h-4 text-[#002B5B] transition-transform group-hover:scale-110 shrink-0" />
                 <span className="relative z-10 whitespace-nowrap">{dict.heroCTA1}</span>
@@ -293,10 +292,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
       <section className="py-20 md:py-28 px-4 md:px-6 bg-[#F5F5F0]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-1.5 bg-[#002B5B]/8 text-[#002B5B] px-4 py-1.5 rounded-full text-xs font-bold mb-4 uppercase tracking-widest border border-[#002B5B]/10">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#002B5B]" />
-              <span>{dict.engagementsBadge}</span>
-            </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#002B5B] mb-4 tracking-tight">
               {dict.engagementsTitle}
             </h2>
@@ -312,7 +307,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                 <Link
                   key={i}
                   href={ENGAGEMENTS_HREFS[i]}
-                  className="card-hover bg-white rounded-3xl p-8 relative overflow-hidden group border border-slate-200/80 block transition-all duration-300 hover:-translate-y-1 cursor-pointer shadow-sm hover:shadow-xl"
+                  className="card-hover bg-white rounded-2xl p-8 relative overflow-hidden group border border-slate-200/80 block transition-all duration-300 hover:-translate-y-1 cursor-pointer shadow-sm hover:shadow-xl"
                 >
                   <div className="w-13 h-13 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#002B5B]/20 group-hover:border-[#002B5B]/30 backdrop-blur-sm text-[#002B5B] flex items-center justify-center p-3 mb-6 transition-all duration-300 shadow-sm">
                     <IconComponent className="w-6 h-6" />
@@ -348,10 +343,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-14 gap-4">
             <div>
-              <span className="inline-flex items-center gap-1.5 bg-[#FFD700]/15 text-[#002B5B] px-4 py-1.5 rounded-full text-xs font-bold mb-4 uppercase tracking-widest border border-[#FFD700]/30">
-                <Boxes className="w-3.5 h-3.5 text-[#002B5B]" />
-                <span>{dict.produitsBadge}</span>
-              </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#002B5B] tracking-tight">
                 {dict.produitsTitle}
               </h2>
@@ -372,7 +363,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
               return (
                 <div
                   key={i}
-                  className="card-hover group bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+                  className="card-hover group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
                 >
                   <div className="relative h-56 overflow-hidden bg-slate-50">
                     <img
@@ -380,11 +371,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                       alt={p.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <span
-                      className={`absolute top-4 left-4 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-md ${c.tagColor}`}
-                    >
-                      {p.tag}
-                    </span>
                     <span className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-md font-mono">
                       {c.spec}
                     </span>
@@ -426,11 +412,11 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
           </div>
 
           {/* Bannière PDF Officiel */}
-          <div className="mt-12 bg-gradient-to-r from-[#001D3D] via-[#002B5B] to-[#001D3D] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl border border-white/10">
+          <div className="mt-12 bg-[#001D3D] rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl border border-white/10">
             <div className="absolute right-0 top-0 w-80 h-80 bg-[#FFD700]/10 rounded-full blur-3xl pointer-events-none" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-5">
-                <div className="w-14 h-14 bg-gold-gradient text-[#002B5B] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg font-black">
+                <div className="w-14 h-14 bg-brand-gold text-[#002B5B] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg font-black">
                   <Download className="w-7 h-7" />
                 </div>
                 <div>
@@ -451,7 +437,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                 <a
                   href="/catalogue-produits-2cgc.pdf"
                   download="Catalogue-2CGC-Produits-Officiel.pdf"
-                  className="w-full sm:w-auto bg-gold-gradient text-[#002B5B] px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-wider hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-brand-gold text-[#002B5B] px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-wider hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all flex items-center justify-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   <span>{dict.telechargerPdf}</span>
@@ -489,7 +475,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
               return (
                 <div
                   key={i}
-                  className="glass rounded-3xl p-6 md:p-8 text-center card-hover border border-white/10"
+                  className="glass rounded-2xl p-6 md:p-8 text-center card-hover border border-white/10"
                 >
                   <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-white/10 flex items-center justify-center text-[#FFD700]">
                     <IconComponent className="w-5 h-5" />
@@ -539,7 +525,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                 <Link
                   key={i}
                   href={hrefs[i]}
-                  className="card-hover group relative bg-white rounded-3xl p-8 md:p-10 overflow-hidden border border-slate-200/80 hover:border-[#002B5B] transition-all block shadow-sm hover:shadow-xl"
+                  className="card-hover group relative bg-white rounded-2xl p-8 md:p-10 overflow-hidden border border-slate-200/80 hover:border-[#002B5B] transition-all block shadow-sm hover:shadow-xl"
                 >
                   <div className="w-14 h-14 bg-[#002B5B]/5 group-hover:bg-[#002B5B] text-[#002B5B] group-hover:text-[#FFD700] rounded-2xl flex items-center justify-center p-3 mb-6 transition-all duration-300 shadow-sm">
                     <ToolIcon className="w-7 h-7" />
@@ -575,7 +561,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
 
               <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight">
                 {dict.b2bTitle1}
-                <span className="block text-gradient mt-1">{dict.b2bTitle2}</span>
+                <span className="block text-[#FFD700] mt-1">{dict.b2bTitle2}</span>
               </h2>
 
               <p className="text-white/70 mb-9 leading-relaxed text-sm sm:text-base">
@@ -593,7 +579,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
 
               <Link
                 href="/connexion"
-                className="inline-flex items-center gap-3 bg-gold-gradient text-[#002B5B] px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-wider hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 min-h-[52px]"
+                className="inline-flex items-center gap-3 bg-brand-gold text-[#002B5B] px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-wider hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 min-h-[52px]"
               >
                 <span>{dict.b2bCTA}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -602,8 +588,8 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
 
             {/* Dashboard Mockup moderne */}
             <div className="relative">
-              <div className="absolute inset-0 bg-[#FFD700]/15 rounded-3xl blur-3xl" />
-              <div className="relative glass rounded-3xl p-6 border border-white/20 space-y-4 shadow-2xl">
+              <div className="absolute inset-0 bg-[#FFD700]/15 rounded-2xl blur-3xl" />
+              <div className="relative glass rounded-2xl p-6 border border-white/20 space-y-4 shadow-2xl">
                 <div className="flex items-center justify-between pb-4 border-b border-white/10">
                   <div>
                     <div className="text-[10px] text-white/50 uppercase tracking-wider font-mono">
@@ -614,7 +600,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                       <span>BTP Afrique SARL</span>
                     </div>
                   </div>
-                  <div className="w-10 h-10 bg-gold-gradient rounded-xl flex items-center justify-center text-[#002B5B] shadow-md font-bold text-xs">
+                  <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center text-[#002B5B] shadow-md font-bold text-xs">
                     PRO
                   </div>
                 </div>
@@ -632,7 +618,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                     <Gift className="w-5 h-5 text-[#FFD700]" />
                   </div>
                   <div className="bg-white/10 rounded-full h-2 overflow-hidden mt-3">
-                    <div className="bg-gold-gradient h-full rounded-full w-[75%]" />
+                    <div className="bg-brand-gold h-full rounded-full w-[75%]" />
                   </div>
                   <div className="text-[10px] text-white/40 mt-2">{dict.pointsAvant}</div>
                 </div>
@@ -693,7 +679,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
             {dict.temoignages.map((t, i) => (
               <div
                 key={i}
-                className="card-hover bg-[#F5F5F0] rounded-3xl p-7 relative group border border-slate-200/80 flex flex-col justify-between"
+                className="card-hover bg-[#F5F5F0] rounded-2xl p-7 relative group border border-slate-200/80 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex gap-1 mb-5">
@@ -746,7 +732,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
               <Link
                 key={zone.slug}
                 href={`/${lang}/zones/${zone.slug}`}
-                className="group bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#002B5B]/20 transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#002B5B]/20 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -789,17 +775,12 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
       {/* ========== CTA FINAL ========== */}
       <section className="py-20 md:py-28 px-4 md:px-6 bg-[#F5F5F0]">
         <div className="max-w-4xl mx-auto">
-          <div className="relative bg-brand-gradient rounded-3xl p-10 md:p-16 text-white text-center overflow-hidden shadow-2xl border border-white/10">
+          <div className="relative bg-brand-gradient rounded-2xl p-10 md:p-16 text-white text-center overflow-hidden shadow-2xl border border-white/10">
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/15 rounded-full blur-3xl -mr-48 -mt-48 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-400/15 rounded-full blur-3xl -ml-36 -mb-36 pointer-events-none" />
             <div className="absolute inset-0 grid-pattern opacity-10" />
 
             <div className="relative z-10">
-              <span className="inline-flex items-center gap-1.5 bg-[#FFD700]/15 border border-[#FFD700]/25 text-[#FFD700] px-4 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest">
-                <Sparkles className="w-3.5 h-3.5 text-[#FFD700]" />
-                <span>{dict.ctaBadge}</span>
-              </span>
-
               <h2 className="text-3xl md:text-5xl font-black mb-4 tracking-tight">
                 {dict.ctaTitle}
               </h2>
@@ -811,7 +792,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
               <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
                 <Link
                   href={`/${lang}/devis`}
-                  className="inline-flex items-center justify-center gap-2 bg-gold-gradient text-[#002B5B] px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-wider hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 min-h-[52px]"
+                  className="inline-flex items-center justify-center gap-2 bg-brand-gold text-[#002B5B] px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-wider hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 min-h-[52px]"
                 >
                   <FileSpreadsheet className="w-4 h-4" />
                   <span>{dict.ctaDevis}</span>

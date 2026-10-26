@@ -166,7 +166,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
             {isEn ? "A Network of Partners " : "Un Réseau de Partenaires "}
             <br />
-            <span className="text-gradient">
+            <span className="text-[#FFD700]">
               {isEn ? "Committed to Building Ivory Coast" : "Engagés pour Bâtir la Côte d'Ivoire"}
             </span>
           </h1>
@@ -203,7 +203,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
             {categoriesPartenaires.map((cat, i) => (
               <div
                 key={i}
-                className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+                className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 flex items-center justify-center text-3xl backdrop-blur-sm">
@@ -232,7 +232,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
         </section>
 
         {/* Avantages Programme Partenaires B2B */}
-        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-gray-100 shadow-xl space-y-8">
+        <section className="bg-white rounded-2xl p-8 sm:p-12 border border-gray-100 shadow-xl space-y-8">
           <div className="max-w-2xl">
             <span className="text-xs font-black text-[#002B5B] uppercase tracking-widest bg-[#002B5B]/5 px-3 py-1.5 rounded-full">
               {isEn ? "B2B Program" : "Programme B2B"}
@@ -251,7 +251,7 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {avantagesPartenaire.map((av, idx) => (
-              <div key={idx} className="p-6 bg-[#F5F5F0] rounded-2xl border-l-4 border-[#FFD700]">
+              <div key={idx} className="p-6 bg-[#F5F5F0] rounded-2xl border border-[#002B5B]/10">
                 <div className="text-base font-black text-[#002B5B] mb-2">{av.titre}</div>
                 <p className="text-gray-600 text-xs leading-relaxed">{av.detail}</p>
               </div>

@@ -54,7 +54,7 @@ export function ProductCard({ produit }: { produit: Produit }) {
           </div>
           <Link
             href={`/devis?produit=${produit.slug}`}
-            className="bg-[#FFD700] text-[#002B5B] px-4 py-2 rounded-lg font-bold hover:bg-yellow-400 transition-colors text-sm min-h-[44px] flex items-center"
+            className="bg-[#FFD700] text-[#002B5B] px-4 py-2 rounded-xl font-bold hover:bg-yellow-400 transition-colors text-sm min-h-[44px] flex items-center"
           >
             Devis
           </Link>

@@ -114,12 +114,12 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
             {isEn ? (
               <>
                 Online Construction <br />
-                <span className="text-gradient">Calculators &amp; Estimators</span>
+                <span className="text-[#FFD700]">Calculators &amp; Estimators</span>
               </>
             ) : (
               <>
                 Calculateurs &amp; Estimateurs <br />
-                <span className="text-gradient">de Chantier en Ligne</span>
+                <span className="text-[#FFD700]">de Chantier en Ligne</span>
               </>
             )}
           </h1>
@@ -138,7 +138,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
           {calculateurs.map((calc) => (
             <div
               key={calc.id}
-              className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
+              className="bg-white rounded-2xl p-8 sm:p-10 border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
@@ -179,7 +179,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
         </section>
 
         {/* Tableau des Ratios Pratiques de Référence */}
-        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl space-y-6">
+        <section className="bg-white rounded-2xl p-6 sm:p-10 border border-gray-100 shadow-xl space-y-6">
           <div className="border-b border-gray-100 pb-5">
             <span className="text-xs font-black text-[#002B5B] uppercase tracking-widest bg-[#002B5B]/5 px-3 py-1.5 rounded-full">
               {isEn ? "Site Reference Cheat Sheet" : "Aide-Mémoire Chantier"}
@@ -196,7 +196,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {ratiosPratiques.map((r, idx) => (
-              <div key={idx} className="p-4 bg-[#F5F5F0] rounded-2xl border-l-4 border-[#002B5B]">
+              <div key={idx} className="p-4 bg-[#F5F5F0] rounded-2xl border border-[#002B5B]/15">
                 <div className="font-bold text-sm text-[#002B5B]">{r.type}</div>
                 <div className="text-xl font-black text-[#FFD700] my-1">{r.ratio}</div>
                 <div className="text-[11px] text-gray-500">{r.usage}</div>
@@ -206,7 +206,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
         </section>
 
         {/* CTA Vers Devis */}
-        <section className="bg-gradient-to-r from-[#002B5B] to-[#003d80] rounded-3xl p-8 sm:p-10 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <section className="bg-[#002B5B] rounded-2xl p-8 sm:p-10 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <h4 className="text-2xl font-black text-white mb-2">
               {isEn ? "Already know your quantities?" : "Vous connaissez déjà vos quantités ?"}
@@ -219,7 +219,7 @@ export default function CalculateursClient({ lang }: CalculateursClientProps) {
           </div>
           <Link
             href={`/${lang}/devis`}
-            className="flex-shrink-0 bg-gold-gradient text-[#002B5B] px-8 py-4 rounded-2xl font-black text-sm shadow-xl hover:shadow-[#FFD700]/30 transition-all"
+            className="flex-shrink-0 bg-brand-gold text-[#002B5B] px-8 py-4 rounded-2xl font-black text-sm shadow-xl hover:shadow-[#FFD700]/30 transition-all"
           >
             {isEn ? "🧮 Configure my quote" : "🧮 Configurer mon devis"}
           </Link>

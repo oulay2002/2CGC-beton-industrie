@@ -149,7 +149,7 @@ export default function InscriptionPage() {
         <div className="relative z-10">
           <h2 className="text-4xl font-black text-white leading-tight mb-6">
             Rejoignez
-            <span className="block text-gradient">l'espace</span>
+            <span className="block text-[#FFD700]">l'espace</span>
             <span className="block">client 2CGC</span>
           </h2>
           <p className="text-white/60 text-sm leading-relaxed mb-8 max-w-xs">

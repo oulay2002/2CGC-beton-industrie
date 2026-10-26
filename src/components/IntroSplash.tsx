@@ -198,7 +198,7 @@ export default function IntroSplash() {
                 transform: stage >= 2 ? "translate(0, 0)" : "translate(-25px, 20px)",
                 opacity: stage >= 2 ? 1 : 0,
                 transformOrigin: "24px 84px",
-                transition: "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             />
 
@@ -215,7 +215,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 3 ? "translate(0, 0)" : "translate(-30px, 15px) rotate(-10deg)",
                 opacity: stage >= 3 ? 1 : 0,
-                transition: "all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.05s",
+                transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s",
               }}
             />
             {/* Brique Basse Droite */}
@@ -229,7 +229,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 3 ? "translate(0, 0)" : "translate(25px, 15px) rotate(8deg)",
                 opacity: stage >= 3 ? 1 : 0,
-                transition: "all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.12s",
+                transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.12s",
               }}
             />
 
@@ -245,7 +245,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 3 ? "translate(0, 0)" : "translate(-35px, -5px) rotate(-8deg)",
                 opacity: stage >= 3 ? 1 : 0,
-                transition: "all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.18s",
+                transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.18s",
               }}
             />
             {/* Brique Milieu Droite */}
@@ -259,7 +259,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 3 ? "translate(0, 0)" : "translate(30px, -10px) rotate(10deg)",
                 opacity: stage >= 3 ? 1 : 0,
-                transition: "all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.24s",
+                transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.24s",
               }}
             />
 
@@ -275,7 +275,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 3 ? "translate(0, 0)" : "translate(-20px, -25px) rotate(-6deg)",
                 opacity: stage >= 3 ? 1 : 0,
-                transition: "all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.3s",
+                transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
               }}
             />
             {/* Brique Haute Droite */}
@@ -289,7 +289,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 3 ? "translate(0, 0)" : "translate(20px, -20px) rotate(6deg)",
                 opacity: stage >= 3 ? 1 : 0,
-                transition: "all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) 0.36s",
+                transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.36s",
               }}
             />
 
@@ -302,7 +302,7 @@ export default function IntroSplash() {
                 transform: stage >= 4 ? "translate(0, 0) rotate(0deg)" : "translate(0, -40px) rotate(-5deg)",
                 opacity: stage >= 4 ? 1 : 0,
                 transformOrigin: "48px 48px",
-                transition: "all 0.55s cubic-bezier(0.34, 1.3, 0.64, 1)",
+                transition: "all 0.55s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             />
             {/* Cheminée */}
@@ -316,7 +316,7 @@ export default function IntroSplash() {
               style={{
                 transform: stage >= 4 ? "translate(0, 0)" : "translate(0, -30px)",
                 opacity: stage >= 4 ? 1 : 0,
-                transition: "all 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.1s",
+                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s",
               }}
             />
           </svg>
@@ -354,7 +354,7 @@ export default function IntroSplash() {
             <span className="text-[#FFD700] drop-shadow-[0_2px_10px_rgba(255,215,0,0.4)]">
               2CGC
             </span>
-            <span className="text-white text-xs uppercase px-2 py-0.5 rounded bg-white/10 border border-white/20 font-mono tracking-normal">
+            <span className="text-white text-xs uppercase px-2 py-0.5 rounded-xl bg-white/10 border border-white/20 font-mono tracking-normal">
               BTP
             </span>
           </div>

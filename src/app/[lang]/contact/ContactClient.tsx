@@ -169,7 +169,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 tracking-tight leading-tight">
             {isEn ? "Contact " : "Contactez "}
-            <span className="text-gradient">2CGC CHEICKNA</span>
+            <span className="text-[#FFD700]">2CGC CHEICKNA</span>
           </h1>
 
           <p className="text-white/70 text-base sm:text-xl max-w-2xl leading-relaxed">
@@ -185,7 +185,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
           {/* Colonne gauche : Infos de contact */}
           <div className="lg:col-span-1 space-y-6">
             {/* Carte contact principal */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-[#FFD700]">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200/80">
               <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
                 <div className="h-12 w-auto flex items-center justify-center flex-shrink-0">
                   <img
@@ -209,7 +209,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               <div className="space-y-4">
                 {/* Téléphones */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📞</span>
                   </div>
                   <div>
@@ -233,7 +233,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
                 {/* Email */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📧</span>
                   </div>
                   <div className="min-w-0 flex-1">
@@ -252,7 +252,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
                 {/* Adresse */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📍</span>
                   </div>
                   <div>
@@ -273,7 +273,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
 
                 {/* Horaires */}
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#002B5B]/10 border border-[#002B5B]/15 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">🕐</span>
                   </div>
                   <div>
@@ -321,7 +321,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
             </div>
 
             {/* Carte rapide */}
-            <div className="bg-gradient-to-br from-[#002B5B] to-[#003d80] text-white rounded-2xl shadow-lg p-6">
+            <div className="bg-[#002B5B] text-white rounded-2xl shadow-lg p-6">
               <h3 className="font-black text-lg mb-3 text-[#FFD700]">
                 {isEn ? "⚡ Quick Response" : "⚡ Réponse rapide"}
               </h3>
@@ -332,7 +332,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               </p>
               <a
                 href="tel:+2250707621799"
-                className="block w-full bg-[#FFD700] text-[#002B5B] text-center py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors min-h-[44px]"
+                className="block w-full bg-[#FFD700] text-[#002B5B] text-center py-3 rounded-xl font-bold hover:bg-yellow-400 transition-colors min-h-[44px]"
               >
                 {isEn ? "Call now" : "Appeler maintenant"}
               </a>
@@ -385,7 +385,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               </p>
 
               {messageEnvoye && (
-                <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
                   <div className="flex items-center gap-2 text-green-800">
                     <span className="text-2xl">✅</span>
                     <div>
@@ -403,7 +403,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
               )}
 
               {erreur && (
-                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                   <div className="flex items-center gap-2 text-red-800">
                     <span className="text-2xl">⚠️</span>
                     <div>
@@ -441,7 +441,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                       value={formData.nom}
                       onChange={handleChange}
                       required
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
                       placeholder={isEn ? "Your full name" : "Votre nom complet"}
                     />
                   </div>
@@ -456,7 +456,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
                       placeholder="votre@email.com"
                     />
                   </div>
@@ -472,7 +472,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                       name="telephone"
                       value={formData.telephone}
                       onChange={handleChange}
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
                       placeholder="+225 07 00 00 00"
                     />
                   </div>
@@ -486,7 +486,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                       name="entreprise"
                       value={formData.entreprise}
                       onChange={handleChange}
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors min-h-[44px]"
                       placeholder={isEn ? "Your company name" : "Nom de votre entreprise"}
                     />
                   </div>
@@ -501,7 +501,7 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                     value={formData.sujet}
                     onChange={handleChange}
                     required
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors bg-white min-h-[44px]"
+                    className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors bg-white min-h-[44px]"
                   >
                     <option value="">{isEn ? "-- Select a subject --" : "-- Sélectionnez un sujet --"}</option>
                     <option value="devis">{isEn ? "Quotation request" : "Demande de devis"}</option>
@@ -523,12 +523,12 @@ Quartier Commerce (non loin de la Pharmacie Appaul), BP 129 Daloa (Côte d'Ivoir
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors resize-none min-h-[120px]"
+                    className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-[#FFD700] focus:outline-none transition-colors resize-none min-h-[120px]"
                     placeholder={isEn ? "Describe your requirement in detail..." : "Décrivez votre besoin en détail..."}
                   />
                 </div>
 
-                <div className="flex items-start gap-3 p-4 bg-[#F5F5F0] rounded-lg">
+                <div className="flex items-start gap-3 p-4 bg-[#F5F5F0] rounded-xl">
                   <input type="checkbox" id="rgpd" required className="mt-1 w-5 h-5 accent-[#FFD700]" />
                   <label htmlFor="rgpd" className="text-sm text-gray-700">
                     {isEn ? (

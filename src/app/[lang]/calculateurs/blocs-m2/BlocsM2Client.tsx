@@ -128,7 +128,7 @@ export default function BlocsM2Client({ lang }: BlocsM2ClientProps) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Formulaire */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm">
+          <div className="lg:col-span-7 bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
               <span className="w-8 h-8 rounded-full bg-brand-navy/10 text-brand-navy font-bold flex items-center justify-center text-sm">
                 1
@@ -208,7 +208,7 @@ export default function BlocsM2Client({ lang }: BlocsM2ClientProps) {
           </div>
 
           {/* Résultat - Haute Visibilité & Contraste Parfait */}
-          <div className="lg:col-span-5 bg-[#002B5B] text-white rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-[#002B5B] flex flex-col justify-between relative overflow-hidden">
+          <div className="lg:col-span-5 bg-[#002B5B] text-white rounded-2xl p-6 md:p-8 shadow-2xl border-2 border-[#002B5B] flex flex-col justify-between relative overflow-hidden">
             <div>
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/20">
                 <span className="w-8 h-8 rounded-full bg-[#FFD700] text-[#002B5B] font-bold flex items-center justify-center text-sm shadow">

@@ -453,7 +453,7 @@ function DevisInner({ lang }: { lang: Locale }) {
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-3">
                 {isEn ? "Quotation " : "Configurateur de "}
-                <span className="text-gradient">{isEn ? "Configurator" : "Devis"}</span>
+                <span className="text-[#FFD700]">{isEn ? "Configurator" : "Devis"}</span>
               </h1>
               <p className="text-white/60 max-w-lg text-sm leading-relaxed">
                 {isEn
@@ -477,7 +477,7 @@ function DevisInner({ lang }: { lang: Locale }) {
           {/* Colonne gauche — Sélection */}
           <div className="lg:col-span-2 space-y-5">
             {/* Étape 1 — Sélection produits par catégorie */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-50">
                 <h2 className="text-lg font-black text-[#002B5B]">
                   {isEn ? "1. Choose your products" : "1. Choisissez vos produits"}
@@ -548,7 +548,7 @@ function DevisInner({ lang }: { lang: Locale }) {
 
             {/* Étape 2 — Quantités */}
             {lignes.length > 0 && (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-6 py-5 border-b border-gray-50">
                   <h2 className="text-lg font-black text-[#002B5B]">
                     {isEn ? "2. Configure your quantities" : "2. Configurez vos quantités"}
@@ -618,7 +618,7 @@ function DevisInner({ lang }: { lang: Locale }) {
 
             {/* Étape 3 — Mode de livraison & Calculateur de Fret */}
             {lignes.length > 0 && (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-black text-[#002B5B]">
@@ -752,7 +752,7 @@ function DevisInner({ lang }: { lang: Locale }) {
             )}
 
             {/* Étape 4 — Coordonnées */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-black text-[#002B5B]">
@@ -794,7 +794,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                         {isEn ? "Phone / WhatsApp" : "Numéro Téléphone / WhatsApp"}{" "}
                         <span className="text-red-500">*</span>
                       </span>
-                      <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xl">
                         💬 WhatsApp
                       </span>
                     </label>
@@ -860,7 +860,7 @@ function DevisInner({ lang }: { lang: Locale }) {
 
           {/* Colonne droite — Récapitulatif sticky */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 sticky top-24 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 sticky top-24 overflow-hidden">
               <div className="bg-[#002B5B] px-6 py-5">
                 <h2 className="text-lg font-black text-white">{isEn ? "📊 Summary" : "📊 Récapitulatif"}</h2>
                 <p className="text-white/50 text-xs mt-1">
@@ -958,7 +958,7 @@ function DevisInner({ lang }: { lang: Locale }) {
                       <button
                         onClick={genererEtSauvegarder}
                         disabled={envoiEnCours}
-                        className="w-full bg-gold-gradient text-[#002B5B] py-3.5 rounded-2xl font-black text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-wait"
+                        className="w-full bg-brand-gold text-[#002B5B] py-3.5 rounded-2xl font-black text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-wait"
                         title={isEn ? "Download official 2CGC proforma invoice" : "Télécharger la facture proforma officielle 2CGC (conforme BSIC & RCCM)"}
                       >
                         {envoiEnCours ? (

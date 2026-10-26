@@ -824,7 +824,7 @@ export default function GestionUtilisateurs() {
                 type="button"
                 onClick={handleConfirmerImport}
                 disabled={clientsPrevisualises.length === 0}
-                className="flex-1 bg-gold-gradient text-[#002B5B] py-3.5 rounded-2xl font-black text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 bg-brand-gold text-[#002B5B] py-3.5 rounded-2xl font-black text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>🚀</span>
                 <span>Valider et Ajouter à la Base ({clientsPrevisualises.length})</span>

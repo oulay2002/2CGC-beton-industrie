@@ -134,13 +134,13 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
             <button
               onClick={() => setMessages([messages[0]])}
               title="Réinitialiser la discussion"
-              className="p-1.5 hover:bg-emerald-600 rounded-lg transition-colors text-emerald-100"
+              className="p-1.5 hover:bg-emerald-600 rounded-xl transition-colors text-emerald-100"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 hover:bg-emerald-600 rounded-lg transition-colors text-emerald-100"
+              className="p-1.5 hover:bg-emerald-600 rounded-xl transition-colors text-emerald-100"
             >
               <X className="w-5 h-5" />
             </button>
@@ -155,7 +155,7 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
               type="text"
               value={senderName}
               onChange={e => setSenderName(e.target.value)}
-              className="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="bg-slate-900 border border-slate-700 rounded-xl px-2 py-0.5 text-xs text-white focus:outline-none focus:border-emerald-500"
               placeholder="Nom du client"
             />
           </div>
@@ -165,7 +165,7 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
               type="text"
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              className="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs text-emerald-300 focus:outline-none focus:border-emerald-500 w-36 font-mono"
+              className="bg-slate-900 border border-slate-700 rounded-xl px-2 py-0.5 text-xs text-emerald-300 focus:outline-none focus:border-emerald-500 w-36 font-mono"
               placeholder="+225..."
             />
           </div>
@@ -227,7 +227,7 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
               key={idx}
               onClick={() => handleSendMessage(scen.text)}
               disabled={loading}
-              className="text-xs bg-slate-800 hover:bg-emerald-900/40 hover:border-emerald-500/50 text-slate-200 border border-slate-700/80 rounded-lg px-2.5 py-1 flex items-center gap-1.5 transition-all whitespace-nowrap disabled:opacity-50"
+              className="text-xs bg-slate-800 hover:bg-emerald-900/40 hover:border-emerald-500/50 text-white border border-slate-700/80 rounded-xl px-2.5 py-1 flex items-center gap-1.5 transition-all whitespace-nowrap disabled:opacity-50"
             >
               <scen.icon className="w-3.5 h-3.5 text-emerald-400" />
               <span>{scen.label}</span>

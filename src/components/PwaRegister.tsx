@@ -138,7 +138,7 @@ export default function PwaRegister() {
             <div className="flex items-center gap-2 mt-3">
               <button
                 onClick={handleInstallClick}
-                className="bg-gold-gradient text-[#002B5B] text-xs font-black px-4 py-2 rounded-xl shadow hover:shadow-[#FFD700]/40 transition-all flex items-center gap-1.5"
+                className="bg-brand-gold text-[#002B5B] text-xs font-black px-4 py-2 rounded-xl shadow hover:shadow-[#FFD700]/40 transition-all flex items-center gap-1.5"
               >
                 <span>⚡</span> Installer l'app
               </button>

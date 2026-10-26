@@ -105,7 +105,7 @@ export default function TempsChantierClient({ lang }: TempsChantierClientProps) 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Formulaire */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm">
+          <div className="lg:col-span-7 bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
               <span className="w-8 h-8 rounded-full bg-brand-navy/10 text-brand-navy font-bold flex items-center justify-center text-sm">
                 1
@@ -165,7 +165,7 @@ export default function TempsChantierClient({ lang }: TempsChantierClientProps) 
           </div>
 
           {/* Résultat Premium */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-brand-navy via-brand-navy to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-white/10 flex flex-col justify-between relative overflow-hidden">
+          <div className="lg:col-span-5 bg-gradient-to-br from-brand-navy via-brand-navy to-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-xl border border-white/10 flex flex-col justify-between relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none" />
 
             <div>

@@ -100,7 +100,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
             {isEn ? "Concrete Excellence " : "L'Excellence du Béton "}
             <br />
-            <span className="text-gradient">
+            <span className="text-[#FFD700]">
               {isEn ? "empowering Ivorian Construction" : "au service du BTP ivoirien"}
             </span>
           </h1>
@@ -123,7 +123,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
 
       {/* Bannière Chiffres Clés */}
       <section className="relative -mt-8 z-20 max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-gray-100 grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100 grid grid-cols-2 lg:grid-cols-4 gap-6">
           {chiffres.map((c, i) => (
             <div
               key={i}
@@ -195,7 +195,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
             </div>
           </div>
 
-          <div className="lg:col-span-5 bg-gradient-to-br from-[#002B5B] to-[#003d80] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+          <div className="lg:col-span-5 bg-[#002B5B] rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#FFD700]/10 rounded-full blur-2xl" />
             <h3 className="text-xl font-black text-[#FFD700] mb-4">
               {isEn ? "Corporate & Official Information" : "Informations Juridiques & Officielles"}
@@ -244,7 +244,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
             {piliers.map((p, i) => (
               <div
                 key={i}
-                className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div className="w-14 h-14 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/15 group-hover:bg-[#FFD700]/25 group-hover:border-[#FFD700]/50 backdrop-blur-sm flex items-center justify-center text-3xl mb-5 transition-all">
                   {p.icone}
@@ -257,7 +257,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
         </section>
 
         {/* Direction Générale Exécutive */}
-        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-gray-100 shadow-lg space-y-8">
+        <section className="bg-white rounded-2xl p-8 sm:p-12 border border-gray-100 shadow-lg space-y-8">
           <div>
             <span className="text-xs font-black text-[#002B5B] uppercase tracking-widest bg-[#002B5B]/5 px-3 py-1.5 rounded-full">
               {isEn ? "Leadership" : "Gouvernance"}
@@ -274,7 +274,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Dirigeant 1 : KEITA BOUBACAR */}
-            <div className="bg-gradient-to-br from-[#002B5B] to-[#003d80] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl">
+            <div className="bg-[#002B5B] rounded-2xl p-8 text-white relative overflow-hidden shadow-xl">
               <div className="flex items-start gap-5">
                 <div className="w-16 h-16 rounded-2xl bg-[#FFD700]/20 border border-[#FFD700]/40 backdrop-blur-md text-[#FFD700] font-black text-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   KB
@@ -311,7 +311,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
             </div>
 
             {/* Dirigeant 2 : Keita Dambou */}
-            <div className="bg-[#F5F5F0] rounded-3xl p-8 border-2 border-gray-200 text-[#002B5B] relative overflow-hidden">
+            <div className="bg-[#F5F5F0] rounded-2xl p-8 border-2 border-gray-200 text-[#002B5B] relative overflow-hidden">
               <div className="flex items-start gap-5">
                 <div className="w-16 h-16 rounded-2xl bg-[#002B5B]/10 border border-[#002B5B]/20 backdrop-blur-sm text-[#002B5B] font-black text-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   KD
@@ -350,7 +350,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
         </section>
 
         {/* Siège Social & Coordonnées */}
-        <section className="bg-gradient-to-r from-[#002B5B] to-[#003d80] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+        <section className="bg-[#002B5B] rounded-2xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
               <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest">
@@ -400,7 +400,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Link
                   href={`/${lang}/devis`}
-                  className="flex-1 bg-gold-gradient text-[#002B5B] py-3 px-5 rounded-xl font-black text-sm text-center shadow-lg hover:shadow-yellow-400/30 transition-all"
+                  className="flex-1 bg-brand-gold text-[#002B5B] py-3 px-5 rounded-xl font-black text-sm text-center shadow-lg hover:shadow-yellow-400/30 transition-all"
                 >
                   🧮 {isEn ? "Configure Quote" : "Configurer mon devis"}
                 </Link>

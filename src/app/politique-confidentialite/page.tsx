@@ -33,7 +33,7 @@ export default function PolitiqueConfidentialitePage() {
 
           <h1 className="text-4xl sm:text-5xl font-black mb-4 tracking-tight leading-tight">
             Politique de Confidentialité <br />
-            <span className="text-gradient">&amp; Protection des Données (RGPD)</span>
+            <span className="text-[#FFD700]">&amp; Protection des Données (RGPD)</span>
           </h1>
 
           <p className="text-white/70 text-sm sm:text-base max-w-2xl leading-relaxed">

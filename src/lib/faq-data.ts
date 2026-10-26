@@ -6,12 +6,16 @@ export interface FaqItem {
   a: { fr: string; en: string };
 }
 
+// Les categories nommaient leur icone par un emoji. Le projet dispose de
+// lucide-react : une icone dessinee, d'un trait et d'une graisse constants,
+// tient le role que douze glyphes empruntes a douze polices systeme ne
+// tiennent pas. On garde ici le NOM de l'icone ; le rendu est dans FaqClient.
 export const FAQ_CATEGORIES = [
-  { id: "toutes", label: { fr: "Toutes les questions", en: "All questions" }, icon: "🔍" },
-  { id: "produits", label: { fr: "Produits & Normes", en: "Products & Standards" }, icon: "🧱" },
-  { id: "devis", label: { fr: "Devis & Commandes", en: "Quotes & Orders" }, icon: "🧮" },
-  { id: "livraison", label: { fr: "Livraison & Chantier", en: "Delivery & Site" }, icon: "🚚" },
-  { id: "paiement", label: { fr: "Paiement & B2B", en: "Payment & B2B" }, icon: "💳" },
+  { id: "toutes", label: { fr: "Toutes les questions", en: "All questions" }, icone: "recherche" },
+  { id: "produits", label: { fr: "Produits & Normes", en: "Products & Standards" }, icone: "produits" },
+  { id: "devis", label: { fr: "Devis & Commandes", en: "Quotes & Orders" }, icone: "devis" },
+  { id: "livraison", label: { fr: "Livraison & Chantier", en: "Delivery & Site" }, icone: "livraison" },
+  { id: "paiement", label: { fr: "Paiement & B2B", en: "Payment & B2B" }, icone: "paiement" },
 ] as const;
 
 export const FAQ_ITEMS: FaqItem[] = [

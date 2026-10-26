@@ -130,7 +130,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
             {isEn ? "Why Entrust Your Construction Sites " : "Pourquoi Confier vos Chantiers "}
             <br />
-            <span className="text-gradient">
+            <span className="text-[#FFD700]">
               {isEn ? "to 2CGC CHEICKNA?" : "à 2CGC CHEICKNA ?"}
             </span>
           </h1>
@@ -159,7 +159,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
             {atoutsTechniques.map((atout, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
+                className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
@@ -179,7 +179,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
         </section>
 
         {/* Tableau comparatif exclusif */}
-        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl overflow-hidden space-y-6">
+        <section className="bg-white rounded-2xl p-6 sm:p-10 border border-gray-100 shadow-xl overflow-hidden space-y-6">
           <div className="border-b border-gray-100 pb-6">
             <span className="text-xs font-black text-[#002B5B] uppercase tracking-widest bg-[#002B5B]/5 px-3 py-1.5 rounded-full">
               {isEn ? "Objective Comparison" : "Comparatif Objectif"}
@@ -235,7 +235,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
         </section>
 
         {/* CTA Devis & Contact */}
-        <section className="bg-gradient-to-r from-[#002B5B] to-[#003d80] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden text-center sm:text-left">
+        <section className="bg-[#002B5B] rounded-2xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden text-center sm:text-left">
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="space-y-3 max-w-xl">
               <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest">
@@ -256,7 +256,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
             <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0 w-full sm:w-auto">
               <Link
                 href={`/${lang}/devis`}
-                className="bg-gold-gradient text-[#002B5B] px-8 py-4 rounded-2xl font-black text-sm text-center shadow-xl hover:shadow-[#FFD700]/30 hover:-translate-y-0.5 transition-all"
+                className="bg-brand-gold text-[#002B5B] px-8 py-4 rounded-2xl font-black text-sm text-center shadow-xl hover:shadow-[#FFD700]/30 hover:-translate-y-0.5 transition-all"
               >
                 🧮 {isEn ? "Get my online quotation" : "Obtenir mon devis en ligne"}
               </Link>

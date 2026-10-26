@@ -328,7 +328,7 @@ export default function DirigeantDashboard() {
 
             <button
               onClick={exporterJournalVentesCSV}
-              className="bg-gold-gradient text-[#002B5B] hover:shadow-xl hover:shadow-[#FFD700]/30 transition-all font-black text-sm px-6 py-4 rounded-2xl flex items-center justify-center gap-2.5 flex-shrink-0 cursor-pointer"
+              className="bg-brand-gold text-[#002B5B] hover:shadow-xl hover:shadow-[#FFD700]/30 transition-all font-black text-sm px-6 py-4 rounded-2xl flex items-center justify-center gap-2.5 flex-shrink-0 cursor-pointer"
               title="Télécharger le fichier CSV compatible Microsoft Excel et logiciels comptables"
             >
               <span>📊</span>

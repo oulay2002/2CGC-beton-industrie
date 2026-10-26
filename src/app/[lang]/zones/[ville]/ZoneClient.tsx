@@ -203,7 +203,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
 
       {/* Contenu Rédactionnel Localisé (SEO Content) */}
       <section className="max-w-5xl mx-auto px-4 py-12 sm:py-16">
-        <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100 grid md:grid-cols-2 gap-8 items-center">
+        <div className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-gray-100 grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#002B5B] bg-[#002B5B]/5 px-3 py-1 rounded-full">
               <span>🏗️</span>
@@ -241,7 +241,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
               allowFullScreen
               src={`https://maps.google.com/maps?q=${zone.lat},${zone.lng}&z=12&output=embed`}
             />
-            <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#002B5B] shadow-md flex items-center gap-1.5">
+            <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl text-[11px] font-semibold text-[#002B5B] shadow-md flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-red-500" />
               <span>Zone {zone.name} & Environs</span>
             </div>
@@ -359,7 +359,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
 
       {/* CTA Final Localisé */}
       <section className="max-w-5xl mx-auto px-4 py-16">
-        <div className="bg-gradient-to-br from-[#002B5B] to-[#003d80] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-8">
+        <div className="bg-[#002B5B] rounded-2xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-8">
           <div className="space-y-3 max-w-xl">
             <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest">
               {isEn ? "Direct Factory Quote" : "Devis Direct Usine"}
