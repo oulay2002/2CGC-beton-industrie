@@ -10,6 +10,24 @@ import {
 } from './crm-data';
 import { ajouterCommandeDepuisWhatsApp } from './commandes-store';
 
+/**
+ * Ce module s'execute dans le navigateur ET dans les route handlers. Cote
+ * serveur, fetch() refuse les URL relatives : on les absolutise.
+ */
+function urlAbsolue(chemin: string): string {
+  if (typeof window !== 'undefined') return chemin;
+
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : '') ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+    'http://localhost:3000';
+
+  return `${base.replace(/\/+$/, '')}${chemin}`;
+}
+
 export interface AgentActionLog {
   id: string;
   timestamp: string;
@@ -199,8 +217,9 @@ export async function triggerAutonomousRelance(
       .replace(/{montant}/g, (lead.valeurEstimee || 0).toLocaleString('fr-FR'));
 
     try {
-      await fetch('/api/email', {
+      await fetch(urlAbsolue('/api/email'), {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           to: lead.email, 
@@ -217,20 +236,18 @@ export async function triggerAutonomousRelance(
   } else {
     // WhatsApp
     const msg = messagePersonnalise || `Bonjour ${lead.nom} 👋, M. KEITA de 2CGC Daloa vous relance concernant votre projet (${lead.produitInteresse || 'Matériaux BTP'}). Avez-vous des questions sur les stocks ?`;
+    // La cle partagee n8n reste cote serveur : on passe par une route
+    // authentifiee plutot que d'embarquer le secret dans le bundle.
     try {
-      await fetch('/api/whatsapp/n8n-relay', {
+      await fetch(urlAbsolue('/api/crm/relance-whatsapp'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-2cgc-api-key': '2cgc_n8n_secret_key_2026',
-        },
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'devis',
-          client: { nom: lead.nom, telephone: lead.telephone },
-          articles: [],
-          totalHT: lead.valeurEstimee || 0,
-          totalTTC: lead.valeurEstimee || 0,
-          notesAgentIA: msg,
+          nom: lead.nom,
+          telephone: lead.telephone,
+          message: msg,
+          valeurEstimee: lead.valeurEstimee || 0,
         }),
       });
     } catch (e) {

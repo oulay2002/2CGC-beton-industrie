@@ -5,14 +5,19 @@ import { ajouterLeadDepuisWhatsApp } from '@/lib/crm-data';
 import { ajouterCommandeDepuisWhatsApp, CommandeArticle } from '@/lib/commandes-store';
 import { loggerProvider, posthogLogExporterLogger } from '@/instrumentation';
 
-// Clé d'API partagée entre le Workflow n8n (Hostinger) et la plateforme 2CGC
-const API_KEY_AUTORISEE = process.env.N8N_RELAY_API_KEY || '2cgc_n8n_secret_key_2026';
+// Clé d'API partagée entre le Workflow n8n (Hostinger) et la plateforme 2CGC.
+// Aucun repli en dur : une clé présente dans le dépôt n'authentifie personne.
+const API_KEY_AUTORISEE = process.env.N8N_RELAY_API_KEY || '';
 
 /**
  * Comparaison sécurisée à temps constant pour prévenir les attaques temporelles
  */
 function isKeyValid(providedKey: string | null): boolean {
   if (!providedKey) return false;
+  if (!API_KEY_AUTORISEE || API_KEY_AUTORISEE.length < 16) {
+    console.error('[n8n-relay] N8N_RELAY_API_KEY non configurée : accès refusé.');
+    return false;
+  }
   try {
     const a = Buffer.from(providedKey);
     const b = Buffer.from(API_KEY_AUTORISEE);

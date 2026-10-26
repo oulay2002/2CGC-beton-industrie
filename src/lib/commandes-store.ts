@@ -1,7 +1,6 @@
 // src/lib/commandes-store.ts — Gestionnaire centralisé et réactif des commandes 2CGC
 
 import { COMMANDES_MOCK } from './auth-context';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase/client';
 
 export interface CommandeArticle {
   nom: string;
@@ -51,40 +50,13 @@ export function saveCommandes(commandes: Commande[]): void {
     localStorage.setItem(STORAGE_COMMANDES_KEY, JSON.stringify(commandes));
     window.dispatchEvent(new Event('commandes_updated'));
 
-    const client = isSupabaseConfigured() ? supabase : null;
-    if (client) {
-      commandes.forEach(async (cmd) => {
-        const { error: errCmd } = await client.from('commandes').upsert({
-          id: cmd.id,
-          date: cmd.date,
-          statut: cmd.statut,
-          statut_production: cmd.statutProduction,
-          total: cmd.total,
-          client_nom: cmd.client.nom,
-          client_entreprise: cmd.client.entreprise,
-          client_email: cmd.client.email,
-          client_telephone: cmd.client.telephone,
-          client_adresse: cmd.client.adresse,
-          chauffeur: cmd.chauffeur,
-          signature: cmd.signature || null,
-          date_livraison_effective: cmd.dateLivraisonEffective || null,
-        });
-
-        if (errCmd) console.error('Erreur Supabase saveCommande', cmd.id, errCmd);
-
-        if (cmd.articles && cmd.articles.length > 0) {
-          await client.from('commande_articles').delete().eq('commande_id', cmd.id);
-          await client.from('commande_articles').insert(
-            cmd.articles.map(a => ({
-              commande_id: cmd.id,
-              nom: a.nom,
-              quantite: a.quantite,
-              prix: a.prix,
-            }))
-          );
-        }
-      });
-    }
+    // La persistance passe par le serveur : le navigateur n'a plus aucun droit
+    // d'ecriture direct sur Supabase (cf. migration 003).
+    void fetch('/api/commandes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commandes }),
+    }).catch((err) => console.error('Erreur persistance commandes', err));
   } catch (err) {
     console.error('Erreur sauvegarde commandes', err);
   }

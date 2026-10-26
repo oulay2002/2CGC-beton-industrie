@@ -8,7 +8,7 @@ import BonLivraison from '@/components/BonLivraison';
 import { genererBonLivraison as genererBonLivraisonPDF } from '@/lib/generer-bons';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
-import { subscribeToRealtimeChanges, updateStockMatiereSupabase } from '@/lib/supabase/services';
+import { updateStockMatiere } from '@/lib/supabase/services';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 
 type Commande = CommandeStore;
@@ -87,14 +87,8 @@ export default function UsineDashboard() {
     const handleUpdate = () => setCommandes(getCommandes());
     window.addEventListener('commandes_updated', handleUpdate);
 
-    const unsubscribe = subscribeToRealtimeChanges(
-      () => setCommandes(getCommandes()),
-      () => setCommandes(getCommandes())
-    );
-
     return () => {
       window.removeEventListener('commandes_updated', handleUpdate);
-      unsubscribe();
     };
   }, []);
 

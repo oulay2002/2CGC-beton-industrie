@@ -1,3 +1,10 @@
+-- !! CADUQUE — NE PAS APPLIQUER !!
+-- Cette migration n a jamais pu s executer : elle fait des ALTER TABLE sur des
+-- tables creees a la main dans le dashboard (donc absentes de la migration 001),
+-- et ses policies reposent sur auth.jwt() alors que l application n utilise pas
+-- Supabase Auth. Elle est remplacee par 003_lockdown_rls_deny_anon.sql.
+-- Conservee uniquement pour l historique.
+
 -- ============================================================================
 -- MIGRATION 002 : RENFORCEMENT DE LA SÉCURITÉ ROW LEVEL SECURITY (RLS)
 -- Protection stricte contre le vol de données et les injections malveillantes

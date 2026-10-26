@@ -8,8 +8,24 @@ export interface SessionPayload {
   exp: number; // Timestamp unix (secondes)
 }
 
-const SESSION_SECRET = process.env.AUTH_SECRET || process.env.SESSION_SECRET || '2cgc_beton_super_secret_session_key_2026_ci_daloa';
+// Aucun repli en dur : un secret present dans le depot rend toute signature
+// forgeable par quiconque lit le code. En son absence, on echoue de maniere
+// fermee (aucune session n'est emise ni acceptee).
+const SESSION_SECRET = process.env.AUTH_SECRET || process.env.SESSION_SECRET || '';
 const COOKIE_NAME = 'beton_session_token';
+
+if (!SESSION_SECRET && process.env.NODE_ENV === 'production') {
+  // Trace explicite au demarrage : sans cette variable, les connexions
+  // echoueront toutes, ce qui est preferable a une securite illusoire.
+  console.error(
+    '[session] AUTH_SECRET est absent. Generez-le avec `openssl rand -base64 32` ' +
+      'et declarez-le dans les variables d environnement du projet.'
+  );
+}
+
+export function isSessionSecretConfigured(): boolean {
+  return SESSION_SECRET.length >= 32;
+}
 
 function base64UrlEncode(str: string): string {
   const bytes = new TextEncoder().encode(str);
@@ -51,6 +67,10 @@ async function getHmacKey(): Promise<CryptoKey> {
  * Crée un jeton de session inviolable signé par HMAC-SHA256
  */
 export async function createSessionToken(payload: Omit<SessionPayload, 'exp'>, maxAgeSeconds = 86400 * 7): Promise<string> {
+  if (!isSessionSecretConfigured()) {
+    throw new Error('AUTH_SECRET absent ou trop court (32 caracteres minimum).');
+  }
+
   const fullPayload: SessionPayload = {
     ...payload,
     exp: Math.floor(Date.now() / 1000) + maxAgeSeconds,
@@ -83,6 +103,7 @@ export async function createSessionToken(payload: Omit<SessionPayload, 'exp'>, m
  * Vérifie l'intégrité, la signature et l'expiration d'un jeton de session
  */
 export async function verifySessionToken(token: string | undefined | null): Promise<SessionPayload | null> {
+  if (!isSessionSecretConfigured()) return null;
   if (!token || typeof token !== 'string') return null;
 
   const parts = token.split('.');
