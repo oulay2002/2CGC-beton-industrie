@@ -334,7 +334,7 @@ export function imprimerTrousseauCollaborateursPDF(collaborateurs: CompteUtilisa
     c.nom,
     c.telephone || '—',
     c.email,
-    c.password || '••••••••',
+    'Non consultable',
     c.vehicule ? `${c.vehicule} (${c.permis || 'Permis OK'})` : '—',
     c.dateCreation || '2026',
   ]);
@@ -506,11 +506,11 @@ export function imprimerFicheCollaborateurPDF(c: CompteUtilisateur) {
 
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(74, 85, 104);
-  doc.text('Mot de Passe Actuel :', 20, 156);
+  doc.text('Mot de Passe :', 20, 156);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(185, 28, 28);
-  doc.text(`${c.password || '••••••••'}`, 60, 156);
+  doc.text('Non consultable — utiliser "Réinitialiser"', 60, 156);
 
   if (c.vehicule || c.permis) {
     doc.setFontSize(9);
@@ -572,7 +572,7 @@ export function exporterTrousseauCSV(collaborateurs: CompteUtilisateur[]) {
     `"${(c.role || '').replace(/"/g, '""')}"`,
     `"${(c.nom || '').replace(/"/g, '""')}"`,
     `"${c.email}"`,
-    `"${c.password || ''}"`,
+    '"Non consultable"',
     `"${c.telephone || ''}"`,
     `"${(c.vehicule || '').replace(/"/g, '""')}"`,
     `"${(c.permis || '').replace(/"/g, '""')}"`,

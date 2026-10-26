@@ -49,6 +49,20 @@ export interface DevisAutoDispatchPayload {
 }
 
 /**
+ * Échappe les caractères actifs en HTML. Les champs du devis sont saisis par un
+ * visiteur anonyme : sans cet échappement, ils permettent d'injecter du balisage
+ * arbitraire dans les emails envoyés au client et à la direction.
+ */
+function e(valeur: unknown): string {
+  return String(valeur ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
  * Génère le gabarit HTML premium pour la facture proforma officielle transmise par email
  */
 function genererHTMLProforma(data: DevisAutoDispatchPayload): string {
@@ -65,8 +79,8 @@ function genererHTMLProforma(data: DevisAutoDispatchPayload): string {
     .map(
       (l, idx) => `
     <tr style="background:${idx % 2 === 0 ? '#FFFFFF' : '#F9FAFB'};border-bottom:1px solid #E5E7EB">
-      <td style="padding:12px 14px;color:#111827;font-weight:600;font-size:13px">${l.nom}</td>
-      <td style="padding:12px 14px;color:#6B7280;font-size:12px">${l.specification || 'Certifié B50/B60'}</td>
+      <td style="padding:12px 14px;color:#111827;font-weight:600;font-size:13px">${e(l.nom)}</td>
+      <td style="padding:12px 14px;color:#6B7280;font-size:12px">${e(l.specification || 'Certifié B50/B60')}</td>
       <td style="padding:12px 14px;color:#111827;text-align:center;font-weight:600;font-size:13px">${l.quantite.toLocaleString('fr-FR')}</td>
       <td style="padding:12px 14px;color:#374151;text-align:right;font-size:13px">${Math.round(l.prix).toLocaleString('fr-FR')} FCFA</td>
       <td style="padding:12px 14px;color:#002B5B;text-align:right;font-weight:bold;font-size:13px">${Math.round(l.quantite * l.prix).toLocaleString('fr-FR')} FCFA</td>
@@ -81,7 +95,7 @@ function genererHTMLProforma(data: DevisAutoDispatchPayload): string {
         🚚 ${isEn ? 'Site Freight & Crane Unloading' : 'Fret Chantier & Déchargement Grue'}
       </td>
       <td style="padding:12px 14px;color:#1D4ED8;font-size:12px">
-        ${zoneNom || 'Daloa'} (${camionsNecessaires || 1} ${isEn ? 'truck(s) 15T' : 'camion(s) 15T'})
+        ${e(zoneNom || 'Daloa')} (${Number(camionsNecessaires) || 1} ${isEn ? 'truck(s) 15T' : 'camion(s) 15T'})
       </td>
       <td style="padding:12px 14px;color:#1E40AF;text-align:center;font-weight:600;font-size:13px">${camionsNecessaires || 1}</td>
       <td style="padding:12px 14px;color:#1E40AF;text-align:right;font-size:13px">
@@ -103,7 +117,7 @@ function genererHTMLProforma(data: DevisAutoDispatchPayload): string {
             ${isEn ? 'Official Proforma Invoice' : 'Facture Proforma Officielle'}
           </span>
           <h2 style="margin:10px 0 4px 0;color:#002B5B;font-size:22px;font-weight:900">
-            N° ${reference}
+            N° ${e(reference)}
           </h2>
           <p style="margin:0;font-size:12px;color:#6B7280">
             ${isEn ? 'Date of issue' : 'Date d\'émission'} : <strong>${dateStr}</strong> • ${isEn ? 'Validity' : 'Validité'} : <strong>${validiteJours} ${isEn ? 'days' : 'jours'}</strong>
@@ -119,20 +133,20 @@ function genererHTMLProforma(data: DevisAutoDispatchPayload): string {
         <table style="width:100%;font-size:13px;color:#374151">
           <tr>
             <td style="padding:3px 0;width:30%;color:#6B7280">${isEn ? 'Client Name' : 'Client / Entreprise'} :</td>
-            <td style="padding:3px 0;font-weight:bold;color:#111827">${client.nom} ${client.entreprise && client.entreprise !== client.nom ? `(${client.entreprise})` : ''}</td>
+            <td style="padding:3px 0;font-weight:bold;color:#111827">${e(client.nom)} ${client.entreprise && client.entreprise !== client.nom ? `(${e(client.entreprise)})` : ''}</td>
           </tr>
           <tr>
             <td style="padding:3px 0;color:#6B7280">${isEn ? 'Phone / WhatsApp' : 'Téléphone / WhatsApp'} :</td>
-            <td style="padding:3px 0;font-weight:bold;color:#002B5B">${client.telephone}</td>
+            <td style="padding:3px 0;font-weight:bold;color:#002B5B">${e(client.telephone)}</td>
           </tr>
           <tr>
             <td style="padding:3px 0;color:#6B7280">Email :</td>
-            <td style="padding:3px 0">${client.email}</td>
+            <td style="padding:3px 0">${e(client.email)}</td>
           </tr>
           <tr>
             <td style="padding:3px 0;color:#6B7280">${isEn ? 'Site destination' : 'Destination / Ville'} :</td>
             <td style="padding:3px 0;font-weight:600;color:#111827">
-              ${client.adresse || client.codePostal || (optionLivraison ? zoneNom : isEn ? '2CGC Daloa Plant Pickup' : 'Retrait Usine Daloa')}
+              ${e(client.adresse || client.codePostal || (optionLivraison ? zoneNom : isEn ? '2CGC Daloa Plant Pickup' : 'Retrait Usine Daloa'))}
             </td>
           </tr>
         </table>
@@ -222,7 +236,7 @@ function genererTexteWhatsApp(data: DevisAutoDispatchPayload): string {
       : `\n🚚 *Fret Flotte :* ${camionsNecessaires || 1} camion(s) vers ${zoneNom} (${Math.round(fraisTransport || 0).toLocaleString('fr-FR')} FCFA)`
     : `\n🏭 *Retrait :* Enlèvement direct à l'usine 2CGC Daloa`;
 
-  return `📄 *FACTURE PROFORMA N° ${reference} — 2CGC DALOA*
+  return `📄 *FACTURE PROFORMA N° ${e(reference)} — 2CGC DALOA*
 
 Bonjour ${client.nom} 👋
 Votre demande de devis a bien été prise en compte par notre système automatisé :
@@ -273,7 +287,7 @@ export async function POST(req: NextRequest) {
     const totalTTCFormate = Math.round(recap.totalTTC).toLocaleString('fr-FR');
     const sujetClient = isEn
       ? `📄 Proforma Invoice No. ${reference} — 2CGC Precast Concrete`
-      : `📄 Facture Proforma N° ${reference} — 2CGC Béton Industrie Daloa`;
+      : `📄 Facture Proforma N° ${e(reference)} — 2CGC Béton Industrie Daloa`;
 
     const htmlContent = genererHTMLProforma(body);
     const whatsappText = genererTexteWhatsApp(body);
@@ -338,11 +352,11 @@ export async function POST(req: NextRequest) {
           </div>
 
           <table style="width:100%;font-size:13px;border:1px solid #E5E7EB;border-radius:8px;padding:12px;margin-bottom:20px">
-            <tr><td><strong>Référence :</strong></td><td>${reference}</td></tr>
-            <tr><td><strong>Client :</strong></td><td>${client.nom}</td></tr>
-            <tr><td><strong>Téléphone :</strong></td><td><a href="tel:${client.telephone}">${client.telephone}</a></td></tr>
-            <tr><td><strong>Email :</strong></td><td><a href="mailto:${client.email}">${client.email}</a></td></tr>
-            <tr><td><strong>Destination :</strong></td><td>${client.adresse || client.codePostal || body.zoneNom || 'Daloa'}</td></tr>
+            <tr><td><strong>Référence :</strong></td><td>${e(reference)}</td></tr>
+            <tr><td><strong>Client :</strong></td><td>${e(client.nom)}</td></tr>
+            <tr><td><strong>Téléphone :</strong></td><td><a href="tel:${e(client.telephone)}">${e(client.telephone)}</a></td></tr>
+            <tr><td><strong>Email :</strong></td><td><a href="mailto:${e(client.email)}">${e(client.email)}</a></td></tr>
+            <tr><td><strong>Destination :</strong></td><td>${e(client.adresse || client.codePostal || body.zoneNom || 'Daloa')}</td></tr>
             <tr><td><strong>Montant Total TTC :</strong></td><td><span style="font-size:16px;color:#002B5B;font-weight:bold">${totalTTCFormate} FCFA</span></td></tr>
           </table>
 
@@ -350,7 +364,7 @@ export async function POST(req: NextRequest) {
             <a href="${linkWhatsApp}" style="background:#25D366;color:#FFF;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;margin-right:10px">
               💬 Relancer le client sur WhatsApp
             </a>
-            <a href="https://2cgc-industries.com/fr/crm" style="background:#002B5B;color:#FFF;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block">
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://2cgc-industrie.com'}/dirigeant/crm" style="background:#002B5B;color:#FFF;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block">
               📊 Ouvrir le CRM Dirigeant
             </a>
           </div>
@@ -448,12 +462,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Si ni Meta ni n8n ne sont activés en production, on log la simulation
+    // Ni Meta ni n8n ne sont configurés : on le signale au lieu de prétendre
+    // un envoi. `whatsappEnvoye` reste à false, l'interface peut alors proposer
+    // le lien wa.me ci-dessous comme solution de repli manuelle.
     if (!whatsappEnvoye) {
-      console.log(`\n💬 [SIMULATION WHATSAPP AUTOMATIQUE] Vers : +${formattedPhone}`);
-      console.log(whatsappText.slice(0, 200) + '...\n');
-      whatsappEnvoye = true;
-      whatsappMode = 'simulation_directe';
+      console.log(`\n💬 [WhatsApp non configuré — aucun envoi] Destinataire visé : +${formattedPhone}`);
+      whatsappMode = 'non_configure';
     }
 
     const whatsappDirectUrl = `https://wa.me/2250707621799?text=${encodeURIComponent(whatsappText)}`;

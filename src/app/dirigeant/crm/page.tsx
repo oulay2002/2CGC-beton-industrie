@@ -12,7 +12,6 @@ import {
 import { envoyerEmail, getMetriquesBotCommercial, MetriquesBotCommercial } from '@/lib/bot-commercial';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
-import { subscribeToRealtimeChanges } from '@/lib/supabase/services';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
 import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
@@ -98,12 +97,6 @@ export default function CRMDashboard() {
     if (!user || user.role !== 'dirigeant') { router.push('/connexion'); return; }
     chargerDonnees();
 
-    const unsubscribe = subscribeToRealtimeChanges(
-      () => chargerDonnees(),
-      undefined,
-      () => chargerDonnees()
-    );
-
     // ✅ Traitement automatique des séquences email J+0 en attente
     const traiterJ0Auto = async () => {
       const today = new Date().toISOString().split('T')[0];
@@ -134,7 +127,6 @@ export default function CRMDashboard() {
     const timer = setTimeout(traiterJ0Auto, 1500);
     return () => {
       clearTimeout(timer);
-      unsubscribe();
     };
   }, [user, isLoading, router, chargerDonnees]);
 

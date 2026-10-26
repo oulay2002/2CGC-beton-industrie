@@ -315,13 +315,41 @@ function DevisInner({ lang }: { lang: Locale }) {
       }),
     })
       .then((res) => res.json())
-      .then(() => {
+      .then((data: { emailClientEnvoye?: boolean; whatsappEnvoye?: boolean }) => {
         setEnvoiEnCours(false);
+
+        // Le message rend compte de ce qui est réellement parti : annoncer un
+        // envoi qui n'a pas eu lieu conduit le client à attendre un email
+        // qu'il ne recevra jamais.
+        const parties = isEn
+          ? [`✅ Proforma ${reference} generated and downloaded.`]
+          : [`✅ Facture Proforma ${reference} générée et téléchargée.`];
+
+        if (data?.emailClientEnvoye) {
+          parties.push(
+            isEn
+              ? `Official copy sent to ${clientEmailBackup}.`
+              : `Copie officielle envoyée par email à ${clientEmailBackup}.`
+          );
+        } else {
+          parties.push(
+            isEn
+              ? `Email could not be sent — our team will contact you at ${clientTelBackup}.`
+              : `L'email n'a pas pu être envoyé — notre équipe vous recontacte au ${clientTelBackup}.`
+          );
+        }
+
+        if (data?.whatsappEnvoye) {
+          parties.push(
+            isEn
+              ? `Sales team notified on WhatsApp (${clientTelBackup}).`
+              : `Service commercial notifié sur WhatsApp (${clientTelBackup}).`
+          );
+        }
+
         setMessage({
-          text: isEn
-            ? `✅ Proforma ${reference} generated! PDF downloaded, official copy sent to ${clientEmailBackup}, and WhatsApp CRM service notified (${clientTelBackup}).`
-            : `✅ Facture Proforma ${reference} générée avec succès ! PDF téléchargé, copie officielle envoyée par email à ${clientEmailBackup}, et service commercial notifié sur WhatsApp (${clientTelBackup}).`,
-          type: "success",
+          text: parties.join(' '),
+          type: 'success',
         });
       })
       .catch((err) => {

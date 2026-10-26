@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, CompteUtilisateur, UserRole, genererMotDePasse } from '@/lib/auth-context';
+import { useAuth, CompteUtilisateur, NouveauCompte, UserRole, genererMotDePasse } from '@/lib/auth-context';
 import { genererLienWhatsApp } from '@/lib/crm-data';
 import {
   imprimerBaseClientsPDF,
@@ -28,7 +28,7 @@ const STATUT_BADGE: Record<string, string> = {
 };
 
 export default function GestionUtilisateurs() {
-  const { user, creerUtilisateur, importerUtilisateurs, getUtilisateurs, supprimerUtilisateur, isLoading } = useAuth();
+  const { user, creerUtilisateur, importerUtilisateurs, getUtilisateurs, supprimerUtilisateur, mettreAJourMotDePasse, isLoading } = useAuth();
   const router = useRouter();
 
   const [utilisateurs, setUtilisateurs] = useState<CompteUtilisateur[]>([]);
@@ -117,26 +117,26 @@ export default function GestionUtilisateurs() {
     }
   };
 
-  const handleConfirmerImport = () => {
+  const handleConfirmerImport = async () => {
     if (clientsPrevisualises.length === 0) {
       afficherNotif('Aucun client à importer.', 'error');
       return;
     }
 
-    const comptesAImporter: CompteUtilisateur[] = clientsPrevisualises.map(c => ({
+    const comptesAImporter: NouveauCompte[] = clientsPrevisualises.map(c => ({
       nom: c.nom,
       entreprise: c.entreprise,
       email: c.email,
       telephone: c.telephone,
       role: 'client' as UserRole,
-      password: c.password || genererMotDePasse(c.nom),
+      motDePasse: c.password || genererMotDePasse(c.nom),
       tarifSpecial: c.tarifSpecial,
       pointsFidelite: c.pointsFidelite || 100,
       dateCreation: new Date().toISOString().split('T')[0],
       creeParDirigeant: true,
     }));
 
-    const res = importerUtilisateurs(comptesAImporter);
+    const res = await importerUtilisateurs(comptesAImporter);
     charger();
     setShowModalImport(false);
     setClientsPrevisualises([]);
@@ -182,12 +182,12 @@ export default function GestionUtilisateurs() {
     }
     setLoading(true);
 
-    const result = creerUtilisateur({
+    const result = await creerUtilisateur({
       nom: form.nom,
       email: form.email,
       telephone: form.telephone,
       entreprise: form.entreprise || '2CGC',
-      password: form.motDePasse,
+      motDePasse: form.motDePasse,
       role: form.role,
       ...(form.role === 'chauffeur' && { vehicule: form.vehicule, permis: form.permis }),
     });
@@ -236,11 +236,21 @@ export default function GestionUtilisateurs() {
     afficherNotif(`Compte de ${nom} supprimé.`, 'success');
   };
 
-  const handleEnvoyerWhatsApp = (u: CompteUtilisateur, mdp: string) => {
+  // Les mots de passe ne sont plus stockes en clair : il est donc impossible de
+  // renvoyer l'existant. On en genere un nouveau, on l'enregistre (haché) et on
+  // le transmet une seule fois, par WhatsApp.
+  const handleEnvoyerWhatsApp = async (u: CompteUtilisateur) => {
+    const mdp = genererMotDePasse(u.nom);
+    const res = await mettreAJourMotDePasse(u.email, mdp);
+    if (!res.success) {
+      afficherNotif(res.error || 'Échec de la réinitialisation du mot de passe.', 'error');
+      return;
+    }
+
     const roleLabel: Record<string, string> = {
       client: 'Client', chef_usine: "Chef d'Usine", chauffeur: 'Chauffeur', dirigeant: 'Dirigeant',
     };
-    const message = `Bonjour ${u.nom} 👋\n\nVotre accès au portail *2CGC* est prêt !\n\n🔐 *Vos identifiants :*\n• Profil : ${roleLabel[u.role]}\n• Email : ${u.email}\n• Mot de passe : *${mdp}*\n\n🔗 Connexion : https://2cgc-industrie.com/connexion\n\n_Conservez ce message précieusement. 2CGC Daloa_`;
+    const message = `Bonjour ${u.nom} 👋\n\nVotre accès au portail *2CGC* a été réinitialisé.\n\n🔐 *Vos identifiants :*\n• Profil : ${roleLabel[u.role]}\n• Email : ${u.email}\n• Mot de passe provisoire : *${mdp}*\n\n🔗 Connexion : https://2cgc-industrie.com/connexion\n\n⚠️ Ce mot de passe est à usage unique : changez-le dès votre première connexion. Il ne pourra pas vous être renvoyé.\n\n_2CGC Daloa_`;
     const tel = u.telephone.replace(/[\s\+\-]/g, '');
     const telFinal = tel.startsWith('225') ? tel : `225${tel}`;
     window.open(`https://wa.me/${telFinal}?text=${encodeURIComponent(message)}`, '_blank');
@@ -483,7 +493,7 @@ export default function GestionUtilisateurs() {
                   )}
                   {u.telephone && u.telephone !== 'Non renseigné' && (
                     <button
-                      onClick={() => handleEnvoyerWhatsApp(u, u.password || '(mot de passe non visible)')}
+                      onClick={() => void handleEnvoyerWhatsApp(u)}
                       className="bg-green-50 hover:bg-green-100 text-green-700 text-xs font-bold px-3 py-2 rounded-xl transition-colors"
                     >
                       💬 WA

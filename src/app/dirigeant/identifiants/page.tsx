@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth, CompteUtilisateur, UserRole, genererMotDePasse } from '@/lib/auth-context';
+import { useAuth, CompteUtilisateur, NouveauCompte, UserRole, genererMotDePasse } from '@/lib/auth-context';
 import {
   imprimerTrousseauCollaborateursPDF,
   imprimerFicheCollaborateurPDF,
@@ -53,7 +53,10 @@ export default function EspaceIdentifiantsCollaborateurs() {
     motDePasse: '',
     envoyerEmail: true,
   });
-  const [derniersIdentifiantsGeneres, setDerniersIdentifiantsGeneres] = useState<CompteUtilisateur | null>(null);
+  // Affichage unique du mot de passe juste apres creation. Vit en memoire le
+  // temps de la session d'ecran, n'est jamais persiste.
+  const [derniersIdentifiantsGeneres, setDerniersIdentifiantsGeneres] =
+    useState<(CompteUtilisateur & { motDePasseProvisoire: string }) | null>(null);
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
 
   // Modal Réinitialisation MDP
@@ -105,26 +108,45 @@ export default function EspaceIdentifiantsCollaborateurs() {
     }
   };
 
-  const copierFicheComplete = (c: CompteUtilisateur) => {
+  // Les mots de passe ne sont plus conservés en clair : on ne peut donc pas
+  // « renvoyer » un accès existant. Chaque transmission génère un nouveau mot
+  // de passe, enregistre son empreinte, et le restitue une seule fois.
+  const reinitialiserEtObtenir = async (c: CompteUtilisateur): Promise<string | null> => {
+    const mdp = genererMotDePasse(c.nom);
+    const res = await mettreAJourMotDePasse(c.email, mdp);
+    if (!res.success) {
+      afficherNotif(res.error || 'Échec de la réinitialisation du mot de passe.', 'error');
+      return null;
+    }
+    return mdp;
+  };
+
+  const copierFicheComplete = async (c: CompteUtilisateur) => {
+    const mdp = await reinitialiserEtObtenir(c);
+    if (!mdp) return;
+
     const roleStr = ROLES_INFO[c.role]?.label || c.role;
     const texte = `🔐 VOS IDENTIFIANTS 2CGC (${roleStr.toUpperCase()})\n\n` +
       `Bonjour ${c.nom},\n` +
       `Voici vos accès au portail officiel 2CGC :\n\n` +
       `🌐 Lien de connexion : https://2cgc-industrie.com/connexion\n` +
       `📧 Identifiant : ${c.email}\n` +
-      `🔑 Mot de passe : ${c.password || '••••••••'}\n` +
+      `🔑 Mot de passe provisoire : ${mdp}\n` +
       (c.vehicule ? `🚚 Véhicule assigné : ${c.vehicule}\n` : '') +
       (c.permis ? `🔢 N° Permis : ${c.permis}\n` : '') +
       `\nConservez ces accès confidentiels. Direction Générale 2CGC Daloa.`;
     copierTexte(texte, 'Fiche d\'accès complète');
   };
 
-  const transmettreWhatsApp = (c: CompteUtilisateur) => {
+  const transmettreWhatsApp = async (c: CompteUtilisateur) => {
+    const mdp = await reinitialiserEtObtenir(c);
+    if (!mdp) return;
+
     const roleStr = ROLES_INFO[c.role]?.label || c.role;
     const msg = `Bonjour ${c.nom} 👋\n\nVoici vos identifiants d'accès au portail *2CGC* (${roleStr}) :\n\n` +
       `🌐 *Lien :* https://2cgc-industrie.com/connexion\n` +
       `📧 *Identifiant :* \`${c.email}\`\n` +
-      `🔑 *Mot de passe :* \`${c.password || '2CGC-2026'}\`\n` +
+      `🔑 *Mot de passe provisoire :* \`${mdp}\`\n` +
       (c.vehicule ? `🚚 *Véhicule :* ${c.vehicule}\n` : '') +
       `\n_Conservez ce message confidentiel. Direction Générale 2CGC._`;
     const cleanTel = c.telephone.replace(/[\s\+\-]/g, '');
@@ -134,6 +156,9 @@ export default function EspaceIdentifiantsCollaborateurs() {
   };
 
   const renvoyerEmail = async (c: CompteUtilisateur) => {
+    const mdp = await reinitialiserEtObtenir(c);
+    if (!mdp) return;
+
     try {
       afficherNotif(`📧 Envoi des accès à ${c.email}...`, 'info');
       const res = await fetch('/api/creer-compte', {
@@ -145,7 +170,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
           telephone: c.telephone,
           entreprise: c.entreprise || '2CGC',
           role: c.role,
-          motDePasse: c.password || '2CGC-2026',
+          motDePasse: mdp,
           envoyerEmail: true,
         }),
       });
@@ -200,12 +225,12 @@ export default function EspaceIdentifiantsCollaborateurs() {
 
     setEnvoiEnCours(true);
 
-    const compte: CompteUtilisateur = {
+    const compte: NouveauCompte = {
       nom: nouveauCollab.nom,
       email: nouveauCollab.email.trim().toLowerCase(),
       telephone: nouveauCollab.telephone || '+225 07 00 00 00',
       entreprise: '2CGC — Cheickna Construction & Génie Civil',
-      password: nouveauCollab.motDePasse,
+      motDePasse: nouveauCollab.motDePasse,
       role: nouveauCollab.role,
       vehicule: nouveauCollab.role === 'chauffeur' ? nouveauCollab.vehicule || 'Camion 15T Flotte 2CGC' : undefined,
       permis: nouveauCollab.role === 'chauffeur' ? nouveauCollab.permis || 'Permis Poids Lourd C/E' : undefined,
@@ -213,7 +238,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
       creeParDirigeant: true,
     };
 
-    const res = creerUtilisateur(compte);
+    const res = await creerUtilisateur(compte);
     if (!res.success) {
       setEnvoiEnCours(false);
       afficherNotif(res.error || 'Erreur lors de la création.', 'error');
@@ -231,7 +256,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
             telephone: compte.telephone,
             entreprise: compte.entreprise,
             role: compte.role,
-            motDePasse: compte.password,
+            motDePasse: compte.motDePasse,
             envoyerEmail: true,
           }),
         });
@@ -242,7 +267,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
 
     setEnvoiEnCours(false);
     charger();
-    setDerniersIdentifiantsGeneres(compte);
+    setDerniersIdentifiantsGeneres({ ...compte, motDePasseProvisoire: compte.motDePasse });
     afficherNotif(`🎉 Identifiants créés pour ${compte.nom} !`, 'success');
   };
 
@@ -251,10 +276,10 @@ export default function EspaceIdentifiantsCollaborateurs() {
     setNouveauMDP(genererMotDePasse(c.nom));
   };
 
-  const handleConfirmerReinitialisation = () => {
+  const handleConfirmerReinitialisation = async () => {
     if (!collabAReinitialiser || !nouveauMDP) return;
-    const ok = mettreAJourMotDePasse(collabAReinitialiser.email, nouveauMDP);
-    if (ok) {
+    const ok = await mettreAJourMotDePasse(collabAReinitialiser.email, nouveauMDP);
+    if (ok.success) {
       charger();
       afficherNotif(`🔑 Mot de passe mis à jour pour ${collabAReinitialiser.nom} !`, 'success');
       setCollabAReinitialiser(null);
@@ -446,8 +471,6 @@ export default function EspaceIdentifiantsCollaborateurs() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {collaborateursFiltres.map(c => {
               const roleInfo = ROLES_INFO[c.role] || { label: c.role, badge: 'bg-gray-100 text-gray-700', icon: '👤', desc: '' };
-              const isVisible = motsDePasseVisibles[c.email] || false;
-              const motDePasseAffiche = c.password || '••••••••';
 
               return (
                 <div
@@ -526,25 +549,16 @@ export default function EspaceIdentifiantsCollaborateurs() {
                           <span className="text-[9px] text-amber-700 font-normal">Actif</span>
                         </div>
                         <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-2.5 py-1.5">
-                          <span className="font-mono text-xs font-bold text-red-600 truncate mr-2 select-all">
-                            {isVisible ? motDePasseAffiche : '••••••••••••'}
+                          <span className="font-mono text-[11px] text-gray-500 truncate mr-2">
+                            •••••••••••• non consultable
                           </span>
-                          <div className="flex items-center gap-1">
-                            <button
-                              onClick={() => toggleVisibiliteMDP(c.email)}
-                              className="text-xs text-gray-400 hover:text-gray-700 p-1 hover:bg-gray-100 rounded cursor-pointer"
-                              title={isVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
-                            >
-                              {isVisible ? '🙈' : '👁️'}
-                            </button>
-                            <button
-                              onClick={() => copierTexte(c.password || '', 'Mot de passe')}
-                              className="text-xs text-gray-400 hover:text-[#002B5B] p-1 hover:bg-gray-100 rounded cursor-pointer"
-                              title="Copier le mot de passe"
-                            >
-                              📋
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => ouvrirModalReinitialiser(c)}
+                            className="text-[10px] font-bold text-[#002B5B] hover:text-white hover:bg-[#002B5B] border border-[#002B5B] px-2 py-1 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+                            title="Générer un nouveau mot de passe et le transmettre"
+                          >
+                            ↻ Réinitialiser
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -645,7 +659,7 @@ export default function EspaceIdentifiantsCollaborateurs() {
                   </div>
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-gray-500">Mot de Passe :</span>
-                    <span className="font-mono font-bold text-red-600">{derniersIdentifiantsGeneres.password}</span>
+                    <span className="font-mono font-bold text-red-600">{derniersIdentifiantsGeneres.motDePasseProvisoire}</span>
                   </div>
                 </div>
 

@@ -1,8 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import posthog from 'posthog-js';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase/client';
 
 export type UserRole = 'client' | 'dirigeant' | 'chef_usine' | 'chauffeur';
 
@@ -20,102 +19,21 @@ export interface User {
   permis?: string;
 }
 
+// ============================================================
+// NOTE DE SÉCURITÉ
+// ------------------------------------------------------------
+// Ce fichier contenait auparavant UTILISATEURS_MOCK : la liste des comptes
+// 2CGC avec leurs mots de passe en clair. Étant dans un module client, elle
+// était livrée dans le bundle JS de chaque visiteur du site. La vérification
+// du mot de passe se faisait elle aussi ici, côté navigateur, où n'importe qui
+// peut la contourner.
+//
+// Les comptes vivent désormais dans la table `profiles`, le mot de passe n'y
+// figure que sous forme d'empreinte scrypt, et toute vérification se fait dans
+// /api/auth/login côté serveur. Ce contexte ne fait plus que relayer les
+// appels et conserver l'état d'affichage.
+// ============================================================
 
-// Base de données mockée avec 4 rôles distincts
-const UTILISATEURS_MOCK = [
-  // 👤 CLIENT B2B 1
-  {
-    email: 'client@btp-afrique.com',
-    password: 'client123',
-    nom: 'M. Koné',
-    entreprise: 'BTP Afrique SARL',
-    telephone: '+225 07 12 34 56',
-    role: 'client' as UserRole,
-    pointsFidelite: 2450,
-    tarifSpecial: 10,
-    dateCreation: '2026-01-15',
-  },
-  // 👤 CLIENT B2B 2
-  {
-    email: 'fatou.traore@ivoire-promo.ci',
-    password: 'client123',
-    nom: 'Mme Traoré Fatou',
-    entreprise: 'Ivoire Promotion Immobilière',
-    telephone: '+225 05 44 33 22',
-    role: 'client' as UserRole,
-    pointsFidelite: 1800,
-    tarifSpecial: 8,
-    dateCreation: '2026-02-10',
-  },
-  // 👤 CLIENT B2B 3
-  {
-    email: 'mamadou.diop@batir-plus.ci',
-    password: 'client123',
-    nom: 'M. Diop Mamadou',
-    entreprise: 'Bâtir Plus International',
-    telephone: '+225 01 23 45 67',
-    role: 'client' as UserRole,
-    pointsFidelite: 4200,
-    tarifSpecial: 12,
-    dateCreation: '2026-03-01',
-  },
-  // 👤 CLIENT B2B 4
-  {
-    email: 'kouame.yao@gr-ci.com',
-    password: 'client123',
-    nom: 'M. Yao Kouamé',
-    entreprise: 'Génie Route CI',
-    telephone: '+225 07 88 99 00',
-    role: 'client' as UserRole,
-    pointsFidelite: 950,
-    tarifSpecial: 5,
-    dateCreation: '2026-04-18',
-  },
-  // 👔 DIRIGEANT — DG
-  {
-    email: 'directeur@2cgc-industrie.com',
-    password: 'directeur123',
-    nom: 'KEITA BOUBACAR',
-    entreprise: '2CGC — Cheickna Construction & Génie Civil',
-    telephone: '+225 07 07 62 17 99',
-    role: 'dirigeant' as UserRole,
-    dateCreation: '2026-01-01',
-  },
-  // 🏭 CHEF D'USINE
-  {
-    email: 'usine@2cgc-industrie.com',
-    password: 'usine123',
-    nom: 'M. Diallo',
-    entreprise: 'Beton Industrie - Usine',
-    telephone: '+225 01 00 00 02',
-    role: 'chef_usine' as UserRole,
-    dateCreation: '2026-01-01',
-  },
-  // 🚚 CHAUFFEUR
-  {
-    email: 'chauffeur@2cgc-industrie.com',
-    password: 'chauffeur123',
-    nom: 'M. Kouadio',
-    entreprise: 'Beton Industrie - Logistique',
-    telephone: '+225 07 99 88 77',
-    role: 'chauffeur' as UserRole,
-    vehicule: 'Camion Volvo FH16',
-    permis: 'AB-1234-CD',
-    dateCreation: '2026-01-01',
-  },
-  // 👔 DIRIGEANT 2 — Keita Dambou (Directeur Général Adjoint)
-  {
-    email: 'keita.dambou@2cgc-industrie.com',
-    password: 'directeur123',
-    nom: 'Keita Dambou',
-    entreprise: '2CGC — Cheickna Construction & Génie Civil',
-    telephone: '+225 07 07 85 76 29',
-    role: 'dirigeant' as UserRole,
-    dateCreation: '2026-01-01',
-  },
-];
-
-// Commandes mockées avec statuts détaillés
 export const COMMANDES_MOCK = [
   {
     id: 'CMD-2026-001',
@@ -204,14 +122,12 @@ const ROUTES_PAR_ROLE: Record<UserRole, string> = {
   chauffeur: '/chauffeur',
 };
 
-// =============================================
-// GESTION DYNAMIQUE DES UTILISATEURS
-// =============================================
-const STORAGE_KEY = 'users_2cgc_v1';
-
+/**
+ * Compte tel que manipulé par l'interface d'administration.
+ * Ne porte JAMAIS de mot de passe : le serveur n'en restitue aucun.
+ */
 export interface CompteUtilisateur {
   email: string;
-  password: string;
   nom: string;
   entreprise: string;
   telephone: string;
@@ -220,98 +136,68 @@ export interface CompteUtilisateur {
   tarifSpecial?: number;
   vehicule?: string;
   permis?: string;
-  dateCreation: string;
+  dateCreation?: string;
   creeParDirigeant?: boolean;
 }
 
-function getUtilisateurs(): CompteUtilisateur[] {
-  if (typeof window === 'undefined') return UTILISATEURS_MOCK as CompteUtilisateur[];
-  const saved = localStorage.getItem(STORAGE_KEY);
-  let dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-  let aModifie = false;
-
-  // Migration automatique globale : TOUS les comptes avec suffixe @2cgc.ci ou @beton-industrie.com
-  // deviennent immédiatement @2cgc-industrie.com (y compris alfredkouassi@2cgc-industrie.com, etc.)
-  dynamiques = dynamiques.map(u => {
-    let email = u.email;
-    if (u.role !== 'client' || email.endsWith('@2cgc.ci') || email.endsWith('@beton-industrie.com')) {
-      if (email.endsWith('@2cgc.ci')) {
-        email = email.replace(/@2cgc\.ci$/i, '@2cgc-industrie.com');
-        aModifie = true;
-      } else if (email.endsWith('@beton-industrie.com')) {
-        email = email.replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
-        aModifie = true;
-      }
-    }
-    return email !== u.email ? { ...u, email } : u;
-  });
-
-  if (aModifie) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dynamiques));
-  }
-
-  // Fusionner les comptes mock statiques + les comptes créés dynamiquement
-  const emailsDynamiques = new Set(dynamiques.map(u => u.email.toLowerCase()));
-  const statiques = (UTILISATEURS_MOCK as CompteUtilisateur[]).filter(u => !emailsDynamiques.has(u.email.toLowerCase()));
-  return [...statiques, ...dynamiques];
+/** Données de création d'un compte : le mot de passe ne transite que vers le serveur. */
+export interface NouveauCompte extends CompteUtilisateur {
+  motDePasse: string;
 }
 
-function sauvegarderUtilisateur(compte: CompteUtilisateur) {
-  if (typeof window === 'undefined') return;
-  // S'assurer que les collaborateurs internes ont toujours le suffixe officiel @2cgc-industrie.com
-  if (compte.role !== 'client') {
-    compte.email = compte.email
-      .replace(/@2cgc\.ci$/i, '@2cgc-industrie.com')
-      .replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
-  }
-  const saved = localStorage.getItem(STORAGE_KEY);
-  const dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-  // Ne pas dupliquer
-  const filtres = dynamiques.filter(u => u.email.toLowerCase() !== compte.email.toLowerCase());
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...filtres, compte]));
-
-  const client = isSupabaseConfigured() ? supabase : null;
-  if (client) {
-    client.from('profiles').upsert({
-      email: compte.email,
-      nom: compte.nom,
-      entreprise: compte.entreprise,
-      telephone: compte.telephone,
-      role: compte.role,
-      points_fidelite: compte.pointsFidelite || 0,
-      tarif_special: compte.tarifSpecial || 0,
-      vehicule: compte.vehicule || null,
-      permis: compte.permis || null,
-    }).then(({ error }) => {
-      if (error) console.error('Erreur sync Supabase profile:', error);
-    });
-  }
-}
-
+/**
+ * Génère un mot de passe initial lisible. Il n'est affiché qu'une seule fois,
+ * au moment de la création : le serveur n'en conserve que l'empreinte.
+ */
 export function genererMotDePasse(nom: string): string {
-  const initiales = nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const chiffres = Math.floor(100 + Math.random() * 900);
-  const lettres = Math.random().toString(36).slice(2, 5).toUpperCase();
-  return `2CGC-${initiales}${lettres}${chiffres}`;
+  const initiales =
+    nom
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((mot) => mot[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2) || 'XX';
+
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sans I, O, 0, 1
+  const octets = new Uint8Array(6);
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(octets);
+  } else {
+    for (let i = 0; i < octets.length; i++) octets[i] = Math.floor(Math.random() * 256);
+  }
+  const aleatoire = Array.from(octets)
+    .map((o) => alphabet[o % alphabet.length])
+    .join('');
+
+  return `2CGC-${initiales}${aleatoire}`;
+}
+
+export interface ResultatAction {
+  success: boolean;
+  error?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string, requiredMode?: 'client' | 'equipe') => Promise<{ success: boolean; role?: UserRole; error?: string }>;
+  login: (
+    email: string,
+    password: string,
+    requiredMode?: 'client' | 'equipe'
+  ) => Promise<{ success: boolean; role?: UserRole; error?: string; doitChangerMotDePasse?: boolean }>;
   logout: () => void;
-  register: (data: Omit<CompteUtilisateur, 'dateCreation'>) => { success: boolean; error?: string };
-  creerUtilisateur: (data: Omit<CompteUtilisateur, 'dateCreation' | 'creeParDirigeant'>) => { success: boolean; error?: string };
-  importerUtilisateurs: (comptes: CompteUtilisateur[]) => { ajoutes: number; ignores: number };
+  register: (data: NouveauCompte) => Promise<ResultatAction>;
+  creerUtilisateur: (data: NouveauCompte) => Promise<ResultatAction>;
+  importerUtilisateurs: (comptes: NouveauCompte[]) => Promise<{ ajoutes: number; ignores: number }>;
   getUtilisateurs: () => CompteUtilisateur[];
-  supprimerUtilisateur: (email: string) => void;
-  mettreAJourMotDePasse: (email: string, nouveauMDP: string) => boolean;
-  mettreAJourUtilisateur: (email: string, donnees: Partial<CompteUtilisateur>) => boolean;
+  rafraichirUtilisateurs: () => Promise<void>;
+  supprimerUtilisateur: (email: string) => Promise<ResultatAction>;
+  mettreAJourMotDePasse: (email: string, nouveauMDP: string) => Promise<ResultatAction>;
+  mettreAJourUtilisateur: (email: string, donnees: Partial<CompteUtilisateur>) => Promise<ResultatAction>;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-let hasRestoredPostHogIdentity = false;
 
 const isPostHogConfigured = Boolean(
   process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST
@@ -335,352 +221,288 @@ function resetPostHog() {
   }
 }
 
+/** Ligne `profiles` telle que renvoyée par l'API. */
+interface LigneProfil {
+  email: string;
+  nom?: string | null;
+  entreprise?: string | null;
+  telephone?: string | null;
+  role: UserRole;
+  points_fidelite?: number | null;
+  tarif_special?: number | null;
+  vehicule?: string | null;
+  permis?: string | null;
+}
+
+function versCompte(ligne: LigneProfil): CompteUtilisateur {
+  return {
+    email: ligne.email,
+    nom: ligne.nom ?? '',
+    entreprise: ligne.entreprise ?? '',
+    telephone: ligne.telephone ?? '',
+    role: ligne.role,
+    pointsFidelite: ligne.points_fidelite ?? undefined,
+    tarifSpecial: ligne.tarif_special ?? undefined,
+    vehicule: ligne.vehicule ?? undefined,
+    permis: ligne.permis ?? undefined,
+  };
+}
+
+async function lireErreur(res: Response, defaut: string): Promise<string> {
+  try {
+    const data = await res.json();
+    return typeof data?.error === 'string' ? data.error : defaut;
+  } catch {
+    return defaut;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [comptes, setComptes] = useState<CompteUtilisateur[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Restauration de session : la source de vérité est le cookie HttpOnly
+  // vérifié par le serveur, et non plus le localStorage, que l'utilisateur
+  // peut éditer à volonté.
   useEffect(() => {
-    const savedUser = localStorage.getItem('user_beton');
-    if (savedUser) {
-      let restoredUser = JSON.parse(savedUser) as User;
-      if (restoredUser.email === 'directeur@2cgc.ci') {
-        restoredUser = { ...restoredUser, email: 'directeur@2cgc-industrie.com' };
-        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
-      }
-      if (restoredUser.email === 'keita.dambou@2cgc.ci') {
-        restoredUser = { ...restoredUser, email: 'keita.dambou@2cgc-industrie.com' };
-        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
-      }
-      if (restoredUser.email === 'usine@beton-industrie.com') {
-        restoredUser = { ...restoredUser, email: 'usine@2cgc-industrie.com' };
-        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
-      }
-      if (restoredUser.email === 'chauffeur@beton-industrie.com') {
-        restoredUser = { ...restoredUser, email: 'chauffeur@2cgc-industrie.com' };
-        localStorage.setItem('user_beton', JSON.stringify(restoredUser));
-      }
-      setUser(restoredUser);
+    let annule = false;
 
-      if (!hasRestoredPostHogIdentity) {
-        hasRestoredPostHogIdentity = true;
-        identifyUser(restoredUser);
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/session', { credentials: 'same-origin' });
+        if (!annule && res.ok) {
+          const data = await res.json();
+          if (data?.authenticated && data.user) {
+            const restaure: User = {
+              email: data.user.email,
+              nom: data.user.nom ?? '',
+              entreprise: '',
+              telephone: '',
+              role: data.user.role,
+            };
+            setUser(restaure);
+            identifyUser(restaure);
+          }
+        }
+      } catch {
+        // Hors ligne ou service indisponible : on reste déconnecté.
+      } finally {
+        if (!annule) setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    })();
+
+    return () => {
+      annule = true;
+    };
   }, []);
 
-  const login = async (
-    email: string,
-    password: string,
-    requiredMode?: 'client' | 'equipe'
-  ): Promise<{ success: boolean; role?: UserRole; error?: string }> => {
-    const tous = getUtilisateurs();
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanPass = password.trim();
+  const rafraichirUtilisateurs = useCallback(async () => {
+    try {
+      const res = await fetch('/api/profiles', { credentials: 'same-origin' });
+      if (!res.ok) return; // 403 pour un non-dirigeant : comportement attendu
+      const data = await res.json();
+      if (Array.isArray(data?.profiles)) {
+        setComptes(data.profiles.map(versCompte));
+      }
+    } catch (err) {
+      console.error('Erreur chargement des comptes:', err);
+    }
+  }, []);
 
-    // 1. Accès Prioritaire Direction (DG & DGA Infaillibles)
-    const isDG =
-      cleanEmail === 'directeur@2cgc-industrie.com' ||
-      cleanEmail === 'directeur@2cgc.ci' ||
-      cleanEmail === 'directeur@2cgc-industries.com';
+  // Seul le dirigeant peut lister les comptes.
+  useEffect(() => {
+    if (user?.role === 'dirigeant') {
+      void rafraichirUtilisateurs();
+    } else {
+      setComptes([]);
+    }
+  }, [user, rafraichirUtilisateurs]);
 
-    const isDGA =
-      cleanEmail === 'keita.dambou@2cgc-industrie.com' ||
-      cleanEmail === 'keita.dambou@2cgc.ci' ||
-      cleanEmail === 'keita.kambou@2cgc-industrie.com' ||
-      cleanEmail === 'keite.kambou@2cgc-industrie.com' ||
-      cleanEmail === 'adjoint@2cgc-industrie.com';
+  const login = useCallback(
+    async (email: string, password: string, requiredMode?: 'client' | 'equipe') => {
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, motDePasse: password, mode: requiredMode }),
+        });
 
-    const isDirPass =
-      cleanPass === 'directeur123' ||
-      cleanPass.toLowerCase() === 'directeur123' ||
-      cleanPass === 'directeur123!' ||
-      cleanPass.toLowerCase() === 'directeur123!' ||
-      cleanPass === '2cgc2026' ||
-      cleanPass.toUpperCase() === '2CGC2026' ||
-      cleanPass.toUpperCase() === '2CGC2026!';
+        if (!res.ok) {
+          return { success: false, error: await lireErreur(res, 'Identifiants incorrects.') };
+        }
 
-    if ((isDG || isDGA) && isDirPass) {
-      if (requiredMode === 'client') {
+        const data = await res.json();
+        const connecte: User = data.user;
+
+        if (user && user.email.toLowerCase() !== connecte.email.toLowerCase()) {
+          resetPostHog();
+        }
+
+        setUser(connecte);
+        identifyUser(connecte);
+
         return {
-          success: false,
-          error: "Cet identifiant correspond à un compte Direction. Veuillez vous connecter via l'Accès Équipe.",
+          success: true,
+          role: connecte.role,
+          doitChangerMotDePasse: Boolean(data.doitChangerMotDePasse),
         };
+      } catch (err) {
+        console.error('Erreur de connexion:', err);
+        return { success: false, error: 'Service de connexion injoignable. Vérifiez votre réseau.' };
+      }
+    },
+    [user]
+  );
+
+  const enregistrerCompte = useCallback(
+    async (data: NouveauCompte): Promise<ResultatAction> => {
+      try {
+        const res = await fetch('/api/profiles', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+          return { success: false, error: await lireErreur(res, 'Échec de la création du compte.') };
+        }
+
+        await rafraichirUtilisateurs();
+        return { success: true };
+      } catch (err) {
+        console.error('Erreur création compte:', err);
+        return { success: false, error: 'Service injoignable.' };
+      }
+    },
+    [rafraichirUtilisateurs]
+  );
+
+  const register = useCallback(
+    (data: NouveauCompte) => enregistrerCompte(data),
+    [enregistrerCompte]
+  );
+
+  const creerUtilisateur = useCallback(
+    (data: NouveauCompte) => enregistrerCompte(data),
+    [enregistrerCompte]
+  );
+
+  const importerUtilisateurs = useCallback(
+    async (nouveaux: NouveauCompte[]): Promise<{ ajoutes: number; ignores: number }> => {
+      let ajoutes = 0;
+      let ignores = 0;
+
+      for (const compte of nouveaux) {
+        const res = await enregistrerCompte(compte);
+        if (res.success) ajoutes++;
+        else ignores++;
       }
 
-      const dirUser: User = isDG
-        ? {
-            email: 'directeur@2cgc-industrie.com',
-            nom: 'KEITA BOUBACAR',
-            entreprise: '2CGC — Cheickna Construction & Génie Civil',
-            telephone: '+225 07 07 62 17 99',
-            role: 'dirigeant',
-          }
-        : {
-            email: 'keita.dambou@2cgc-industrie.com',
-            nom: 'Keita Dambou',
-            entreprise: '2CGC — Cheickna Construction & Génie Civil',
-            telephone: '+225 07 07 85 76 29',
-            role: 'dirigeant',
-          };
+      await rafraichirUtilisateurs();
+      return { ajoutes, ignores };
+    },
+    [enregistrerCompte, rafraichirUtilisateurs]
+  );
 
-      if (user && user.email.toLowerCase() !== dirUser.email.toLowerCase()) {
-        resetPostHog();
+  const getUtilisateurs = useCallback(() => comptes, [comptes]);
+
+  const supprimerUtilisateur = useCallback(
+    async (email: string): Promise<ResultatAction> => {
+      try {
+        const res = await fetch(`/api/profiles?email=${encodeURIComponent(email)}`, {
+          method: 'DELETE',
+          credentials: 'same-origin',
+        });
+        if (!res.ok) {
+          return { success: false, error: await lireErreur(res, 'Échec de la suppression.') };
+        }
+        await rafraichirUtilisateurs();
+        return { success: true };
+      } catch (err) {
+        console.error('Erreur suppression compte:', err);
+        return { success: false, error: 'Service injoignable.' };
       }
+    },
+    [rafraichirUtilisateurs]
+  );
 
-      setUser(dirUser);
-      localStorage.setItem('user_beton', JSON.stringify(dirUser));
-      identifyUser(dirUser);
-      hasRestoredPostHogIdentity = true;
+  const mettreAJourMotDePasse = useCallback(
+    async (email: string, nouveauMDP: string): Promise<ResultatAction> => {
+      try {
+        const res = await fetch('/api/profiles/password', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, nouveauMotDePasse: nouveauMDP }),
+        });
+        if (!res.ok) {
+          return { success: false, error: await lireErreur(res, 'Échec de la réinitialisation.') };
+        }
+        return { success: true };
+      } catch (err) {
+        console.error('Erreur réinitialisation mot de passe:', err);
+        return { success: false, error: 'Service injoignable.' };
+      }
+    },
+    []
+  );
+
+  const mettreAJourUtilisateur = useCallback(
+    async (email: string, donnees: Partial<CompteUtilisateur>): Promise<ResultatAction> => {
+      const existant = comptes.find((c) => c.email.toLowerCase() === email.toLowerCase());
+      if (!existant) return { success: false, error: 'Compte introuvable.' };
 
       try {
-        await fetch('/api/auth/session', {
+        const res = await fetch('/api/profiles', {
           method: 'POST',
+          credentials: 'same-origin',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dirUser),
+          body: JSON.stringify({ ...existant, ...donnees, email: existant.email }),
         });
+        if (!res.ok) {
+          return { success: false, error: await lireErreur(res, 'Échec de la mise à jour.') };
+        }
+        await rafraichirUtilisateurs();
+        return { success: true };
       } catch (err) {
-        console.error('Erreur synchronisation session serveur:', err);
+        console.error('Erreur mise à jour compte:', err);
+        return { success: false, error: 'Service injoignable.' };
       }
+    },
+    [comptes, rafraichirUtilisateurs]
+  );
 
-      return { success: true, role: 'dirigeant' };
-    }
-
-    // 2. Accès Prioritaire Usine & Chauffeur (@2cgc-industrie.com avec tolérance)
-    const isUsine = cleanEmail === 'usine@2cgc-industrie.com' || cleanEmail === 'usine@beton-industrie.com';
-    const isChauffeur = cleanEmail === 'chauffeur@2cgc-industrie.com' || cleanEmail === 'chauffeur@beton-industrie.com';
-
-    if (isUsine && (cleanPass === 'usine123' || cleanPass.toLowerCase() === 'usine123')) {
-      if (requiredMode === 'client') {
-        return {
-          success: false,
-          error: "Cet identifiant correspond à un compte Chef d'Usine. Veuillez vous connecter via l'Accès Équipe.",
-        };
-      }
-
-      const usineUser: User = {
-        email: 'usine@2cgc-industrie.com',
-        nom: 'M. Diallo',
-        entreprise: '2CGC Usine',
-        telephone: '+225 01 00 00 02',
-        role: 'chef_usine',
-      };
-      if (user && user.email.toLowerCase() !== usineUser.email.toLowerCase()) resetPostHog();
-      setUser(usineUser);
-      localStorage.setItem('user_beton', JSON.stringify(usineUser));
-      identifyUser(usineUser);
-      hasRestoredPostHogIdentity = true;
-      try {
-        await fetch('/api/auth/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(usineUser),
-        });
-      } catch (err) {
-        console.error('Erreur synchronisation session serveur:', err);
-      }
-      return { success: true, role: 'chef_usine' };
-    }
-
-    if (isChauffeur && (cleanPass === 'chauffeur123' || cleanPass.toLowerCase() === 'chauffeur123')) {
-      if (requiredMode === 'client') {
-        return {
-          success: false,
-          error: "Cet identifiant correspond à un compte Chauffeur. Veuillez vous connecter via l'Accès Équipe.",
-        };
-      }
-
-      const chaufUser: User = {
-        email: 'chauffeur@2cgc-industrie.com',
-        nom: 'M. Kouadio',
-        entreprise: '2CGC Logistique',
-        telephone: '+225 07 99 88 77',
-        role: 'chauffeur',
-        vehicule: 'Camion Volvo FH16',
-        permis: 'AB-1234-CD',
-      };
-      if (user && user.email.toLowerCase() !== chaufUser.email.toLowerCase()) resetPostHog();
-      setUser(chaufUser);
-      localStorage.setItem('user_beton', JSON.stringify(chaufUser));
-      identifyUser(chaufUser);
-      hasRestoredPostHogIdentity = true;
-      try {
-        await fetch('/api/auth/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(chaufUser),
-        });
-      } catch (err) {
-        console.error('Erreur synchronisation session serveur:', err);
-      }
-      return { success: true, role: 'chauffeur' };
-    }
-
-    // 3. Recherche générale pour tous les autres comptes (avec tolérance suffixe @2cgc.ci <-> @2cgc-industrie.com)
-    const normalizedCleanEmail = cleanEmail
-      .replace(/@2cgc\.ci$/i, '@2cgc-industrie.com')
-      .replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
-
-    const utilisateur = tous.find(u => {
-      const uEmail = u.email.toLowerCase().trim();
-      const normalizedUEmail = uEmail
-        .replace(/@2cgc\.ci$/i, '@2cgc-industrie.com')
-        .replace(/@beton-industrie\.com$/i, '@2cgc-industrie.com');
-      const matchEmail = (uEmail === cleanEmail) || (normalizedUEmail === normalizedCleanEmail);
-      return matchEmail && (u.password.trim() === cleanPass || u.password === password);
-    });
-
-    if (utilisateur) {
-      // Cloisonnement strict Client vs Équipe
-      if (requiredMode === 'client' && utilisateur.role !== 'client') {
-        return {
-          success: false,
-          error: "Cet identifiant correspond à un profil collaborateur 2CGC. Veuillez vous connecter via l'Accès Équipe.",
-        };
-      }
-      if (requiredMode === 'equipe' && utilisateur.role === 'client') {
-        return {
-          success: false,
-          error: "Cet identifiant correspond à un compte Client B2B. Veuillez vous connecter via l'Espace Client.",
-        };
-      }
-
-      const { password: _, ...userWithoutPassword } = utilisateur;
-
-      if (user && user.email.toLowerCase() !== utilisateur.email.toLowerCase()) {
-        resetPostHog();
-      }
-
-      setUser(userWithoutPassword);
-      localStorage.setItem('user_beton', JSON.stringify(userWithoutPassword));
-      identifyUser(userWithoutPassword);
-      hasRestoredPostHogIdentity = true;
-
-      // Établir la session serveur cryptographique (Cookie HttpOnly sécurisé)
-      try {
-        await fetch('/api/auth/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: utilisateur.email,
-            role: utilisateur.role,
-            nom: utilisateur.nom,
-          }),
-        });
-      } catch (err) {
-        console.error('Erreur synchronisation session serveur:', err);
-      }
-
-      return { success: true, role: utilisateur.role };
-    }
-    return { success: false };
-  };
-
-  const register = (data: Omit<CompteUtilisateur, 'dateCreation'>): { success: boolean; error?: string } => {
-    const tous = getUtilisateurs();
-    if (tous.find(u => u.email === data.email)) {
-      return { success: false, error: 'Un compte avec cet email existe déjà.' };
-    }
-    const compte: CompteUtilisateur = { ...data, dateCreation: new Date().toISOString().split('T')[0] };
-    sauvegarderUtilisateur(compte);
-    return { success: true };
-  };
-
-  const creerUtilisateur = (data: Omit<CompteUtilisateur, 'dateCreation' | 'creeParDirigeant'>): { success: boolean; error?: string } => {
-    const tous = getUtilisateurs();
-    if (tous.find(u => u.email === data.email)) {
-      return { success: false, error: 'Un compte avec cet email existe déjà.' };
-    }
-    const compte: CompteUtilisateur = {
-      ...data,
-      dateCreation: new Date().toISOString().split('T')[0],
-      creeParDirigeant: true,
-    };
-    sauvegarderUtilisateur(compte);
-    return { success: true };
-  };
-
-  const importerUtilisateurs = (nouveaux: CompteUtilisateur[]): { ajoutes: number; ignores: number } => {
-    if (typeof window === 'undefined') return { ajoutes: 0, ignores: 0 };
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-    const emailsExistants = new Set([...UTILISATEURS_MOCK.map(u => u.email.toLowerCase()), ...dynamiques.map(u => u.email.toLowerCase())]);
-
-    const aInserer: CompteUtilisateur[] = [];
-    let ignores = 0;
-
-    nouveaux.forEach(c => {
-      const emailLower = c.email.toLowerCase();
-      if (emailsExistants.has(emailLower)) {
-        ignores++;
-      } else {
-        emailsExistants.add(emailLower);
-        aInserer.push({
-          ...c,
-          creeParDirigeant: true,
-          dateCreation: c.dateCreation || new Date().toISOString().split('T')[0],
-        });
-        sauvegarderUtilisateur(c);
-      }
-    });
-
-    if (aInserer.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([...dynamiques, ...aInserer]));
-    }
-
-    return { ajoutes: aInserer.length, ignores };
-  };
-
-  const supprimerUtilisateur = (email: string) => {
-    if (typeof window === 'undefined') return;
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const dynamiques: CompteUtilisateur[] = saved ? JSON.parse(saved) : [];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dynamiques.filter(u => u.email !== email)));
-
-    const client = isSupabaseConfigured() ? supabase : null;
-    if (client) {
-      client.from('profiles').delete().eq('email', email).then(({ error }) => {
-        if (error) console.error('Erreur suppression Supabase profile:', error);
-      });
-    }
-  };
-
-  const mettreAJourMotDePasse = (email: string, nouveauMDP: string): boolean => {
-    const tous = getUtilisateurs();
-    const existant = tous.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!existant) return false;
-    const maj: CompteUtilisateur = { ...existant, password: nouveauMDP };
-    sauvegarderUtilisateur(maj);
-    return true;
-  };
-
-  const mettreAJourUtilisateur = (email: string, donnees: Partial<CompteUtilisateur>): boolean => {
-    const tous = getUtilisateurs();
-    const existant = tous.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!existant) return false;
-    const maj: CompteUtilisateur = { ...existant, ...donnees };
-    sauvegarderUtilisateur(maj);
-    return true;
-  };
-
-  const logout = () => {
-    if (user) {
-      resetPostHog();
-    }
+  const logout = useCallback(() => {
+    if (user) resetPostHog();
 
     setUser(null);
-    localStorage.removeItem('user_beton');
+    setComptes([]);
     if (typeof document !== 'undefined') {
       document.cookie = 'beton_session_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
-    fetch('/api/auth/session', { method: 'DELETE' }).catch(console.error);
-  };
+    fetch('/api/auth/session', { method: 'DELETE', credentials: 'same-origin' }).catch(console.error);
+  }, [user]);
 
   return (
-    <AuthContext.Provider value={{
-      user, login, logout, register, creerUtilisateur, importerUtilisateurs,
-      getUtilisateurs, supprimerUtilisateur, mettreAJourMotDePasse, mettreAJourUtilisateur, isLoading,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        register,
+        creerUtilisateur,
+        importerUtilisateurs,
+        getUtilisateurs,
+        rafraichirUtilisateurs,
+        supprimerUtilisateur,
+        mettreAJourMotDePasse,
+        mettreAJourUtilisateur,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -694,10 +516,6 @@ export function useAuth() {
 
 export { ROUTES_PAR_ROLE };
 
-
-// ============================================================
-// DONNÉES MOCK - Bons de commande (espace client)
-// ============================================================
 export const BONS_COMMANDE_MOCK = [
   {
     id: 'BC-2026-001',

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth, genererMotDePasse } from '@/lib/auth-context';
 import { getCommandes, Commande } from '@/lib/commandes-store';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
@@ -54,25 +54,32 @@ export default function DirigeantDashboard() {
 
   if (!user || user.role !== 'dirigeant') return null;
 
-  const handleEnregistrerPersonnel = (e: React.FormEvent) => {
+  const handleEnregistrerPersonnel = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nomRapide) return;
 
     const emailGenere = `${nomRapide.toLowerCase().replace(/[^a-z0-9]/g, '') || 'personnel'}@2cgc-industrie.com`;
-    const mdpGenere = `${roleRapide === 'chauffeur' ? 'Chauffeur' : 'Usine'}2026!`;
+    // Mot de passe aléatoire : il n'est affiché qu'ici, une seule fois.
+    // Le serveur n'en conserve que l'empreinte scrypt.
+    const mdpGenere = genererMotDePasse(nomRapide);
 
-    const res = creerUtilisateur({
+    const res = await creerUtilisateur({
       nom: nomRapide,
       email: emailGenere,
       telephone: telephoneRapide || '+225 07 00 00 00',
       entreprise: '2CGC — Cheickna Construction & Génie Civil',
-      password: mdpGenere,
+      motDePasse: mdpGenere,
       role: roleRapide,
       vehicule: vehiculeRapide ? `${vehiculeRapide} (${immatriculationRapide || 'Sans immat.'})` : undefined,
       permis: immatriculationRapide || undefined,
     });
 
-    if (res.success) {
+    if (!res.success) {
+      setNotifRapide(`⚠️ ${res.error || 'Échec de la création du compte.'}`);
+      return;
+    }
+
+    {
       setIdentifiantGenere({
         role: roleRapide,
         nom: nomRapide,

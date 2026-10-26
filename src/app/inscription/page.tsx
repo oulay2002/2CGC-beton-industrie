@@ -41,13 +41,14 @@ export default function InscriptionPage() {
 
     setLoading(true);
 
-    // Créer le compte dans le système local
-    const result = register({
+    // Création du compte côté serveur : le mot de passe est transmis une seule
+    // fois, haché par /api/profiles, et n'est jamais conservé dans le navigateur.
+    const result = await register({
       nom: form.nom,
       email: form.email,
       telephone: form.telephone,
       entreprise: form.entreprise || 'Particulier',
-      password: form.motDePasse,
+      motDePasse: form.motDePasse,
       role: 'client',
       pointsFidelite: 0,
       tarifSpecial: 0,
