@@ -75,6 +75,10 @@ export default function CRMDashboard() {
     const res = await triggerAutonomousRelance(lead.id, lead.telephone ? 'whatsapp' : 'email');
     setEnvoyant(null);
     if (res.success) {
+      // Envoi automatique non configuré : le serveur renvoie un lien prêt.
+      // On ouvre WhatsApp avec le message déjà rédigé plutôt que de laisser
+      // l'utilisateur devant une relance qui n'est jamais partie.
+      if (res.lienWhatsApp) window.open(res.lienWhatsApp, '_blank');
       chargerDonnees();
       afficherNotif(`⚙️ Automatisation : ${res.message}`, 'success');
     } else {

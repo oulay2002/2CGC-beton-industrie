@@ -67,7 +67,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://votre-domaine-2cgc.com/api/whatsapp/n8n-relay",
+        "url": "https://2cgc-industrie.com/api/whatsapp/n8n-relay",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [

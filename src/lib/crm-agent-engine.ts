@@ -38,7 +38,8 @@ export interface AgentActionLog {
   thought: string;
   toolUsed: string;
   status: 'success' | 'pending_approval' | 'failed';
-  details?: Record<string, any>;
+  /** Contexte libre de l action journalisee : forme variable selon l action. */
+  details?: Record<string, unknown>;
 }
 
 export interface LeadAIScore {
@@ -200,7 +201,7 @@ export async function triggerAutonomousRelance(
   leadId: string, 
   canal: 'email' | 'whatsapp' = 'whatsapp',
   messagePersonnalise?: string
-): Promise<{ success: boolean; message: string }> {
+): Promise<{ success: boolean; message: string; lienWhatsApp?: string }> {
   const leads = await getLeads();
   const lead = leads.find(l => l.id === leadId);
 
@@ -209,6 +210,7 @@ export async function triggerAutonomousRelance(
   }
 
   const dateAuj = new Date().toISOString().split('T')[0];
+  let lienWhatsApp: string | undefined;
 
   if (canal === 'email' && lead.email && lead.email.includes('@')) {
     const templateKey = lead.statut === 'nouveau' ? 'bienvenue' : 'relance_j2';
@@ -240,10 +242,11 @@ export async function triggerAutonomousRelance(
   } else {
     // WhatsApp
     const msg = messagePersonnalise || `Bonjour ${lead.nom} 👋, M. KEITA de 2CGC Daloa vous relance concernant votre projet (${lead.produitInteresse || 'Matériaux BTP'}). Avez-vous des questions sur les stocks ?`;
+    let modeEnvoi = 'inconnu';
     // La cle partagee n8n reste cote serveur : on passe par une route
     // authentifiee plutot que d'embarquer le secret dans le bundle.
     try {
-      await fetch(urlAbsolue('/api/crm/relance-whatsapp'), {
+      const res = await fetch(urlAbsolue('/api/crm/relance-whatsapp'), {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
@@ -254,10 +257,22 @@ export async function triggerAutonomousRelance(
           valeurEstimee: lead.valeurEstimee || 0,
         }),
       });
+      const data = (await res.json()) as { mode?: string; lienWhatsApp?: string };
+      if (data.lienWhatsApp) lienWhatsApp = data.lienWhatsApp;
+      modeEnvoi = data.mode ?? modeEnvoi;
     } catch (e) {
       console.warn('Erreur relais WhatsApp agent:', e);
     }
-    await ajouterActivite(leadId, `⚙️ Relance WhatsApp transmise automatiquement (${msg.slice(0, 60)}...)`, 'whatsapp');
+
+    // On trace ce qui s'est reellement passe : « transmise automatiquement »
+    // etait faux des que l'envoi automatique n'etait pas configure.
+    await ajouterActivite(
+      leadId,
+      modeEnvoi === 'lien_manuel'
+        ? `⚙️ Relance WhatsApp préparée, à envoyer depuis WhatsApp (${msg.slice(0, 50)}...)`
+        : `⚙️ Relance WhatsApp envoyée automatiquement (${msg.slice(0, 50)}...)`,
+      'whatsapp'
+    );
   }
 
   lead.derniereRelance = dateAuj;
@@ -274,9 +289,12 @@ export async function triggerAutonomousRelance(
     details: { canal, leadId }
   });
 
-  return { 
-    success: true, 
-    message: `Relance ${canal.toUpperCase()} exécutée pour ${lead.nom}` 
+  return {
+    success: true,
+    message: lienWhatsApp
+      ? `Message préparé pour ${lead.nom} — WhatsApp s'ouvre, vérifiez et envoyez.`
+      : `Relance ${canal.toUpperCase()} exécutée pour ${lead.nom}`,
+    lienWhatsApp,
   };
 }
 

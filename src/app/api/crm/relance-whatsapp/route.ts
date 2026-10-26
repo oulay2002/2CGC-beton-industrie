@@ -106,14 +106,16 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Aucun canal sortant configure : on le dit, au lieu de pretendre un envoi.
-  return NextResponse.json(
-    {
-      success: false,
-      mode: 'non_configure',
-      error:
-        'Aucun canal WhatsApp sortant configure (WHATSAPP_PHONE_NUMBER_ID / N8N_WEBHOOK_URL).',
-    },
-    { status: 503 }
-  );
+  // Aucun canal sortant automatique configure. Plutot que d'echouer en
+  // silence, on renvoie un lien wa.me pret a l'emploi : l'interface ouvre
+  // WhatsApp avec le message deja redige, il ne reste qu'a appuyer sur
+  // Envoyer. L'envoi entierement automatique demande un compte WhatsApp
+  // Business Meta (cf. docs/WHATSAPP.md).
+  return NextResponse.json({
+    success: true,
+    mode: 'lien_manuel',
+    lienWhatsApp: `https://wa.me/${destinataire}?text=${encodeURIComponent(message)}`,
+    message:
+      'Message prepare. WhatsApp va s ouvrir : verifiez le texte et appuyez sur Envoyer.',
+  });
 }
