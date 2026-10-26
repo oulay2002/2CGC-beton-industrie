@@ -162,8 +162,12 @@ export interface MetriquesBotCommercial {
   relancesUrgentes: number; // leads sans contact depuis > 5j
 }
 
-export async function getMetriquesBotCommercial(): Promise<MetriquesBotCommercial> {
-  const leads = await getLeads();
+export async function getMetriquesBotCommercial(
+  leadsFournis?: CRMLead[]
+): Promise<MetriquesBotCommercial> {
+  // L'ecran CRM vient de charger le pipeline : le relire ici doublait le
+  // temps d'ouverture pour rien.
+  const leads = leadsFournis ?? (await getLeads());
   const today = new Date().toISOString().split('T')[0];
   const sequences = sequencesEnAttente(leads);
 

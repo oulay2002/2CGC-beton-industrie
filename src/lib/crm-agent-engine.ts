@@ -236,7 +236,7 @@ export async function triggerAutonomousRelance(
       console.warn('Erreur envoi email agent:', e);
     }
 
-    await ajouterActivite(leadId, `🤖 Agent IA : Relance automatique envoyée par Email (${templateKey})`, 'email', true);
+    await ajouterActivite(leadId, `🤖 Agent IA : Relance automatique envoyée par Email (${templateKey})`, 'email');
   } else {
     // WhatsApp
     const msg = messagePersonnalise || `Bonjour ${lead.nom} 👋, M. KEITA de 2CGC Daloa vous relance concernant votre projet (${lead.produitInteresse || 'Matériaux BTP'}). Avez-vous des questions sur les stocks ?`;
@@ -257,7 +257,7 @@ export async function triggerAutonomousRelance(
     } catch (e) {
       console.warn('Erreur relais WhatsApp agent:', e);
     }
-    await ajouterActivite(leadId, `🤖 Agent IA : Relance WhatsApp transmise automatiquement (${msg.slice(0, 60)}...)`, 'whatsapp', true);
+    await ajouterActivite(leadId, `⚙️ Relance WhatsApp transmise automatiquement (${msg.slice(0, 60)}...)`, 'whatsapp');
   }
 
   lead.derniereRelance = dateAuj;
@@ -343,9 +343,7 @@ export async function sendLeadToFactory(leadId: string): Promise<{ success: bool
   await ajouterActivite(
     leadId,
     `🏭 Agent IA Usine : Opportunité convertie et relayée au Chef d'Usine à Daloa (N° Commande Usine: ${commande.id})`,
-    'systeme',
-    true
-  );
+    'systeme');
 
   logAgentAction({
     agentName: 'Agent Usine Dispatch',

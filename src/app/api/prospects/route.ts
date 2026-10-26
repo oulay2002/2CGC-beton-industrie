@@ -13,8 +13,11 @@ import {
   enregistrerLead,
   enregistrerLeads,
   supprimerLead,
+  changerStatut,
+  ajouterActivite,
+  marquerSequenceEnvoyee,
 } from '@/lib/crm-server';
-import { CRMLead } from '@/lib/crm-types';
+import { CRMLead, CRMActivite } from '@/lib/crm-types';
 
 const STATUTS: CRMLead['statut'][] = [
   'nouveau', 'contacte', 'devis_envoye', 'negociation', 'gagne', 'perdu',
@@ -142,6 +145,88 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[api/prospects] POST', err);
     return NextResponse.json({ error: 'Échec de l’enregistrement.' }, { status: 503 });
+  }
+}
+
+/**
+ * PATCH — applique une modification ciblee a un seul lead, cote serveur.
+ *
+ * Sans cette route, le navigateur devait relire TOUT le pipeline pour changer
+ * un statut : mesure a 466 ms pour 200 prospects, et la duree croit avec le
+ * nombre de fiches. Ici une seule fiche circule, dans les deux sens.
+ *
+ * Corps accepte :
+ *   { id, statut }                              -> changement de statut
+ *   { id, activite: { action, canal } }         -> ajout a l historique
+ *   { id, sequenceEnvoyee: { sequenceId, canal } } -> relance marquee envoyee
+ */
+export async function PATCH(req: NextRequest) {
+  const ip = getClientIp(req);
+  if (!checkRateLimit(`prospects_${ip}`, { limit: 120, windowMs: 60 * 1000 }).success) {
+    return NextResponse.json({ error: 'Trop de requetes.' }, { status: 429 });
+  }
+
+  if (!(await exigerDirigeant(req))) {
+    return NextResponse.json({ error: 'Acces non autorise.' }, { status: 403 });
+  }
+
+  let body: {
+    id?: unknown;
+    statut?: unknown;
+    activite?: { action?: unknown; canal?: unknown };
+    sequenceEnvoyee?: { sequenceId?: unknown; canal?: unknown };
+  };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Corps de requete invalide.' }, { status: 400 });
+  }
+
+  const id = texte(body.id, 60);
+  if (!id) {
+    return NextResponse.json({ error: 'Identifiant requis.' }, { status: 400 });
+  }
+
+  try {
+    let lead: CRMLead | null = null;
+
+    if (body.statut !== undefined) {
+      const statut = texte(body.statut, 30) as CRMLead['statut'];
+      if (!STATUTS.includes(statut)) {
+        return NextResponse.json({ error: 'Statut invalide.' }, { status: 400 });
+      }
+      lead = await changerStatut(id, statut);
+    } else if (body.activite) {
+      const action = texte(body.activite.action, 500);
+      if (!action) {
+        return NextResponse.json({ error: 'Action requise.' }, { status: 400 });
+      }
+      lead = await ajouterActivite(
+        id,
+        action,
+        (texte(body.activite.canal, 20) || 'systeme') as CRMActivite['canal']
+      );
+    } else if (body.sequenceEnvoyee) {
+      const sequenceId = texte(body.sequenceEnvoyee.sequenceId, 80);
+      if (!sequenceId) {
+        return NextResponse.json({ error: 'Identifiant de sequence requis.' }, { status: 400 });
+      }
+      lead = await marquerSequenceEnvoyee(
+        id,
+        sequenceId,
+        (texte(body.sequenceEnvoyee.canal, 20) || 'email') as CRMActivite['canal']
+      );
+    } else {
+      return NextResponse.json({ error: 'Aucune modification fournie.' }, { status: 400 });
+    }
+
+    if (!lead) {
+      return NextResponse.json({ error: 'Prospect introuvable.' }, { status: 404 });
+    }
+    return NextResponse.json({ success: true, lead });
+  } catch (err) {
+    console.error('[api/prospects] PATCH', err);
+    return NextResponse.json({ error: 'Echec de la modification.' }, { status: 503 });
   }
 }
 

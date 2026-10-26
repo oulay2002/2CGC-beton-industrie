@@ -95,7 +95,7 @@ export default function CRMDashboard() {
   const chargerDonnees = useCallback(async () => {
     const l = await getLeads();
     setLeads(l);
-    setMetriques(await getMetriquesBotCommercial());
+    setMetriques(await getMetriquesBotCommercial(l));
   }, []);
 
   useEffect(() => {
@@ -166,7 +166,7 @@ export default function CRMDashboard() {
       if (seqId) {
         marquerSequenceEnvoyee(lead.id, seqId, 'email');
       } else {
-        ajouterActivite(lead.id, `📧 Email "${templateKey}" envoyé manuellement`, 'email', false);
+        ajouterActivite(lead.id, `📧 Email "${templateKey}" envoyé manuellement`, 'email');
         if (lead.statut === 'nouveau') {
           updateLeadStatut(lead.id, 'devis_envoye');
         }
@@ -211,7 +211,7 @@ export default function CRMDashboard() {
     });
     window.open(lien, '_blank');
     if (seqId) marquerSequenceEnvoyee(lead.id, seqId, 'whatsapp');
-    else ajouterActivite(lead.id, `💬 WhatsApp "${templateKey}" envoyé manuellement`, 'whatsapp', false);
+    else ajouterActivite(lead.id, `💬 WhatsApp "${templateKey}" envoyé manuellement`, 'whatsapp');
     chargerDonnees();
     afficherNotif(`💬 WhatsApp ouvert pour ${lead.nom}`, 'info');
   };
