@@ -20,8 +20,8 @@ export default function ChauffeurDashboard() {
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    setCommandesList(getCommandes());
-    const handleUpdate = () => setCommandesList(getCommandes());
+    void getCommandes().then(setCommandesList);
+    const handleUpdate = () => void getCommandes().then(setCommandesList);
     window.addEventListener('commandes_updated', handleUpdate);
     return () => window.removeEventListener('commandes_updated', handleUpdate);
   }, []);
@@ -187,7 +187,7 @@ export default function ChauffeurDashboard() {
         : c
     );
     setCommandesList(updatedList);
-    saveCommandes(updatedList);
+    void saveCommandes(updatedList);
 
     // 3. Ouvrir la notification WhatsApp de livraison terminée
     const lienNotification = genererLienWhatsAppSuivi(livraisonActive, 'livre');

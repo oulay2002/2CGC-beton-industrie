@@ -6,7 +6,8 @@ import { useAuth } from '@/lib/auth-context';
 import {
   getLeads, updateLeadStatut, CRMLead, CRMSequence,
   ajouterLeadManuellement, ajouterActivite, marquerSequenceEnvoyee,
-  genererLienWhatsApp, getSequencesEnAttente, TEMPLATES_EMAIL, TEMPLATES_WHATSAPP,
+  genererLienWhatsApp, sequencesEnAttente as calculerSequencesDues,
+  TEMPLATES_EMAIL, TEMPLATES_WHATSAPP,
   importerLeadsScrapes,
 } from '@/lib/crm-data';
 import { envoyerEmail, getMetriquesBotCommercial, MetriquesBotCommercial } from '@/lib/bot-commercial';
@@ -76,31 +77,31 @@ export default function CRMDashboard() {
     }
   };
 
-  const handleAgentUsine = (lead: CRMLead) => {
-    const res = sendLeadToFactory(lead.id);
+  const handleAgentUsine = async (lead: CRMLead) => {
+    const res = await sendLeadToFactory(lead.id);
     if (res.success) {
-      chargerDonnees();
+      await chargerDonnees();
       afficherNotif(`🏭 Agent Usine : ${res.message}`, 'success');
     } else {
       afficherNotif(`⚠️ ${res.message}`, 'error');
     }
   };
 
-  const chargerDonnees = useCallback(() => {
-    const l = getLeads();
+  const chargerDonnees = useCallback(async () => {
+    const l = await getLeads();
     setLeads(l);
-    setMetriques(getMetriquesBotCommercial());
+    setMetriques(await getMetriquesBotCommercial());
   }, []);
 
   useEffect(() => {
     if (isLoading) return;
     if (!user || user.role !== 'dirigeant') { router.push('/connexion'); return; }
-    chargerDonnees();
+    void chargerDonnees();
 
     // ✅ Traitement automatique des séquences email J+0 en attente
     const traiterJ0Auto = async () => {
       const today = new Date().toISOString().split('T')[0];
-      const leads = getLeads();
+      const leads = await getLeads();
       let nbEnvoyes = 0;
       for (const lead of leads) {
         const seqsJ0 = lead.sequences.filter(
@@ -145,10 +146,10 @@ export default function CRMDashboard() {
     setTimeout(() => setNotif(null), 4000);
   };
 
-  const deplacerLead = (leadId: string, statut: CRMLead['statut']) => {
-    updateLeadStatut(leadId, statut);
-    chargerDonnees();
-    if (leadSelectionne?.id === leadId) setLeadSelectionne(getLeads().find(l => l.id === leadId) || null);
+  const deplacerLead = async (leadId: string, statut: CRMLead['statut']) => {
+    const maj = await updateLeadStatut(leadId, statut);
+    await chargerDonnees();
+    if (leadSelectionne?.id === leadId) setLeadSelectionne(maj);
   };
 
   const handleEnvoyerEmail = async (lead: CRMLead, templateKey: string, seqId?: string) => {
@@ -175,7 +176,7 @@ export default function CRMDashboard() {
   const handleLancerAutomationsManuelles = async () => {
     afficherNotif('⚡ Lancement des séquences automatiques J+0 et envoi des emails...', 'info');
     const today = new Date().toISOString().split('T')[0];
-    const leads = getLeads();
+    const leads = await getLeads();
     let nbEnvoyes = 0;
     for (const lead of leads) {
       const seqsJ0 = lead.sequences.filter(
@@ -186,7 +187,7 @@ export default function CRMDashboard() {
         try {
           const ok = await envoyerEmail(lead, seq.template);
           if (ok) {
-            marquerSequenceEnvoyee(lead.id, seq.id, 'email');
+            await marquerSequenceEnvoyee(lead.id, seq.id, 'email');
             nbEnvoyes++;
           }
         } catch (e) {
@@ -215,12 +216,12 @@ export default function CRMDashboard() {
       afficherNotif('Nom et email requis', 'error');
       return;
     }
-    const nouveauLead = ajouterLeadManuellement({
+    const nouveauLead = await ajouterLeadManuellement({
       ...formNouveauLead,
       valeurEstimee: parseFloat(formNouveauLead.valeurEstimee) || 0,
       source: 'site_web',
     });
-    chargerDonnees();
+    await chargerDonnees();
     setFormNouveauLead({ nom: '', entreprise: '', email: '', telephone: '', produitInteresse: '', valeurEstimee: '', notes: '' });
     setOnglet('pipeline');
     afficherNotif(`✅ Lead "${nouveauLead.nom}" créé ! Envoi de l'email de bienvenue...`, 'info');
@@ -230,8 +231,8 @@ export default function CRMDashboard() {
     if (seqJ0 && nouveauLead.email) {
       const ok = await envoyerEmail(nouveauLead, 'bienvenue');
       if (ok) {
-        marquerSequenceEnvoyee(nouveauLead.id, seqJ0.id, 'email');
-        chargerDonnees();
+        await marquerSequenceEnvoyee(nouveauLead.id, seqJ0.id, 'email');
+        await chargerDonnees();
         afficherNotif(`📧 Email de bienvenue envoyé automatiquement à ${nouveauLead.nom} !`, 'success');
       } else {
         afficherNotif(`⚠️ Lead créé, mais l'email J+0 a échoué — vérifiez RESEND_API_KEY`, 'error');
@@ -282,13 +283,13 @@ export default function CRMDashboard() {
     }
   };
 
-  const handleImporterSelection = () => {
+  const handleImporterSelection = async () => {
     const aImporter = prospectsScrapes.filter(p => selectionProspects.includes(p.id));
     if (aImporter.length === 0) {
       afficherNotif('Veuillez sélectionner au moins un prospect.', 'info');
       return;
     }
-    const importes = importerLeadsScrapes(aImporter.map(p => ({
+    const importes = await importerLeadsScrapes(aImporter.map(p => ({
       nom: p.nom,
       entreprise: p.entreprise,
       email: p.email,
@@ -300,7 +301,7 @@ export default function CRMDashboard() {
       notes: `Extrait via scraping [${p.source}]. Chantier: ${p.chantiersEnCours || 'N/A'}. Score de fiabilité: ${p.scoreFiabilite}%.`,
     })));
 
-    chargerDonnees();
+    await chargerDonnees();
     afficherNotif(`📥 ${importes.length} nouveaux prospects ajoutés au Pipeline CRM !`, 'success');
   };
 
@@ -373,7 +374,7 @@ export default function CRMDashboard() {
   const valeurPipeline = pipeline.reduce((s, l) => s + l.valeurEstimee, 0);
   const valeurGagnee = gagnes.reduce((s, l) => s + l.valeurEstimee, 0);
   const tauxConversion = leads.length > 0 ? Math.round((gagnes.length / leads.length) * 100) : 0;
-  const sequencesEnAttente = getSequencesEnAttente();
+  const sequencesEnAttente = calculerSequencesDues(leads);
 
   return (
     <main className="min-h-screen bg-[#F5F5F0]">

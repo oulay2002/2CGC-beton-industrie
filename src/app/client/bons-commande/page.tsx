@@ -24,8 +24,8 @@ function BonsCommandePageInner() {
   const [toutesCommandes, setToutesCommandes] = useState<Commande[]>([]);
 
   useEffect(() => {
-    setToutesCommandes(getCommandes());
-    const handleUpdate = () => setToutesCommandes(getCommandes());
+    void getCommandes().then(setToutesCommandes);
+    const handleUpdate = () => void getCommandes().then(setToutesCommandes);
     window.addEventListener('commandes_updated', handleUpdate);
     return () => window.removeEventListener('commandes_updated', handleUpdate);
   }, []);

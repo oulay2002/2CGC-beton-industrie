@@ -2,7 +2,8 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth, COMMANDES_MOCK, CompteUtilisateur } from '@/lib/auth-context';
+import { useAuth, CompteUtilisateur } from '@/lib/auth-context';
+import { getCommandes, Commande } from '@/lib/commandes-store';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 
@@ -21,6 +22,16 @@ function ClientDashboardInner() {
   // Liste des comptes clients disponibles
   const [clients, setClients] = useState<CompteUtilisateur[]>([]);
   const [selectedClientEmail, setSelectedClientEmail] = useState<string>('');
+  // Commandes reelles, filtrees cote serveur selon la session : un client ne
+  // recoit que les siennes. Remplace la lecture du jeu de demonstration.
+  const [commandes, setCommandes] = useState<Commande[]>([]);
+
+  useEffect(() => {
+    void getCommandes().then(setCommandes);
+    const rafraichir = () => { void getCommandes().then(setCommandes); };
+    window.addEventListener('commandes_updated', rafraichir);
+    return () => window.removeEventListener('commandes_updated', rafraichir);
+  }, []);
 
   useEffect(() => {
     if (isLoading) return;
@@ -58,8 +69,8 @@ function ClientDashboardInner() {
     : user;
 
   // Filtrer les commandes pour ce client précis
-  const commandesClient = COMMANDES_MOCK.filter(cmd => {
-    const cEmail = (cmd.client as any).email?.toLowerCase();
+  const commandesClient = commandes.filter(cmd => {
+    const cEmail = cmd.client.email?.toLowerCase();
     const cNom = cmd.client.nom?.toLowerCase();
     const cEnt = cmd.client.entreprise?.toLowerCase();
     const targetEmail = clientActif.email?.toLowerCase();

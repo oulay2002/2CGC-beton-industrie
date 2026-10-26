@@ -1,7 +1,8 @@
 // src/lib/whatsapp-service.ts — Service de traitement automatique WhatsApp 2CGC
 
-import { ajouterLeadDepuisWhatsApp } from './crm-data';
-import { ajouterCommandeDepuisWhatsApp, CommandeArticle } from './commandes-store';
+import { enregistrerLeadWhatsApp } from './crm-server';
+import { enregistrerCommandeWhatsApp } from './commandes-server';
+import type { CommandeArticle } from './commandes-store';
 
 export interface WhatsAppIncomingMessage {
   from: string; // Ex: "+225 07 07 12 34 56" ou "2250707123456"
@@ -121,7 +122,7 @@ export async function traiterMessageWhatsAppEntrant(
 
   if (isCommande) {
     // 🚚 PASSATION DE COMMANDE DIRECTE
-    const commande = ajouterCommandeDepuisWhatsApp({
+    const commande = await enregistrerCommandeWhatsApp({
       clientNom: payload.senderName || `Client WA (${telephone.slice(-4)})`,
       telephone,
       total: totalTTC,
@@ -130,7 +131,7 @@ export async function traiterMessageWhatsAppEntrant(
     commandeId = commande.id;
 
     // Enregistrement dans le CRM
-    const lead = ajouterLeadDepuisWhatsApp({
+    const lead = await enregistrerLeadWhatsApp({
       nom: payload.senderName,
       telephone,
       valeurEstimee: totalTTC,
@@ -163,7 +164,7 @@ _Merci de votre confiance en 2CGC !_`;
 
   } else if (isProforma || isDevis) {
     // 📝 GÉNÉRATION DE DEVIS / PROFORMA AUTOMATIQUE
-    const lead = ajouterLeadDepuisWhatsApp({
+    const lead = await enregistrerLeadWhatsApp({
       nom: payload.senderName,
       telephone,
       valeurEstimee: totalTTC,

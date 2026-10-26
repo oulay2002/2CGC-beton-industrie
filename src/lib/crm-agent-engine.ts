@@ -162,16 +162,20 @@ export function scoreLead(lead: CRMLead): LeadAIScore {
   };
 }
 
-export function scoreAllLeads(): CRMLeadAgentic[] {
-  const leads = getLeads();
-  const leadsScores: CRMLeadAgentic[] = leads.map(lead => {
-    const aiScore = scoreLead(lead);
-    return {
-      ...lead,
-      aiScore
-    };
-  });
-  saveLeads(leadsScores);
+/**
+ * Score une liste de leads. Fonction pure : le score est une donnee derivee,
+ * recalculee a la volee, jamais persistee — l'ancienne version reecrivait
+ * l'integralite du pipeline en base a chaque consultation du tableau de bord.
+ */
+export function scorerLeads(leads: CRMLead[]): CRMLeadAgentic[] {
+  return leads
+    .map((lead) => ({ ...lead, aiScore: scoreLead(lead) }))
+    .sort((a, b) => (b.aiScore?.score || 0) - (a.aiScore?.score || 0));
+}
+
+export async function scoreAllLeads(leadsFournis?: CRMLead[]): Promise<CRMLeadAgentic[]> {
+  const leads = leadsFournis ?? (await getLeads());
+  const leadsScores = scorerLeads(leads);
 
   logAgentAction({
     agentName: 'Agent Scorage IA',
@@ -197,7 +201,7 @@ export async function triggerAutonomousRelance(
   canal: 'email' | 'whatsapp' = 'whatsapp',
   messagePersonnalise?: string
 ): Promise<{ success: boolean; message: string }> {
-  const leads = getLeads();
+  const leads = await getLeads();
   const lead = leads.find(l => l.id === leadId);
 
   if (!lead) {
@@ -232,7 +236,7 @@ export async function triggerAutonomousRelance(
       console.warn('Erreur envoi email agent:', e);
     }
 
-    ajouterActivite(leadId, `🤖 Agent IA : Relance automatique envoyée par Email (${templateKey})`, 'email', true);
+    await ajouterActivite(leadId, `🤖 Agent IA : Relance automatique envoyée par Email (${templateKey})`, 'email', true);
   } else {
     // WhatsApp
     const msg = messagePersonnalise || `Bonjour ${lead.nom} 👋, M. KEITA de 2CGC Daloa vous relance concernant votre projet (${lead.produitInteresse || 'Matériaux BTP'}). Avez-vous des questions sur les stocks ?`;
@@ -253,11 +257,11 @@ export async function triggerAutonomousRelance(
     } catch (e) {
       console.warn('Erreur relais WhatsApp agent:', e);
     }
-    ajouterActivite(leadId, `🤖 Agent IA : Relance WhatsApp transmise automatiquement (${msg.slice(0, 60)}...)`, 'whatsapp', true);
+    await ajouterActivite(leadId, `🤖 Agent IA : Relance WhatsApp transmise automatiquement (${msg.slice(0, 60)}...)`, 'whatsapp', true);
   }
 
   lead.derniereRelance = dateAuj;
-  saveLeads(leads);
+  await saveLeads([lead]);
 
   logAgentAction({
     agentName: 'Agent Relances Autonomes',
@@ -280,7 +284,7 @@ export async function triggerAutonomousRelance(
  * Exécute une relance globale autonome sur tous les devis expirés (> 48h)
  */
 export async function triggerBulkRelancesExpiress(): Promise<{ relancesCount: number; leadsRelances: string[] }> {
-  const leads = getLeads();
+  const leads = await getLeads();
   const dateAuj = new Date();
   const leadsRelances: string[] = [];
 
@@ -311,8 +315,8 @@ export async function triggerBulkRelancesExpiress(): Promise<{ relancesCount: nu
 /**
  * Convertit un lead gagné en commande pour le Chef d'Usine à Daloa
  */
-export function sendLeadToFactory(leadId: string): { success: boolean; commandeId?: string; message: string } {
-  const leads = getLeads();
+export async function sendLeadToFactory(leadId: string): Promise<{ success: boolean; commandeId?: string; message: string }> {
+  const leads = await getLeads();
   const lead = leads.find(l => l.id === leadId);
 
   if (!lead) {
@@ -320,10 +324,10 @@ export function sendLeadToFactory(leadId: string): { success: boolean; commandeI
   }
 
   // 1. Mettre à jour le statut du lead
-  updateLeadStatut(leadId, 'gagne');
+  await updateLeadStatut(leadId, 'gagne');
 
   // 2. Transférer la commande au Chef d'Usine
-  const commande = ajouterCommandeDepuisWhatsApp({
+  const commande = await ajouterCommandeDepuisWhatsApp({
     clientNom: lead.nom,
     telephone: lead.telephone || '+225 07 00 00 00',
     total: lead.valeurEstimee || 1000000,
@@ -336,7 +340,7 @@ export function sendLeadToFactory(leadId: string): { success: boolean; commandeI
     ]
   });
 
-  ajouterActivite(
+  await ajouterActivite(
     leadId,
     `🏭 Agent IA Usine : Opportunité convertie et relayée au Chef d'Usine à Daloa (N° Commande Usine: ${commande.id})`,
     'systeme',
@@ -364,14 +368,12 @@ export function sendLeadToFactory(leadId: string): { success: boolean; commandeI
 /**
  * Génère des analyses prédictives et recommandations pour le dirigeant
  */
-export function getPipelineAnalytics(): {
+export function getPipelineAnalytics(leads: CRMLeadAgentic[]): {
   chiffreAffairesPotentiel: number;
   tauxConversionPondere: number;
   opportunitesCritiques: CRMLeadAgentic[];
   recommandationsStrategiques: string[];
 } {
-  const leads = scoreAllLeads();
-
   const totalPotentiel = leads
     .filter(l => l.statut !== 'perdu')
     .reduce((sum, l) => sum + (l.valeurEstimee || 0), 0);
@@ -424,7 +426,7 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
   }
 
   if (promptLower.includes('scor') || promptLower.includes('priorit') || promptLower.includes('analys')) {
-    const scoredLeads = scoreAllLeads();
+    const scoredLeads = await scoreAllLeads();
     const tops = scoredLeads.slice(0, 3);
     return {
       thought: `Analyse de l'intention utilisateur : Recalcul et réévaluation des scores de priorité de l'ensemble du CRM.`,
@@ -436,10 +438,10 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
   }
 
   if (promptLower.includes('usine') || promptLower.includes('convert') || promptLower.includes('command')) {
-    const leads = getLeads().filter(l => l.statut === 'negociation' || l.statut === 'devis_envoye');
+    const leads = (await getLeads()).filter(l => l.statut === 'negociation' || l.statut === 'devis_envoye');
     if (leads.length > 0) {
       const topLead = leads[0];
-      const res = sendLeadToFactory(topLead.id);
+      const res = await sendLeadToFactory(topLead.id);
       return {
         thought: `Conversion de la meilleure opportunité en cours (${topLead.nom}) et envoi automatique au Chef d'Usine à Daloa.`,
         reply: `🏗️ ${res.message} Le statut de ${topLead.nom} est passé à "Gagné".`,
@@ -456,7 +458,7 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
   }
 
   if (promptLower.includes('rapport') || promptLower.includes('prévision') || promptLower.includes('chiffre') || promptLower.includes('stat')) {
-    const stats = getPipelineAnalytics();
+    const stats = getPipelineAnalytics(await scoreAllLeads());
     return {
       thought: `Génération du rapport prédictif et des métriques de vente pondérées par le score IA.`,
       reply: `📈 **Rapport d'Analyse Prédictive 2CGC** :\n\n` +
@@ -469,8 +471,8 @@ export async function processCopilotPrompt(userPrompt: string): Promise<{
     };
   }
 
-  // Réponse par défaut
-  const stats = getPipelineAnalytics();
+  // Réponse par défaut : simple présentation des capacités, aucune donnée
+  // nécessaire — on évite d'interroger la base pour rien.
   return {
     thought: `Compréhension générale du prompt. Présentation des capacités agentiques CRM 2CGC.`,
     reply: `Bonjour ! Je suis l'Agent IA CRM 2CGC. Voici ce que je peux faire pour vous en autonomie :\n\n` +

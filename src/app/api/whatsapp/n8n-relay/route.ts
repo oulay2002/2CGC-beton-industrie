@@ -1,8 +1,9 @@
 import { SeverityNumber } from '@opentelemetry/api-logs';
 import { after, NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { ajouterLeadDepuisWhatsApp } from '@/lib/crm-data';
-import { ajouterCommandeDepuisWhatsApp, CommandeArticle } from '@/lib/commandes-store';
+import { enregistrerLeadWhatsApp } from '@/lib/crm-server';
+import { enregistrerCommandeWhatsApp } from '@/lib/commandes-server';
+import type { CommandeArticle } from '@/lib/commandes-store';
 import { loggerProvider, posthogLogExporterLogger } from '@/instrumentation';
 
 // Clé d'API partagée entre le Workflow n8n (Hostinger) et la plateforme 2CGC.
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     if (action === 'commande') {
       // 🏭 1. CREATION DE LA COMMANDE POUR LE CHEF D'USINE
-      const nouvelleCommande = ajouterCommandeDepuisWhatsApp({
+      const nouvelleCommande = await enregistrerCommandeWhatsApp({
         clientNom,
         telephone,
         adresse: body.client.adresse,
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
       commandeId = nouvelleCommande.id;
 
       // 📊 2. MISE A JOUR DU CRM DIRIGEANT (STATUT: GAGNÉ)
-      const lead = ajouterLeadDepuisWhatsApp({
+      const lead = await enregistrerLeadWhatsApp({
         nom: clientNom,
         telephone,
         valeurEstimee: totalTTC,
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     } else {
       // 📝 DEVIS OU PROFORMA (STATUT CRM: DEVIS ENVOYÉ)
-      const lead = ajouterLeadDepuisWhatsApp({
+      const lead = await enregistrerLeadWhatsApp({
         nom: clientNom,
         telephone,
         valeurEstimee: totalTTC,

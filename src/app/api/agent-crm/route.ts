@@ -1,40 +1,130 @@
+// src/app/api/agent-crm/route.ts — Automatisations CRM côté serveur.
+//
+// Avant : cette route importait le moteur d'agent, dont l'accès aux données
+// passait par localStorage. Exécutée sur le serveur, elle travaillait donc sur
+// la liste de démonstration figée et ses écritures étaient perdues, tout en
+// répondant « succès ». Elle lit et écrit désormais la base via crm-server.
+//
+// Le copilote conversationnel, lui, reste dans le navigateur
+// (components/crm/CRMAgenticCopilot) : c'est une fonction de tableau de bord,
+// pas une automatisation. Cette route ne porte que les traitements par lot,
+// appelables par un ordonnanceur.
+
 import { SeverityNumber } from '@opentelemetry/api-logs';
 import { after, NextRequest, NextResponse } from 'next/server';
-import { processCopilotPrompt, getPipelineAnalytics, scoreAllLeads, triggerBulkRelancesExpiress } from '@/lib/crm-agent-engine';
 import { loggerProvider, posthogLogExporterLogger } from '@/instrumentation';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { listerLeads, enregistrerLead, marquerSequenceEnvoyee } from '@/lib/crm-server';
+import { scorerLeads, getPipelineAnalytics } from '@/lib/crm-agent-engine';
+import { TEMPLATES_EMAIL, CRMLead } from '@/lib/crm-types';
+
+const SEUIL_RELANCE_JOURS = 2;
+
+function joursDepuis(date?: string): number {
+  if (!date) return Number.POSITIVE_INFINITY;
+  return Math.floor((Date.now() - new Date(date).getTime()) / 86400000);
+}
 
 /**
- * POST /api/agent-crm
- * Endpoint pour exécuter les instructions de l'Agent IA CRM (Copilot / Actions Autonomes)
+ * Relance les devis stagnants. Contrairement à la version précédente, les
+ * changements sont réellement persistés et l'envoi est compté honnêtement :
+ * un email qui échoue n'est pas comptabilisé comme envoyé.
  */
+async function relancerDevisStagnants(req: NextRequest) {
+  const leads = await listerLeads();
+  const origine = req.nextUrl.origin;
+
+  const candidats = leads.filter(
+    (l) =>
+      (l.statut === 'devis_envoye' || l.statut === 'negociation') &&
+      joursDepuis(l.derniereRelance ?? l.dateCreation) >= SEUIL_RELANCE_JOURS
+  );
+
+  const relances: string[] = [];
+  const echecs: string[] = [];
+
+  for (const lead of candidats) {
+    if (!lead.email || !lead.email.includes('@')) {
+      echecs.push(`${lead.nom} (pas d'email)`);
+      continue;
+    }
+
+    const template = TEMPLATES_EMAIL.relance_j2;
+    const corps = template.corps
+      .replace(/{nom}/g, lead.nom)
+      .replace(/{entreprise}/g, lead.entreprise || 'votre entreprise')
+      .replace(/{produit}/g, lead.produitInteresse || 'nos matériaux')
+      .replace(/{montant}/g, (lead.valeurEstimee || 0).toLocaleString('fr-FR'));
+
+    try {
+      const res = await fetch(`${origine}/api/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          cookie: req.headers.get('cookie') ?? '',
+        },
+        body: JSON.stringify({
+          to: lead.email,
+          sujet: template.sujet.replace(/{nom}/g, lead.nom),
+          corps,
+          nomDestinataire: lead.nom,
+        }),
+      });
+
+      if (!res.ok) {
+        echecs.push(`${lead.nom} (HTTP ${res.status})`);
+        continue;
+      }
+
+      const dateAuj = new Date().toISOString().split('T')[0];
+      const majour: CRMLead = {
+        ...lead,
+        derniereRelance: dateAuj,
+        activites: [
+          {
+            date: dateAuj,
+            action: '🤖 Relance automatique envoyée par email (devis stagnant)',
+            automatique: true,
+            canal: 'email',
+          },
+          ...lead.activites,
+        ],
+      };
+      await enregistrerLead(majour);
+
+      const seqDue = lead.sequences.find((s) => s.statut === 'en_attente' && s.canal === 'email');
+      if (seqDue) await marquerSequenceEnvoyee(lead.id, seqDue.id, 'email');
+
+      relances.push(lead.nom);
+    } catch (err) {
+      console.error('[agent-crm] relance', lead.id, err);
+      echecs.push(`${lead.nom} (erreur réseau)`);
+    }
+  }
+
+  return { candidats: candidats.length, relances, echecs };
+}
+
 export async function POST(req: NextRequest) {
   try {
-    // 1. Contrôle d'accès strict : réservé au Dirigeant 2CGC
-    const token = req.cookies.get(COOKIE_NAME)?.value;
-    const session = await verifySessionToken(token);
-
+    // Réservé au dirigeant.
+    const session = await verifySessionToken(req.cookies.get(COOKIE_NAME)?.value);
     if (!session || session.role !== 'dirigeant') {
       return NextResponse.json(
-        { error: 'Accès non autorisé. Seul le Dirigeant peut piloter l\'Agent IA CRM.' },
+        { error: "Accès non autorisé. Seul le Dirigeant peut piloter l'Agent CRM." },
         { status: 401 }
       );
     }
 
-    // 2. Limitation de débit
     const clientIp = getClientIp(req);
-    const rateCheck = checkRateLimit(`crm_${clientIp}`, { limit: 30, windowMs: 60 * 1000 });
-    if (!rateCheck.success) {
-      return NextResponse.json(
-        { error: 'Quota de requêtes IA dépassé. Veuillez patienter.' },
-        { status: 429 }
-      );
+    if (!checkRateLimit(`crm_${clientIp}`, { limit: 30, windowMs: 60 * 1000 }).success) {
+      return NextResponse.json({ error: 'Quota de requêtes dépassé.' }, { status: 429 });
     }
 
     if (posthogLogExporterLogger) {
       posthogLogExporterLogger.emit({
-        body: 'CRM copilot request accepted',
+        body: 'CRM agent request accepted',
         severityNumber: SeverityNumber.INFO,
         attributes: { endpoint: '/api/agent-crm' },
       });
@@ -43,71 +133,48 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const body = await req.json();
-    const { action, prompt, leadId } = body;
+    const { action } = (await req.json()) as { action?: string };
 
-    // Action specifique : Scorage global
     if (action === 'score_all') {
-      const scoredLeads = scoreAllLeads();
+      const leads = scorerLeads(await listerLeads());
       return NextResponse.json({
         success: true,
         actionProcessed: 'score_all',
-        leads: scoredLeads,
-        message: 'Ensemble des prospects réévalués avec succès.'
+        leads,
+        message: `${leads.length} prospects réévalués.`,
       });
     }
 
-    // Action specifique : Relances automatiques globales
+    if (action === 'analytics') {
+      const leads = scorerLeads(await listerLeads());
+      return NextResponse.json({
+        success: true,
+        actionProcessed: 'analytics',
+        analytics: getPipelineAnalytics(leads),
+      });
+    }
+
     if (action === 'bulk_relance') {
-      const res = await triggerBulkRelancesExpiress();
+      const res = await relancerDevisStagnants(req);
       return NextResponse.json({
         success: true,
         actionProcessed: 'bulk_relance',
         details: res,
-        message: `${res.relancesCount} relances autonomes exécutées par WhatsApp/Email.`
+        message:
+          `${res.relances.length} relance(s) envoyée(s) sur ${res.candidats} devis stagnant(s)` +
+          (res.echecs.length > 0 ? `, ${res.echecs.length} échec(s).` : '.'),
       });
     }
 
-    // Action specifique : Rapport analytique
-    if (action === 'analytics') {
-      const analytics = getPipelineAnalytics();
-      return NextResponse.json({
-        success: true,
-        actionProcessed: 'analytics',
-        analytics,
-      });
-    }
-
-    // Traitement d'un prompt conversationnel Copilot
-    if (prompt) {
-      if (typeof prompt !== 'string') {
-        return NextResponse.json({ error: 'Format du prompt invalide.' }, { status: 400 });
-      }
-
-      // Limiter la taille du prompt (max 2000 car.) pour prévenir la surconsommation de ressources (DoS)
-      const cleanPrompt = prompt.slice(0, 2000).trim();
-      if (!cleanPrompt) {
-        return NextResponse.json({ error: 'Le prompt ne peut pas être vide.' }, { status: 400 });
-      }
-
-      const result = await processCopilotPrompt(cleanPrompt);
-      return NextResponse.json({
-        success: true,
-        actionProcessed: result.actionTaken || 'copilot_response',
-        reply: result.reply,
-        thought: result.thought,
-        details: result.dataDetails || null,
-        timestamp: new Date().toISOString()
-      });
-    }
-
-    return NextResponse.json({ error: 'Action ou prompt requis.' }, { status: 400 });
-
-  } catch (error: any) {
-    console.error('❌ Erreur Agent CRM API:', error);
-    return NextResponse.json({
-      error: 'Erreur lors du traitement de l\'action agentique',
-      details: error.message
-    }, { status: 500 });
+    return NextResponse.json(
+      { error: "Action inconnue. Valeurs acceptées : 'score_all', 'analytics', 'bulk_relance'." },
+      { status: 400 }
+    );
+  } catch (error) {
+    console.error('[agent-crm]', error);
+    return NextResponse.json(
+      { error: 'Erreur lors du traitement de la demande.' },
+      { status: 500 }
+    );
   }
 }
