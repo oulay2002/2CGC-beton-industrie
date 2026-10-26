@@ -114,22 +114,44 @@ visible du poste de travail de la direction : **à annoncer avant la bascule.**
 
 ---
 
-## Reste à traiter (hors de cette bascule)
+## État au 26/10/2026 — tout est traité
 
-1. **Le CRM vit toujours dans le `localStorage` du navigateur.** Les prospects
-   saisis par le DG n'existent que sur son poste, et disparaissent si le cache
-   est vidé. Les routes serveur `/api/prospects` et la table `prospects_crm`
-   sont en place et prêtes à l'accueillir ; la migration de `src/lib/crm-data.ts`
-   reste à faire. C'est le dernier point bloquant pour une livraison honnête.
-2. **Idem pour les commandes** : `commandes-store.ts` écrit désormais bien en base
-   via `/api/commandes`, mais la lecture au chargement vient encore du
-   `localStorage` — à basculer sur `fetchCommandes()`.
-3. **L'« Agent IA CRM »** est un enchaînement de `if` sur des mots-clés, sans
-   modèle de langage. À requalifier dans l'interface ou à brancher réellement.
-4. **Le « scraping de prospects »** est une liste écrite à la main dans
-   `src/app/api/prospects/scrape/route.ts`. Si ces contacts sont réels, leur
-   traitement doit être justifié ; sinon, ne pas le présenter comme de la
-   prospection.
-5. **Limitation de débit en mémoire** : inefficace sur Vercel, où chaque instance
-   a son propre compteur. À remplacer par un store partagé ou le Vercel Firewall.
-6. **215 erreurs ESLint préexistantes** (`any`, variables inutilisées) et aucun test.
+Les points listés lors de l'audit initial ont tous été corrigés et vérifiés en
+production. Pour mémoire, et dans l'ordre où ils l'ont été :
+
+| Défaut | Correctif |
+|---|---|
+| Base ouverte en lecture/écriture/suppression à la clé anonyme publique | migration 003, deny-all, vérifié depuis l'extérieur |
+| `POST /api/auth/session` délivrait une session dirigeant sans mot de passe | point d'entrée supprimé (`410`), authentification dans `/api/auth/login` |
+| Mots de passe en clair (bundle JS, localStorage, exports CSV/PDF) | empreintes scrypt, migration 004, plus aucun stockage lisible |
+| CRM et commandes dans le `localStorage` du navigateur | migration 005, tables `prospects_crm` et `commandes` |
+| Mot de passe provisoire jamais changé | imposé par le proxy, écran `/changer-mot-de-passe` |
+| « Agent IA », « Gemini 3.6 », « Scraping », « Emails certifiés » | 27 libellés requalifiés |
+| Service worker : installation en échec à chaque chargement | `cache.addAll` remplacé, espaces privés exclus du cache |
+| Limitation de débit en mémoire d'instance | portée documentée, règles WAF dans [PARE_FEU.md](PARE_FEU.md) |
+| Aucun test | 38 tests (`npm test`), sans dépendance ajoutée |
+| Adresse de livraison identique sur tous les bons | migration 006, adresse par compte client |
+
+Bugs découverts en cours de route, absents de l'audit initial :
+
+- **collision d'identifiants de leads** — `genererIdLead` n'offrait que dix
+  valeurs par milliseconde, et l'identifiant est la clé primaire du CRM :
+  l'import en masse écrasait des prospects sans la moindre erreur ;
+- **hooks React conditionnels dans le ChatBot** — huit hooks appelés après un
+  `return` anticipé, écran blanc garanti au premier changement de page ;
+- **déréférencement nul sur l'écran chauffeur** — `livraisonActive` utilisé
+  sans contrôle, plantage possible en pleine tournée ;
+- **dispense de mot de passe actuel pour un dirigeant** changeant le sien ;
+- **fuite de `error.message`** dans les réponses de deux routes publiques.
+
+## Ce qui reste, sans urgence
+
+1. **Appliquer les règles de pare-feu** décrites dans [PARE_FEU.md](PARE_FEU.md),
+   en mode `Log` d'abord.
+2. **20 erreurs ESLint** (contre 201 au départ) : réinitialisations de
+   formulaire et chargements initiaux, sans impact fonctionnel connu.
+3. **Recréer les collaborateurs** : le chef d'usine et les chauffeurs ont été
+   purgés avec les données de démonstration, à saisir depuis la page
+   Identifiants.
+4. **Renseigner l'adresse de livraison** des comptes clients existants : la
+   colonne est en place mais vide.
