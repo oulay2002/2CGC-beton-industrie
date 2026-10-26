@@ -110,19 +110,16 @@
     "engagementsDesc": "Recognised expertise serving your most demanding construction projects",
     "engagements": [
       {
-        "icon": "",
         "title": "Site Delivery",
         "desc": "Real-time GPS tracking, electronic signature, guaranteed on-time delivery.",
         "cta": "Learn more"
       },
       {
-        "icon": "",
         "title": "Instant Quote",
         "desc": "Smart configurator with automatic calculation of surfaces, pallets and VAT included.",
         "cta": "Learn more"
       },
       {
-        "icon": "",
         "title": "Certified Quality",
         "desc": "Blocks compliant with standards, technical data sheets available for download, full traceability.",
         "cta": "Learn more"
@@ -166,20 +163,16 @@
     "statsDesc": "Results that speak for themselves",
     "stats": [
       {
-        "label": "Years of experience",
-        "icon": ""
+        "label": "Years of experience"
       },
       {
-        "label": "Sites delivered",
-        "icon": ""
+        "label": "Sites delivered"
       },
       {
-        "label": "Units / month",
-        "icon": ""
+        "label": "Units / month"
       },
       {
-        "label": "Google rating · 4.9/5",
-        "icon": ""
+        "label": "Google rating · 4.9/5"
       }
     ],
     "calcBadge": "Free tools",
@@ -187,13 +180,11 @@
     "calcDesc": "Estimate your needs and plan your project in a few clicks, for free.",
     "outils": [
       {
-        "icon": "",
         "title": "Block / m² Calculator",
         "desc": "Estimate the exact number of blocks or pavers needed for your surface, with breakage margin included.",
         "cta": "Use the tool"
       },
       {
-        "icon": "",
         "title": "Construction Time Estimator",
         "desc": "Evaluate the duration of your project based on surface area, laying type and number of workers.",
         "cta": "Use the tool"

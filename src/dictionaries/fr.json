@@ -110,19 +110,16 @@
     "engagementsDesc": "Une expertise reconnue au service de vos chantiers les plus exigeants",
     "engagements": [
       {
-        "icon": "",
         "title": "Livraison Chantier",
         "desc": "Tracking GPS en temps réel, signature électronique, respect des délais de livraison garantis.",
         "cta": "En savoir plus"
       },
       {
-        "icon": "",
         "title": "Devis Instantané",
         "desc": "Configurateur intelligent avec calcul automatique des surfaces, palettes et TVA incluse.",
         "cta": "En savoir plus"
       },
       {
-        "icon": "",
         "title": "Qualité Certifiée",
         "desc": "Blocs conformes aux normes, fiches techniques disponibles en téléchargement, traçabilité complète.",
         "cta": "En savoir plus"
@@ -166,20 +163,16 @@
     "statsDesc": "Des résultats qui parlent d'eux-mêmes",
     "stats": [
       {
-        "label": "Années d'expérience",
-        "icon": ""
+        "label": "Années d'expérience"
       },
       {
-        "label": "Chantiers livrés",
-        "icon": ""
+        "label": "Chantiers livrés"
       },
       {
-        "label": "Unités / mois",
-        "icon": ""
+        "label": "Unités / mois"
       },
       {
-        "label": "Avis Google · 4,9/5",
-        "icon": ""
+        "label": "Avis Google · 4,9/5"
       }
     ],
     "calcBadge": "Outils gratuits",
@@ -187,13 +180,11 @@
     "calcDesc": "Estimez vos besoins et planifiez votre chantier en quelques clics, gratuitement.",
     "outils": [
       {
-        "icon": "",
         "title": "Calculateur de Blocs / m²",
         "desc": "Estimez le nombre exact de parpaings ou pavés nécessaires pour votre surface, avec marge de casse incluse.",
         "cta": "Utiliser l'outil"
       },
       {
-        "icon": "",
         "title": "Estimateur de Temps de Chantier",
         "desc": "Évaluez la durée de votre projet en fonction de la surface, du type de pose et du nombre d'ouvriers.",
         "cta": "Utiliser l'outil"

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import posthog from 'posthog-js';
+import { Package, Truck, FileText, Award, MapPin, Phone } from 'lucide-react';
 
 export default function InscriptionPage() {
   const { register } = useAuth();
@@ -157,13 +158,13 @@ export default function InscriptionPage() {
           </p>
           <div className="space-y-3">
             {[
-              { icon: '📦', text: 'Passez vos commandes en ligne 24h/24' },
-              { icon: '🚚', text: 'Suivez vos livraisons en temps réel' },
-              { icon: '📄', text: 'Accédez à tous vos devis et factures' },
-              { icon: '⭐', text: 'Programme fidélité B2B exclusif' },
+              { Icone: Package, text: 'Passez vos commandes en ligne 24h/24' },
+              { Icone: Truck, text: 'Suivez vos livraisons en temps réel' },
+              { Icone: FileText, text: 'Accédez à tous vos devis et factures' },
+              { Icone: Award, text: 'Programme fidélité B2B exclusif' },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 glass rounded-xl px-4 py-3">
-                <span className="text-xl">{item.icon}</span>
+                <item.Icone className="w-5 h-5 text-[#FFD700] shrink-0" />
                 <span className="text-white/80 text-sm">{item.text}</span>
               </div>
             ))}
@@ -171,8 +172,14 @@ export default function InscriptionPage() {
         </div>
 
         <div className="relative z-10 text-white/40 text-xs leading-relaxed">
-          📍 Quartier Commerce (Réf. Pharmacie Appaul), BP 129 Daloa<br />
-          📞 Tel : +225 07 07 62 17 99 / +225 07 07 85 76 29
+          <span className="flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 shrink-0" />
+            Quartier Commerce (Réf. Pharmacie Appaul), BP 129 Daloa
+          </span>
+          <span className="flex items-center gap-1.5 mt-1">
+            <Phone className="w-3.5 h-3.5 shrink-0" />
+            Tel : +225 07 07 62 17 99 / +225 07 07 85 76 29
+          </span>
         </div>
 
       </div>
