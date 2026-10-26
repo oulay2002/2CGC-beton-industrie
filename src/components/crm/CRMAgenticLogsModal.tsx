@@ -62,7 +62,7 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 Journal des automatisations CRM
                 <span className="text-xs bg-emerald-500/20 text-emerald-300 font-normal px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-                  Traçabilité 100%
+                  Journal complet
                 </span>
               </h2>
               <p className="text-xs text-slate-400">

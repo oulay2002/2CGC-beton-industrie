@@ -49,3 +49,7 @@ next-env.d.ts
 # Le gabarit d environnement doit rester versionne : aucune valeur, uniquement
 # la liste des variables requises. Cette negation doit rester la derniere regle.
 !.env.example
+
+# Captures d ecran et traces de navigation automatisee (regenerables)
+docs-captures/
+.playwright-mcp/

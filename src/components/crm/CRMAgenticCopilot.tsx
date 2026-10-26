@@ -37,7 +37,6 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
   const [isOpen, setIsOpen] = useState(false);
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isAutonomous, setIsAutonomous] = useState(true);
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -160,22 +159,16 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
             </div>
           </div>
 
-          {/* Banner Autonomie & Controls */}
-          <div className="px-4 py-2.5 bg-slate-950/40 border-b border-slate-800/80 flex items-center justify-between text-xs text-slate-300">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Supervision humaine : <strong className="text-emerald-400">Active</strong></span>
-            </div>
-            <button
-              onClick={() => setIsAutonomous(!isAutonomous)}
-              className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition border ${
-                isAutonomous 
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' 
-                  : 'bg-slate-800 text-slate-400 border-slate-700'
-              }`}
-            >
-              Mode Autonome : {isAutonomous ? '100%' : 'Manuel'}
-            </button>
+          {/* Le bouton « Mode Autonome » qui se trouvait ici ne pilotait rien :
+              il basculait un badge, sans effet sur le comportement. Un reglage
+              decoratif induit plus en erreur qu'un libelle inexact. Remplace
+              par ce que l'assistant fait reellement. */}
+          <div className="px-4 py-2.5 bg-slate-950/40 border-b border-slate-800/80 flex items-center gap-2 text-xs text-slate-300">
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <span>
+              Chaque action est déclenchée par vous et consignée dans le{' '}
+              <strong className="text-emerald-400">journal des automatisations</strong>.
+            </span>
           </div>
 
           {/* Shortcuts rapides */}
@@ -195,7 +188,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
               className="flex items-center gap-1.5 whitespace-nowrap bg-slate-800/90 hover:bg-slate-800 text-sky-300 text-xs px-3 py-1.5 rounded-lg border border-sky-500/20 transition"
             >
               <TrendingUp className="w-3.5 h-3.5 text-sky-400" />
-              Scorer prospects IA
+              Scorer les prospects
             </button>
 
             <button

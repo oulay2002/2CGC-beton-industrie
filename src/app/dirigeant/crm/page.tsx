@@ -49,7 +49,7 @@ export default function CRMDashboard() {
   const [envoyant, setEnvoyant] = useState<string | null>(null);
   const [notif, setNotif] = useState<{ msg: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  // États Scraping de prospects BTP
+  // États de l annuaire de prospects BTP
   const [villeScrap, setVilleScrap] = useState('toutes');
   const [secteurScrap, setSecteurScrap] = useState('tous');
   const [motsClesScrap, setMotsClesScrap] = useState('');
@@ -539,13 +539,13 @@ export default function CRMDashboard() {
                           {formatFCFA(lead.valeurEstimee)}
                         </div>
 
-                        {/* Badge Score IA */}
+                        {/* Score de priorite, calcule a partir du montant, de l anciennete et du canal */}
                         {(() => {
                           const aiScore = scoreLead(lead);
                           return (
                             <div className="mb-2 flex items-center justify-between text-[10px] bg-slate-900 text-slate-100 px-2 py-1 rounded-lg border border-slate-700">
                               <span className="flex items-center gap-1 font-bold">
-                                <span>⚡ Score IA:</span>
+                                <span>⚡ Priorité :</span>
                                 <span className={aiScore.score >= 75 ? 'text-emerald-400 font-extrabold' : aiScore.score >= 50 ? 'text-amber-400 font-extrabold' : 'text-rose-400 font-extrabold'}>
                                   {aiScore.score}%
                                 </span>
@@ -580,7 +580,7 @@ export default function CRMDashboard() {
                             className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/60 text-[10px] font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1"
                             title="Déclencher une relance automatique pour ce prospect"
                           >
-                            🤖 Relance IA
+                            ⚙️ Relancer
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); handleEnvoyerEmail(lead, 'relance_j2'); }}
@@ -640,7 +640,7 @@ export default function CRMDashboard() {
                 </div>
 
                 <div className="p-6 space-y-5">
-                  {/* IA Recommendation Box */}
+                  {/* Recommandation issue du score de priorite */}
                   {(() => {
                     const scoreData = scoreLead(leadSelectionne);
                     return (
@@ -659,7 +659,7 @@ export default function CRMDashboard() {
                             onClick={() => handleAgentRelance(leadSelectionne)}
                             className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black py-2 rounded-xl transition shadow"
                           >
-                            ⚡ Lancer Relance Autonome IA
+                            ⚡ Lancer la relance automatique
                           </button>
                           <button
                             onClick={() => handleAgentUsine(leadSelectionne)}
@@ -967,15 +967,16 @@ export default function CRMDashboard() {
             <div className="flex items-start gap-3">
               <span className="text-2xl">🤖</span>
               <div>
-                <div className="font-black text-sm mb-1">Traitement 100% automatique dès la création</div>
+                <div className="font-black text-sm mb-1">Quatre relances programmées dès la création</div>
                 <div className="text-emerald-100 text-xs leading-relaxed">
-                  Dès que vous cliquez sur "Créer", le prospect reçoit automatiquement :
+                  Dès que vous cliquez sur « Créer », ces relances sont planifiées. Elles partent
+                  à l'ouverture du CRM, le jour venu :
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-1.5">
                   {[
                     { icon: '📧', label: 'Email bienvenue', timing: 'Immédiatement (J+0)' },
                     { icon: '📧', label: 'Relance email', timing: 'Dans 2 jours (J+2)' },
-                    { icon: '💬', label: 'WhatsApp relance', timing: 'Dans 5 jours (J+5)' },
+                    { icon: '💬', label: 'WhatsApp relance', timing: 'J+5 — à valider par vous' },
                     { icon: '🎁', label: 'Offre spéciale', timing: 'Dans 7 jours (J+7)' },
                   ].map((s, i) => (
                     <div key={i} className="bg-white/10 rounded-xl px-3 py-2">
@@ -991,7 +992,7 @@ export default function CRMDashboard() {
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-50">
               <h2 className="text-lg font-black text-[#002B5B]">➕ Ajouter un nouveau lead</h2>
-              <p className="text-xs text-gray-400 mt-1">L'email de bienvenue est envoyé <strong>automatiquement</strong> à la création</p>
+              <p className="text-xs text-gray-400 mt-1">L'email de bienvenue part <strong>automatiquement</strong> à la création</p>
             </div>
             <div className="p-6 space-y-4">
               {[
@@ -1124,7 +1125,7 @@ export default function CRMDashboard() {
                 />
               </div>
 
-              {/* Bouton Scraping */}
+              {/* Bouton de recherche dans l annuaire */}
               <div className="flex items-end">
                 <button
                   onClick={lancerScraping}
@@ -1351,9 +1352,9 @@ export default function CRMDashboard() {
             /* État vide invitant au premier scan */
             <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 shadow-sm">
               <div className="text-5xl mb-3">🔍</div>
-              <h3 className="text-xl font-black text-[#002B5B]">Prêt pour la prospection BTP automatisée</h3>
+              <h3 className="text-xl font-black text-[#002B5B]">Recherchez dans l’annuaire</h3>
               <p className="text-sm text-gray-500 mt-1 max-w-xl mx-auto">
-                Sélectionnez vos critères (Zone géographique, corps de métier ou mots-clés) puis cliquez sur <strong>« Lancer le Scraping »</strong> pour extraire instantanément des entreprises et chantiers qualifiés.
+                Sélectionnez une zone, un corps de métier ou saisissez des mots-clés, puis lancez la recherche pour afficher les entreprises correspondantes du répertoire.
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <button
