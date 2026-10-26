@@ -11,6 +11,7 @@ import {
   importerLeadsScrapes,
 } from '@/lib/crm-data';
 import { envoyerEmail, getMetriquesBotCommercial, MetriquesBotCommercial } from '@/lib/bot-commercial';
+import type { ProspectScrape } from '@/app/api/prospects/scrape/route';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
@@ -33,6 +34,10 @@ const CANAL_ICONS: Record<string, string> = {
 
 type Onglet = 'pipeline' | 'scraping' | 'sequences' | 'templates' | 'nouveau_lead';
 
+/** Champs saisissables du formulaire de creation de lead. */
+type ChampNouveauLead =
+  | 'nom' | 'entreprise' | 'email' | 'telephone' | 'produitInteresse' | 'valeurEstimee' | 'notes';
+
 export default function CRMDashboard() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
@@ -48,7 +53,7 @@ export default function CRMDashboard() {
   const [villeScrap, setVilleScrap] = useState('toutes');
   const [secteurScrap, setSecteurScrap] = useState('tous');
   const [motsClesScrap, setMotsClesScrap] = useState('');
-  const [prospectsScrapes, setProspectsScrapes] = useState<any[]>([]);
+  const [prospectsScrapes, setProspectsScrapes] = useState<ProspectScrape[]>([]);
   const [scrapingEnCours, setScrapingEnCours] = useState(false);
   const [sourcesScrapees, setSourcesScrapees] = useState<string[]>([]);
   const [selectionProspects, setSelectionProspects] = useState<string[]>([]);
@@ -58,7 +63,7 @@ export default function CRMDashboard() {
   const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
 
   // Nouveau lead form
-  const [formNouveauLead, setFormNouveauLead] = useState({
+  const [formNouveauLead, setFormNouveauLead] = useState<Record<ChampNouveauLead, string>>({
     nom: '', entreprise: '', email: '', telephone: '', produitInteresse: '', valeurEstimee: '', notes: '',
   });
 
@@ -257,7 +262,7 @@ export default function CRMDashboard() {
       if (data.succes) {
         setProspectsScrapes(data.prospects);
         setSourcesScrapees(data.sourcesScrapees || []);
-        setSelectionProspects(data.prospects.map((p: any) => p.id));
+        setSelectionProspects(data.prospects.map((p: ProspectScrape) => p.id));
         afficherNotif(`🎯 ${data.totalTrouves} prospects BTP qualifiés extraits !`, 'success');
       } else {
         afficherNotif('Erreur lors de l\'extraction des prospects', 'error');
@@ -358,7 +363,7 @@ export default function CRMDashboard() {
     setModalWhatsAppQueue(true);
   };
 
-  const envoyerWhatsAppIndividuel = (p: any) => {
+  const envoyerWhatsAppIndividuel = (p: ProspectScrape) => {
     const lien = genererLienWhatsApp(p.telephone, 'prospection_b2b', {
       nom: p.nom,
       entreprise: p.entreprise,
@@ -997,7 +1002,7 @@ export default function CRMDashboard() {
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{label}</label>
                   <input
                     type={field === 'valeurEstimee' ? 'number' : 'text'}
-                    value={(formNouveauLead as any)[field]}
+                    value={formNouveauLead[field as ChampNouveauLead]}
                     onChange={(e) => setFormNouveauLead(prev => ({ ...prev, [field]: e.target.value }))}
                     placeholder={placeholder}
                     className="w-full border-2 border-gray-100 rounded-2xl px-4 py-3 text-sm focus:border-[#FFD700] focus:outline-none bg-[#F5F5F0] focus:bg-white transition-colors"

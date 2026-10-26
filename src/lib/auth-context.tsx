@@ -57,6 +57,8 @@ export interface CompteUtilisateur {
   nom: string;
   entreprise: string;
   telephone: string;
+  /** Adresse de livraison de reference, reprise par defaut sur les bons. */
+  adresse?: string;
   role: UserRole;
   pointsFidelite?: number;
   tarifSpecial?: number;
@@ -153,6 +155,7 @@ interface LigneProfil {
   nom?: string | null;
   entreprise?: string | null;
   telephone?: string | null;
+  adresse?: string | null;
   role: UserRole;
   points_fidelite?: number | null;
   tarif_special?: number | null;
@@ -166,6 +169,7 @@ function versCompte(ligne: LigneProfil): CompteUtilisateur {
     nom: ligne.nom ?? '',
     entreprise: ligne.entreprise ?? '',
     telephone: ligne.telephone ?? '',
+    adresse: ligne.adresse ?? undefined,
     role: ligne.role,
     pointsFidelite: ligne.points_fidelite ?? undefined,
     tarifSpecial: ligne.tarif_special ?? undefined,

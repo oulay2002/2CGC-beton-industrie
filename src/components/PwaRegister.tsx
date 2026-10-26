@@ -22,7 +22,8 @@ export default function PwaRegister() {
     // 1. Détection mode standalone (déjà installé)
     const isAppStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true;
+      // `standalone` est une extension Safari iOS, absente du type standard.
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
 
     if (isAppStandalone) {
       setIsStandalone(true);

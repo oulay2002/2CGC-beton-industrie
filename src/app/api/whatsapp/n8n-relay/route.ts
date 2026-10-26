@@ -138,11 +138,10 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     }, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Erreur lors du traitement du relais n8n :', error);
     return NextResponse.json({
       error: 'Erreur interne lors de la prise en compte de la demande n8n',
-      details: error.message,
     }, { status: 500 });
   }
 }

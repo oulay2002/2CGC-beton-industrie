@@ -23,7 +23,25 @@ const captureAnalytics = (event: string, properties: Record<string, unknown>) =>
   }
 };
 
-const PRODUITS = [
+/** Produit du catalogue, tel que decrit dans PRODUITS ci-dessous. */
+interface Produit {
+  id: string;
+  categorie: string;
+  nom: string;
+  nomEn: string;
+  prix: number;
+  stock: number;
+  co2: number;
+  unite: string;
+  uniteEn: string;
+  poidsKg: number;
+  image: string;
+}
+
+/** Produit ajoute au devis, avec la quantite choisie. */
+type LigneDevis = Produit & { quantite: number };
+
+const PRODUITS: Produit[] = [
   // Briques
   { id: "1", categorie: "agglos", nom: "Brique 20 Pleine", nomEn: "Solid Block 20", prix: 570, stock: 5000, co2: 12.5, unite: "unité", uniteEn: "unit", poidsKg: 20, image: "/images/produits/page_0_img_12.jpeg" },
   { id: "2", categorie: "agglos", nom: "Brique 20 Creuse", nomEn: "Hollow Block 20", prix: 470, stock: 8000, co2: 9.2, unite: "unité", uniteEn: "unit", poidsKg: 14, image: "/images/produits/page_0_img_13.jpeg" },
@@ -108,7 +126,7 @@ function DevisInner({ lang }: { lang: Locale }) {
     },
   ];
 
-  const [lignes, setLignes] = useState<any[]>([]);
+  const [lignes, setLignes] = useState<LigneDevis[]>([]);
   const [clientInfo, setClientInfo] = useState({ nom: "", telephone: "", email: "", codePostal: "" });
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [envoiEnCours, setEnvoiEnCours] = useState<boolean>(false);
@@ -138,12 +156,12 @@ function DevisInner({ lang }: { lang: Locale }) {
     }
   }, [searchParams, isEn]);
 
-  const ajouterProduit = (produit: any) => {
+  const ajouterProduit = (produit: Produit) => {
     if (lignes.find((l) => l.id === produit.id)) return;
     setLignes([...lignes, { ...produit, quantite: 1 }]);
   };
 
-  const updateLigne = (id: string, field: string, value: any) => {
+  const updateLigne = <C extends keyof LigneDevis>(id: string, field: C, value: LigneDevis[C]) => {
     setLignes(lignes.map((l) => (l.id === id ? { ...l, [field]: value } : l)));
   };
 

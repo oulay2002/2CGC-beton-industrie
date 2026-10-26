@@ -8,6 +8,8 @@ export interface ClientImportData {
   entreprise: string;
   email: string;
   telephone: string;
+  /** Adresse de livraison de reference, reprise par defaut sur les bons. */
+  adresse?: string;
   role?: UserRole;
   tarifSpecial?: number;
   pointsFidelite?: number;
@@ -40,6 +42,7 @@ export function parserCSVEntrants(contenuTexte: string): ClientImportData[] {
   const idxEmail = colonnes.findIndex(c => c.includes('mail') || c.includes('courriel'));
   const idxTel = colonnes.findIndex(c => c.includes('tel') || c.includes('phone') || c.includes('whatsapp') || c.includes('mobile'));
   const idxRemise = colonnes.findIndex(c => c.includes('remise') || c.includes('tarif') || c.includes('special') || c.includes('pourcent'));
+  const idxAdresse = colonnes.findIndex(c => c.includes('adresse') || c.includes('livraison') || c.includes('chantier') || c.includes('localisation'));
 
   const resultats: ClientImportData[] = [];
 
@@ -52,6 +55,7 @@ export function parserCSVEntrants(contenuTexte: string): ClientImportData[] {
     let email = (idxEmail !== -1 ? rawCols[idxEmail] : '').toLowerCase();
     const tel = (idxTel !== -1 ? rawCols[idxTel] : '') || '+225 07 00 00 00';
     const remise = idxRemise !== -1 ? parseFloat(rawCols[idxRemise].replace(',', '.')) : 0;
+    const adresse = idxAdresse !== -1 ? rawCols[idxAdresse] : '';
 
     // Si pas d'email fourni, génération automatique d'un email 2CGC unique pour permettre la connexion
     if (!email || !email.includes('@')) {
@@ -65,6 +69,7 @@ export function parserCSVEntrants(contenuTexte: string): ClientImportData[] {
       entreprise,
       email,
       telephone: tel,
+      adresse: adresse || undefined,
       role: 'client',
       tarifSpecial: isNaN(remise) ? 0 : remise,
       pointsFidelite: 100, // Points de bienvenue
@@ -80,12 +85,12 @@ export function parserCSVEntrants(contenuTexte: string): ClientImportData[] {
  * Exporte et déclenche le téléchargement d'un modèle CSV type pour faciliter l'import
  */
 export function telechargerModeleCSV() {
-  const entetes = ['Nom Complet', 'Entreprise / Raison Sociale', 'Email', 'Telephone / WhatsApp', 'Remise Commerciale %'];
+  const entetes = ['Nom Complet', 'Entreprise / Raison Sociale', 'Email', 'Telephone / WhatsApp', 'Adresse de livraison', 'Remise Commerciale %'];
   const exemples = [
-    ['M. Drissa Koné', 'BTP Afrique SARL', 'contact@btp-afrique.com', '+225 07 12 34 56', '5'],
-    ['Mme Fatou Traoré', 'Ivoire Promotion Immobilière', 'fatou.traore@ivoire-promo.ci', '+225 05 44 33 22', '3'],
-    ['M. Kouamé Yao', 'Génie Route CI', 'kouame.yao@gr-ci.com', '+225 07 88 99 00', '10'],
-    ['Société SOCOBA', 'SOCOBA Daloa', 'appro@socoba.ci', '+225 07 07 85 76 00', '5'],
+    ['M. Drissa Koné', 'BTP Afrique SARL', 'contact@btp-afrique.com', '+225 07 12 34 56', 'Zone Industrielle, lot 14 — Daloa', '5'],
+    ['Mme Fatou Traoré', 'Ivoire Promotion Immobilière', 'fatou.traore@ivoire-promo.ci', '+225 05 44 33 22', 'Cocody Riviera 3 — Abidjan', '3'],
+    ['M. Kouamé Yao', 'Génie Route CI', 'kouame.yao@gr-ci.com', '+225 07 88 99 00', 'Quartier Commerce — Bouaké', '10'],
+    ['Société SOCOBA', 'SOCOBA Daloa', 'appro@socoba.ci', '+225 07 07 85 76 00', 'BP 129 — Daloa', '5'],
   ];
 
   const csvContent = '\uFEFF' + [entetes.join(';'), ...exemples.map(e => e.join(';'))].join('\r\n');
@@ -237,13 +242,14 @@ export function imprimerBaseClientsPDF(clients: CompteUtilisateur[]) {
  * Export de la base client en CSV pour Excel
  */
 export function exporterBaseClientsCSV(clients: CompteUtilisateur[]) {
-  const entetes = ['N°', 'Nom', 'Entreprise', 'Email', 'Telephone', 'Role', 'Remise Speciale %', 'Points Fidelite', 'Date Inscription'];
+  const entetes = ['N°', 'Nom', 'Entreprise', 'Email', 'Telephone', 'Adresse de livraison', 'Role', 'Remise Speciale %', 'Points Fidelite', 'Date Inscription'];
   const lignes = clients.map((c, i) => [
     i + 1,
     `"${(c.nom || '').replace(/"/g, '""')}"`,
     `"${(c.entreprise || '').replace(/"/g, '""')}"`,
     `"${c.email}"`,
     `"${c.telephone || ''}"`,
+    `"${(c.adresse || '').replace(/"/g, '""')}"`,
     `"${c.role}"`,
     c.tarifSpecial || 0,
     c.pointsFidelite || 0,
