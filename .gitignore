@@ -53,3 +53,7 @@ next-env.d.ts
 # Captures d ecran et traces de navigation automatisee (regenerables)
 docs-captures/
 .playwright-mcp/
+
+# Configuration locale d'editeur et d'agent : propre a chaque poste.
+.claude/
+.vscode/
