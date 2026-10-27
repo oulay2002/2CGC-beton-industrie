@@ -35,10 +35,14 @@ export async function GET(req: NextRequest) {
   // Repli sur le contenu du jeton : une base indisponible ne doit pas
   // deconnecter l'utilisateur, seulement appauvrir son profil.
   const minimal = { email: session.email, role: session.role, nom: session.nom ?? '' };
+  // L'ecran de changement a besoin de savoir si le mot de passe provisoire
+  // court encore : sans cela il se represente a l'identique une fois le
+  // changement fait, et une ressaisie de l'ancien echoue sans explication.
+  const doitChanger = session.mdp === true;
 
   const admin = getAdminClient();
   if (!admin) {
-    return NextResponse.json({ authenticated: true, user: minimal });
+    return NextResponse.json({ authenticated: true, doitChangerMotDePasse: doitChanger, user: minimal });
   }
 
   const { data, error } = await admin
@@ -49,11 +53,12 @@ export async function GET(req: NextRequest) {
 
   if (error || !data) {
     if (error) console.error('[api/auth/session] profil', error.message);
-    return NextResponse.json({ authenticated: true, user: minimal });
+    return NextResponse.json({ authenticated: true, doitChangerMotDePasse: doitChanger, user: minimal });
   }
 
   return NextResponse.json({
     authenticated: true,
+    doitChangerMotDePasse: doitChanger,
     user: {
       email: data.email,
       nom: data.nom ?? session.nom ?? '',

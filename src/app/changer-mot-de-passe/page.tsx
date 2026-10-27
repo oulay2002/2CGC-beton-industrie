@@ -8,7 +8,7 @@
 // appliqué par le proxy (src/proxy.ts) à partir du drapeau porté par le jeton
 // de session : cet écran ne peut pas être sauté en changeant d'URL.
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 
@@ -56,6 +56,25 @@ function ChangerMotDePasseInner() {
   const [enCours, setEnCours] = useState(false);
 
   const destination = searchParams.get('redirect') || '/';
+
+  // Cet ecran ne vaut que tant que le mot de passe provisoire court. Une fois
+  // le changement fait, il se representait a l'identique : ressaisir l'ancien
+  // mot de passe y repondait « Mot de passe actuel incorrect », sans dire que
+  // c'etait parce qu'il avait deja ete remplace.
+  const [dejaChange, setDejaChange] = useState<boolean | null>(null);
+  useEffect(() => {
+    let annule = false;
+    // Lecture de l'etat de session apres le montage : il n'existe pas au
+    // rendu serveur.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetch('/api/auth/session', { credentials: 'same-origin' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!annule && d) setDejaChange(d.doitChangerMotDePasse === false);
+      })
+      .catch(() => { if (!annule) setDejaChange(null); });
+    return () => { annule = true; };
+  }, []);
 
   const soumettre = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,6 +130,45 @@ function ChangerMotDePasseInner() {
 
   const champ =
     'w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#002B5B] focus:ring-2 focus:ring-[#002B5B]/20 outline-none transition-colors';
+
+  // Mot de passe deja choisi : on le dit, plutot que de reproposer un
+  // formulaire dont la premiere case attend un mot de passe qui n'existe plus.
+  if (dejaChange === true) {
+    return (
+      <main className="min-h-screen bg-[#F5F5F0] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-[#002B5B] px-8 py-7 text-white">
+            <div className="inline-block bg-[#FFD700] text-[#002B5B] font-black px-3 py-1 rounded-lg text-sm mb-3">
+              2CGC
+            </div>
+            <h1 className="text-xl font-black">Mot de passe déjà défini</h1>
+            <p className="text-white/70 text-sm mt-1">
+              Votre compte n&apos;utilise plus le mot de passe provisoire.
+            </p>
+          </div>
+
+          <div className="p-8 space-y-4">
+            <p className="text-sm text-gray-600">
+              Le changement a bien été enregistré. Connectez-vous désormais avec le
+              mot de passe que vous avez choisi — l&apos;ancien n&apos;est plus valide.
+            </p>
+            <button
+              onClick={() => router.replace(destination)}
+              className="w-full bg-[#002B5B] hover:bg-[#001D3D] text-white font-black py-3 rounded-xl transition-colors"
+            >
+              Accéder au portail
+            </button>
+            <button
+              onClick={() => void logout()}
+              className="w-full text-xs font-bold text-gray-500 hover:text-[#002B5B] transition-colors"
+            >
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#F5F5F0] flex items-center justify-center p-4">
