@@ -62,6 +62,7 @@ Nom        : Limite envois email
 Condition  : Path  starts with  /api/devis/auto-dispatch
          OU : Path  starts with  /api/email
          OU : Path  starts with  /api/creer-compte
+         OU : Path  starts with  /api/profiles
 Action     : Rate limit
   Fenêtre  : 60 s
   Requêtes : 20
@@ -71,6 +72,11 @@ Action     : Rate limit
 
 20 requêtes par minute et par IP laisse largement passer un visiteur qui génère
 plusieurs devis d'affilée, tout en coupant un script.
+
+`/api/profiles` figure dans la même règle : la route crée des comptes sans
+authentification (auto-inscription), et chaque création déclenche un envoi
+d'email. Son compteur applicatif de 10 par minute vit en mémoire d'instance,
+donc il ne vaut que par instance.
 
 ### 2. Connexion
 
