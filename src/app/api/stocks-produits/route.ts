@@ -71,7 +71,12 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Acces non autorise.' }, { status: 403 });
   }
 
-  let body: { produitId?: unknown; quantite?: unknown; ajout?: unknown };
+  let body: {
+    produitId?: unknown;
+    quantite?: unknown;
+    ajout?: unknown;
+    seuilAlerte?: unknown;
+  };
   try {
     body = await req.json();
   } catch {
@@ -88,7 +93,19 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Persistance indisponible.' }, { status: 503 });
   }
 
-  let nouvelle: number;
+  // Le seuil se regle independamment de la quantite : deplacer une alerte ne
+  // doit pas obliger a ressaisir le stock, ni l'inverse.
+  const champs: Record<string, unknown> = {};
+
+  if (body.seuilAlerte !== undefined) {
+    const seuil = Number(body.seuilAlerte);
+    if (!Number.isFinite(seuil) || seuil < 0 || seuil > 10_000_000) {
+      return NextResponse.json({ error: 'Seuil invalide.' }, { status: 400 });
+    }
+    champs.seuil_alerte = Math.round(seuil);
+  }
+
+  let nouvelle: number | null = null;
 
   if (body.ajout !== undefined) {
     const ajout = Number(body.ajout);
@@ -109,7 +126,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'Produit inconnu.' }, { status: 404 });
     }
     nouvelle = Number(actuel.quantite) + Math.round(ajout);
-  } else {
+  } else if (body.quantite !== undefined) {
     const q = Number(body.quantite);
     if (!Number.isFinite(q) || q < 0 || q > 10_000_000) {
       return NextResponse.json({ error: 'Quantite invalide.' }, { status: 400 });
@@ -117,9 +134,15 @@ export async function PATCH(req: NextRequest) {
     nouvelle = Math.round(q);
   }
 
+  if (nouvelle !== null) champs.quantite = nouvelle;
+
+  if (Object.keys(champs).length === 0) {
+    return NextResponse.json({ error: 'Rien a mettre a jour.' }, { status: 400 });
+  }
+
   const { error } = await admin
     .from('stocks_produits')
-    .update({ quantite: nouvelle })
+    .update(champs)
     .eq('produit_id', produitId);
 
   if (error) {
@@ -127,5 +150,5 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Echec de la mise a jour du stock.' }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true, quantite: nouvelle });
+  return NextResponse.json({ success: true, quantite: nouvelle ?? undefined });
 }

@@ -81,6 +81,26 @@ export async function updateStockMatiere(
   return sendJson('/api/stocks', 'PATCH', { id, quantiteTonnes: nouvelleQuantiteTonnes });
 }
 
+/**
+ * Ajuste une matiere premiere : quantite apres inventaire, seuil d'alerte,
+ * capacite du silo. Chaque champ est facultatif — deplacer un seuil ne doit
+ * pas obliger a ressaisir le stock.
+ */
+export async function ajusterStockMatiere(
+  id: string,
+  champs: { quantiteTonnes?: number; seuilCritiqueTonnes?: number; capaciteMaxTonnes?: number },
+): Promise<boolean> {
+  return sendJson('/api/stocks', 'PATCH', { id, ...champs });
+}
+
+/** Ajuste un produit fini : quantite absolue et/ou seuil d'alerte. */
+export async function ajusterStockProduit(
+  produitId: string,
+  champs: { quantite?: number; seuilAlerte?: number },
+): Promise<boolean> {
+  return sendJson('/api/stocks-produits', 'PATCH', { produitId, ...champs });
+}
+
 export interface StockProduit {
   produitId: string;
   categorie: string;

@@ -13,6 +13,8 @@ import {
   fetchStocksProduits,
   fetchChauffeurs,
   updateStockMatiere,
+  ajusterStockMatiere,
+  ajusterStockProduit,
   emettreBon,
   type StockMatiere,
   type StockProduit,
@@ -47,6 +49,88 @@ export default function UsineDashboard() {
   const [modalReappro, setModalReappro] = useState<string | null>(null);
   useFermetureModale(modalReappro !== null, () => setModalReappro(null));
   const [quantiteAjout, setQuantiteAjout] = useState<number>(20);
+
+  // Ajustement d'un produit fini. Le panneau etait en lecture seule : on
+  // voyait les stocks sans pouvoir les corriger apres un inventaire, ni
+  // deplacer un seuil d'alerte.
+  const [produitAjuste, setProduitAjuste] = useState<StockProduit | null>(null);
+  const [saisieQuantite, setSaisieQuantite] = useState('');
+  const [saisieSeuil, setSaisieSeuil] = useState('');
+  const [enregistrement, setEnregistrement] = useState(false);
+  useFermetureModale(produitAjuste !== null, () => setProduitAjuste(null));
+
+  // Matieres premieres : la boite ne savait qu'enregistrer une livraison.
+  // Corriger un stock apres inventaire, ou deplacer un seuil, etait impossible.
+  const [saisieStockMatiere, setSaisieStockMatiere] = useState('');
+  const [saisieSeuilMatiere, setSaisieSeuilMatiere] = useState('');
+
+  const ouvrirReappro = (m: StockMatiere) => {
+    setSaisieStockMatiere(String(m.quantiteTonnes));
+    setSaisieSeuilMatiere(String(m.seuilCritiqueTonnes));
+    setQuantiteAjout(20);
+    setModalReappro(m.id);
+  };
+
+  const enregistrerAjustementMatiere = async () => {
+    const matiere = stocksMatieres.find((m) => m.id === modalReappro);
+    if (!matiere) return;
+    const q = Number(saisieStockMatiere);
+    const seuil = Number(saisieSeuilMatiere);
+    if (!Number.isFinite(q) || q < 0 || !Number.isFinite(seuil) || seuil < 0) {
+      setAlertStockMessage('Saisissez des nombres positifs.');
+      setTimeout(() => setAlertStockMessage(null), 5000);
+      return;
+    }
+    const ok = await ajusterStockMatiere(matiere.id, {
+      quantiteTonnes: q,
+      seuilCritiqueTonnes: seuil,
+    });
+    if (!ok) {
+      setAlertStockMessage("L'ajustement n'a pas pu etre enregistre.");
+      setTimeout(() => setAlertStockMessage(null), 6000);
+      return;
+    }
+    setStocksMatieres((prev) =>
+      prev.map((m) =>
+        m.id === matiere.id ? { ...m, quantiteTonnes: q, seuilCritiqueTonnes: seuil } : m,
+      ),
+    );
+    setModalReappro(null);
+    setAlertStockMessage(`${matiere.nom} : ${q} T en stock, alerte sous ${seuil} T.`);
+    setTimeout(() => setAlertStockMessage(null), 5000);
+  };
+
+  const ouvrirAjustement = (s: StockProduit) => {
+    setSaisieQuantite(String(s.quantite));
+    setSaisieSeuil(String(s.seuilAlerte));
+    setProduitAjuste(s);
+  };
+
+  const enregistrerAjustement = async () => {
+    if (!produitAjuste) return;
+    const q = Number(saisieQuantite);
+    const seuil = Number(saisieSeuil);
+    if (!Number.isFinite(q) || q < 0 || !Number.isFinite(seuil) || seuil < 0) {
+      setAlertStockMessage('Saisissez des nombres positifs.');
+      setTimeout(() => setAlertStockMessage(null), 5000);
+      return;
+    }
+    setEnregistrement(true);
+    const ok = await ajusterStockProduit(produitAjuste.produitId, {
+      quantite: Math.round(q),
+      seuilAlerte: Math.round(seuil),
+    });
+    setEnregistrement(false);
+    if (!ok) {
+      setAlertStockMessage("L'ajustement n'a pas pu etre enregistre.");
+      setTimeout(() => setAlertStockMessage(null), 6000);
+      return;
+    }
+    setProduitAjuste(null);
+    void rechargerStocks();
+    setAlertStockMessage(`${produitAjuste.nom} : ${Math.round(q)} unites, seuil ${Math.round(seuil)}.`);
+    setTimeout(() => setAlertStockMessage(null), 5000);
+  };
   const [alertStockMessage, setAlertStockMessage] = useState<string | null>(null);
   const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
 
@@ -427,7 +511,8 @@ export default function UsineDashboard() {
                   </h2>
                   <p className="text-gray-500 text-xs mt-1">
                     Unités disponibles sur parc, prêtes à être chargées. Déduites
-                    automatiquement à l'émission d'un bon de livraison.
+                    automatiquement à l&apos;émission d&apos;un bon de livraison.
+                    Cliquez une référence pour corriger sa quantité ou son seuil.
                   </p>
                 </div>
                 <button
@@ -450,9 +535,12 @@ export default function UsineDashboard() {
                   {stocksProduits.map((s) => {
                     const critique = s.quantite <= s.seuilAlerte;
                     return (
-                      <div
+                      <button
                         key={s.produitId}
-                        className={`rounded-xl border p-3 ${
+                        type="button"
+                        onClick={() => ouvrirAjustement(s)}
+                        title="Ajuster la quantité et le seuil"
+                        className={`text-left w-full rounded-xl border p-3 transition-colors hover:border-[#002B5B]/40 hover:shadow-sm ${
                           critique
                             ? 'border-red-300 bg-red-50/60'
                             : 'border-slate-200 bg-slate-50/60'
@@ -473,10 +561,10 @@ export default function UsineDashboard() {
                         </div>
                         {critique && (
                           <div className="text-[11px] font-bold text-red-700 mt-1">
-                            Sous le seuil d'alerte
+                            Sous le seuil d&apos;alerte
                           </div>
                         )}
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -565,7 +653,7 @@ export default function UsineDashboard() {
                       <div className="space-y-1.5 pt-1">
                         <button
                           onClick={() => {
-                            setModalReappro(mat.id);
+                            ouvrirReappro(mat);
                             setQuantiteAjout(mat.id === 'adjuvant' ? 2 : 25);
                           }}
                           className="w-full bg-white hover:bg-gray-100 text-[#002B5B] border border-gray-200 text-xs font-bold py-2 rounded-xl transition-colors cursor-pointer"
@@ -591,6 +679,64 @@ export default function UsineDashboard() {
             </div>
 
             {/* Modal Réapprovisionnement Silo */}
+            {/* Ajustement d'un produit fini : quantite apres inventaire et
+                seuil d'alerte. Le panneau etait en lecture seule. */}
+            {produitAjuste && (
+              <div
+                className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+                onClick={fermerSiFond(() => setProduitAjuste(null))}
+              >
+                <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
+                  <h3 className="text-lg font-black text-[#002B5B]">{produitAjuste.nom}</h3>
+                  <p className="text-xs text-gray-500 mt-1 mb-5">
+                    Stock actuel : {produitAjuste.quantite.toLocaleString('fr-FR')} unités.
+                    Corrigez-le après un inventaire, ou déplacez le seuil d&apos;alerte.
+                  </p>
+
+                  <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1.5">
+                    Quantité en stock
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={saisieQuantite}
+                    onChange={(e) => setSaisieQuantite(e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:border-[#FFD700] focus:outline-none mb-4"
+                  />
+
+                  <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1.5">
+                    Seuil d&apos;alerte
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={saisieSeuil}
+                    onChange={(e) => setSaisieSeuil(e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:border-[#FFD700] focus:outline-none"
+                  />
+                  <p className="text-[11px] text-gray-500 mt-1.5 mb-5">
+                    En dessous de ce nombre, la référence est signalée en rouge.
+                  </p>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setProduitAjuste(null)}
+                      className="flex-1 border-2 border-gray-200 text-gray-600 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-50 transition-colors"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={() => void enregistrerAjustement()}
+                      disabled={enregistrement}
+                      className="flex-1 bg-[#002B5B] hover:bg-[#001D3D] disabled:opacity-50 text-white py-2.5 rounded-xl font-black text-sm transition-colors"
+                    >
+                      {enregistrement ? 'Enregistrement…' : 'Enregistrer'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {modalReappro && (
               <div
                 className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
@@ -637,6 +783,49 @@ export default function UsineDashboard() {
                       onChange={(e) => setQuantiteAjout(Math.max(0.1, parseFloat(e.target.value) || 0))}
                       className="w-full border-2 border-gray-200 focus:border-[#FFD700] rounded-xl px-4 py-2.5 text-sm font-bold outline-none"
                     />
+                  </div>
+
+                  {/* Second volet : corriger le stock apres un inventaire
+                      physique, et deplacer le seuil d'alerte. Distinct de la
+                      saisie d'une livraison, qui s'ajoute au stock courant. */}
+                  <div className="border-t border-gray-100 pt-4 mb-5">
+                    <p className="text-xs font-bold text-gray-700 mb-3">
+                      Ou corriger directement, après inventaire
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-600 mb-1">
+                          Stock réel (Tonnes)
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={saisieStockMatiere}
+                          onChange={(e) => setSaisieStockMatiere(e.target.value)}
+                          className="w-full border-2 border-gray-200 focus:border-[#FFD700] rounded-xl px-3 py-2 text-sm font-bold focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-600 mb-1">
+                          Seuil d&apos;alerte (T)
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.5"
+                          value={saisieSeuilMatiere}
+                          onChange={(e) => setSaisieSeuilMatiere(e.target.value)}
+                          className="w-full border-2 border-gray-200 focus:border-[#FFD700] rounded-xl px-3 py-2 text-sm font-bold focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => void enregistrerAjustementMatiere()}
+                      className="w-full mt-3 border-2 border-[#002B5B] text-[#002B5B] hover:bg-[#002B5B]/5 py-2 rounded-xl font-bold text-xs transition-colors"
+                    >
+                      Enregistrer la correction
+                    </button>
                   </div>
 
                   <div className="flex gap-3">

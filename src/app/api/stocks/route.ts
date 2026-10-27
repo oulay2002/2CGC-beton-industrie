@@ -50,7 +50,12 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Acces non autorise.' }, { status: 403 });
   }
 
-  let body: { id?: unknown; quantiteTonnes?: unknown };
+  let body: {
+    id?: unknown;
+    quantiteTonnes?: unknown;
+    seuilCritiqueTonnes?: unknown;
+    capaciteMaxTonnes?: unknown;
+  };
   try {
     body = await req.json();
   } catch {
@@ -58,13 +63,41 @@ export async function PATCH(req: NextRequest) {
   }
 
   const id = typeof body.id === 'string' ? body.id.trim().slice(0, 80) : '';
-  const quantite = Number(body.quantiteTonnes);
-
   if (!id) {
     return NextResponse.json({ error: 'Identifiant de matiere requis.' }, { status: 400 });
   }
-  if (!Number.isFinite(quantite) || quantite < 0) {
-    return NextResponse.json({ error: 'Quantite invalide.' }, { status: 400 });
+
+  // Trois gestes distincts, et non un seul : livrer un appoint, corriger
+  // apres un inventaire physique, ou deplacer le seuil d'alerte. Seul le
+  // premier etait possible, ce qui obligeait a tout recalculer de tete.
+  const champs: Record<string, unknown> = { updated_at: new Date().toISOString() };
+
+  if (body.quantiteTonnes !== undefined) {
+    const quantite = Number(body.quantiteTonnes);
+    if (!Number.isFinite(quantite) || quantite < 0 || quantite > 100_000) {
+      return NextResponse.json({ error: 'Quantite invalide.' }, { status: 400 });
+    }
+    champs.quantite_tonnes = quantite;
+  }
+
+  if (body.seuilCritiqueTonnes !== undefined) {
+    const seuil = Number(body.seuilCritiqueTonnes);
+    if (!Number.isFinite(seuil) || seuil < 0 || seuil > 100_000) {
+      return NextResponse.json({ error: 'Seuil invalide.' }, { status: 400 });
+    }
+    champs.seuil_critique_tonnes = seuil;
+  }
+
+  if (body.capaciteMaxTonnes !== undefined) {
+    const capacite = Number(body.capaciteMaxTonnes);
+    if (!Number.isFinite(capacite) || capacite <= 0 || capacite > 100_000) {
+      return NextResponse.json({ error: 'Capacite invalide.' }, { status: 400 });
+    }
+    champs.capacite_max_tonnes = capacite;
+  }
+
+  if (Object.keys(champs).length === 1) {
+    return NextResponse.json({ error: 'Rien a mettre a jour.' }, { status: 400 });
   }
 
   const admin = getAdminClient();
@@ -72,10 +105,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Persistance indisponible.' }, { status: 503 });
   }
 
-  const { error } = await admin
-    .from('stocks_matieres')
-    .update({ quantite_tonnes: quantite, updated_at: new Date().toISOString() })
-    .eq('id', id);
+  const { error } = await admin.from('stocks_matieres').update(champs).eq('id', id);
 
   if (error) {
     console.error('[api/stocks] update', error.message);
