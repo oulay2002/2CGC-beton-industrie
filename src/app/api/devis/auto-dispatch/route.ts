@@ -9,7 +9,11 @@ const ENTREPRISE_OFFICIAL_EMAIL = 'cheicknaconstruction@gmail.com';
 const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 const WHATSAPP_META_ACCESS_TOKEN = process.env.WHATSAPP_META_ACCESS_TOKEN;
 const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
-const N8N_RELAY_API_KEY = process.env.N8N_RELAY_API_KEY || '2cgc_n8n_secret_key_2026';
+// Aucun repli en dur : ce depot est public, et une cle qu'il contient
+// n'authentifie personne. Sans variable d'environnement, le relais n8n reste
+// simplement inactif — ce que la route /api/whatsapp/n8n-relay applique deja
+// de son cote en refusant toute requete.
+const N8N_RELAY_API_KEY = process.env.N8N_RELAY_API_KEY || '';
 
 export interface DevisAutoDispatchPayload {
   reference: string;
@@ -270,8 +274,14 @@ _Répondez à ce message pour valider votre commande ou poser vos questions tech
  */
 export async function POST(req: NextRequest) {
   try {
+    // Cette route est volontairement ouverte : un visiteur anonyme configure
+    // son devis et reçoit sa proforma. Elle fait donc partir un courriel
+    // depuis le domaine vérifié de 2CGC vers une adresse que l'appelant
+    // fournit. Le contenu est échappé (cf. `e`), mais l'envoi lui-même reste
+    // abusable : d'où deux compteurs, l'un par appelant, l'autre par
+    // destinataire, pour qu'une seule source ne puisse pas arroser une liste.
     const clientIp = getClientIp(req);
-    const rateCheck = checkRateLimit(`devis_dispatch_${clientIp}`, { limit: 10, windowMs: 60 * 1000 });
+    const rateCheck = checkRateLimit(`devis_dispatch_${clientIp}`, { limit: 4, windowMs: 60 * 1000 });
     if (!rateCheck.success) {
       return NextResponse.json({ error: 'Trop de requêtes de génération de devis. Veuillez patienter.' }, { status: 429 });
     }
@@ -281,6 +291,21 @@ export async function POST(req: NextRequest) {
 
     if (!reference || !client || !client.email || !client.telephone || !lignes || lignes.length === 0) {
       return NextResponse.json({ error: 'Données de devis incomplètes (reference, client, lignes requis)' }, { status: 400 });
+    }
+
+    // Une même adresse ne reçoit pas plus de trois proformas par quart
+    // d'heure, quelle que soit l'origine de la demande. Un destinataire
+    // légitime n'en demande pas davantage ; un envoi en masse, si.
+    const destinataire = String(client.email).trim().toLowerCase();
+    const quotaDestinataire = checkRateLimit(`devis_dispatch_to_${destinataire}`, {
+      limit: 3,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (!quotaDestinataire.success) {
+      return NextResponse.json(
+        { error: 'Trop de devis déjà envoyés à cette adresse. Veuillez patienter.' },
+        { status: 429 },
+      );
     }
 
     const isEn = body.lang === 'en';

@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminClient } from '@/lib/supabase/admin';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
+import { deciderEcritureProfil } from '@/lib/autorisation-profil';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { hacherMotDePasse, motifRejetMotDePasse } from '@/lib/password';
 
@@ -52,7 +53,6 @@ export async function POST(req: NextRequest) {
   }
 
   const session = await verifySessionToken(req.cookies.get(COOKIE_NAME)?.value);
-  const isDirigeant = session?.role === 'dirigeant';
 
   let body: ProfilPayload;
   try {
@@ -71,17 +71,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Role invalide.' }, { status: 400 });
   }
 
-  // Elevation de privileges : seul un dirigeant cree des comptes internes.
-  if (role !== 'client' && !isDirigeant) {
-    return NextResponse.json(
-      { error: 'Seul un dirigeant authentifie peut creer un compte collaborateur.' },
-      { status: 403 }
-    );
-  }
-
-  // Un client authentifie ne peut modifier que son propre profil.
-  if (session && session.role === 'client' && session.email.toLowerCase() !== email) {
-    return NextResponse.json({ error: 'Modification non autorisee.' }, { status: 403 });
+  // Elevation de privileges, cloisonnement entre comptes et changement de
+  // role : la regle est isolee dans `autorisation-profil`, ou elle est
+  // couverte par des tests.
+  const decision = deciderEcritureProfil(session, email, role);
+  if (decision.verdict === 'refuse') {
+    return NextResponse.json({ error: decision.motif }, { status: decision.statut });
   }
 
   const admin = getAdminClient();
@@ -92,6 +87,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // L'ecriture finale est un `upsert` : sur une adresse deja prise, elle
+  // ecrase la ligne au lieu d'echouer. Une requete autorisee a creer mais pas
+  // a mettre a jour doit donc buter sur l'adresse existante, sinon
+  // l'auto-inscription suffit a s'emparer de n'importe quel compte en
+  // reecrivant son empreinte de mot de passe et son role.
+  if (!decision.peutMettreAJour) {
+    const { data: existant, error: erreurLecture } = await admin
+      .from('profiles')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (erreurLecture) {
+      console.error('[api/profiles] lecture avant creation', erreurLecture.message);
+      return NextResponse.json({ error: 'Echec de l enregistrement du profil.' }, { status: 500 });
+    }
+    if (existant) {
+      return NextResponse.json(
+        { error: 'Un compte existe deja pour cette adresse email.' },
+        { status: 409 }
+      );
+    }
+  }
+
   const enregistrement: Record<string, unknown> = {
     email,
     nom: texte(body.nom),
@@ -99,11 +118,17 @@ export async function POST(req: NextRequest) {
     telephone: texte(body.telephone, 40),
     adresse: texte(body.adresse, 400) || null,
     role,
-    points_fidelite: nombre(body.pointsFidelite),
-    tarif_special: nombre(body.tarifSpecial),
-    vehicule: texte(body.vehicule) || null,
-    permis: texte(body.permis, 40) || null,
   };
+
+  // Champs a portee commerciale ou operationnelle : seul un dirigeant les
+  // fixe. Les omettre, plutot que leur donner une valeur par defaut, laisse
+  // intact ce qui est deja en base lors d'une mise a jour.
+  if (decision.peutEcrireChampsCommerciaux) {
+    enregistrement.points_fidelite = nombre(body.pointsFidelite);
+    enregistrement.tarif_special = nombre(body.tarifSpecial);
+    enregistrement.vehicule = texte(body.vehicule) || null;
+    enregistrement.permis = texte(body.permis, 40) || null;
+  }
 
   // Le mot de passe n'est jamais stocke tel quel : seule son empreinte scrypt
   // est ecrite, et il ne ressort d'aucun point d'entree de l'API.

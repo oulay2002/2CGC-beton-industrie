@@ -33,12 +33,19 @@ réputation d'envoi du domaine.
 
 | Chemin | Accès | Risque si abusé | Limite code actuelle |
 |---|---|---|---|
-| `/api/devis/auto-dispatch` | public | envoi d'emails Resend | 10 / min |
+| `/api/devis/auto-dispatch` | public | envoi d'emails Resend | 4 / min par IP, **3 / 15 min par destinataire** |
 | `/api/email` | public (restreint) | envoi d'emails Resend | 5 / min |
 | `/api/creer-compte` | public pour le rôle client | création de comptes, emails | 5 / min |
+| `/api/profiles` | public pour la création d'un client | création de comptes | 10 / min |
 | `/api/auth/login` | public | force brute (déjà couvert en base) | 10 / min |
 | `/api/whatsapp/webhook` | public, signé Meta | charge de traitement | 60 / min |
 | `/api/whatsapp/n8n-relay` | clé API | écritures CRM | — |
+
+Le compteur **par destinataire** de `/api/devis/auto-dispatch` est celui qui
+compte le plus : une seule source ne peut plus expédier la proforma 2CGC à une
+liste d'adresses. Il partage toutefois la faiblesse de tous les compteurs en
+mémoire — il vaut par instance, pas globalement. D'où l'intérêt de la règle de
+pare-feu ci-dessous, appliquée en amont des fonctions.
 
 ## Règles proposées
 
