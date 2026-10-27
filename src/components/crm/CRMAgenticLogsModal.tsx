@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useFermetureModale, fermerSiFond } from '@/lib/use-fermeture-modale';
 import { 
   History, 
   X, 
@@ -31,6 +32,8 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
   const [rafraichissements, setRafraichissements] = useState(0);
   const reloadLogs = () => setRafraichissements((n) => n + 1);
 
+  useFermetureModale(isOpen, onClose);
+
   useEffect(() => {
     if (!isOpen) return;
     let annule = false;
@@ -60,7 +63,10 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in"
+      onClick={fermerSiFond(onClose)}
+    >
       <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden text-slate-100">
         
         {/* Header */}

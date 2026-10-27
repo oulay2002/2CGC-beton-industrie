@@ -19,6 +19,7 @@ import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
 import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
 import { scoreLead, triggerAutonomousRelance, sendLeadToFactory } from '@/lib/crm-agent-engine';
 import { Banknote, BarChart3, Bot, CheckCircle2, Download, Gift, Loader, Mail, MessageCircle, Package, PartyPopper, Phone, Rocket, ScrollText, Search, TrendingUp, Zap } from 'lucide-react';
+import { useFermetureModale, fermerSiFond } from '@/lib/use-fermeture-modale';
 
 const COLONNES: { id: CRMLead['statut']; label: string; couleur: string; bg: string; dot: string }[] = [
   { id: 'nouveau', label: 'Nouveau', couleur: 'border-blue-400', bg: 'bg-blue-50', dot: 'bg-blue-500' },
@@ -60,6 +61,7 @@ export default function CRMDashboard() {
   const [selectionProspects, setSelectionProspects] = useState<string[]>([]);
   const [envoiAutoEnCours, setEnvoiAutoEnCours] = useState(false);
   const [modalWhatsAppQueue, setModalWhatsAppQueue] = useState(false);
+  useFermetureModale(modalWhatsAppQueue, () => setModalWhatsAppQueue(false));
   const [indexWhatsAppQueue, setIndexWhatsAppQueue] = useState(0);
   const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
 
@@ -1389,7 +1391,7 @@ export default function CRMDashboard() {
                   }}
                   className="bg-[#002B5B] text-white font-bold text-xs px-5 py-3 rounded-xl hover:bg-[#001D3D] transition-all shadow"
                 >
-                  Lancer un test sur Daloa (Chantiers & BTP locaux)
+                  Voir les entreprises de Daloa et environs
                 </button>
                 <button
                   onClick={() => {
@@ -1399,7 +1401,7 @@ export default function CRMDashboard() {
                   }}
                   className="bg-[#FFD700] text-[#002B5B] font-extrabold text-xs px-5 py-3 rounded-xl hover:bg-yellow-400 transition-all shadow"
                 >
-                  Scraper tous les prospects BTP en Côte d'Ivoire
+                  Afficher tout le répertoire (Côte d'Ivoire)
                 </button>
               </div>
             </div>
@@ -1409,7 +1411,10 @@ export default function CRMDashboard() {
 
       {/* ====== MODAL FILE D'ATTENTE WHATSAPP AUTOMATISÉE ====== */}
       {modalWhatsAppQueue && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={fermerSiFond(() => setModalWhatsAppQueue(false))}
+        >
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-emerald-500 space-y-4">
             {/* Header modal */}
             <div className="flex justify-between items-center pb-3 border-b border-gray-100">

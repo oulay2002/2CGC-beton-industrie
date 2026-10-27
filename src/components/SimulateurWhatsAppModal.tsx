@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useFermetureModale, fermerSiFond } from '@/lib/use-fermeture-modale';
 import { Send, Phone, CheckCircle, RefreshCw, X, MessageSquare, ShoppingCart, FileText, Bot } from 'lucide-react';
 import { WhatsAppResponsePayload } from '@/lib/whatsapp-service';
 import { heureCourte, maintenant } from '@/lib/horodatage';
@@ -33,6 +34,8 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
       time: heureCourte(),
     },
   ]);
+
+  useFermetureModale(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -112,7 +115,10 @@ export default function SimulateurWhatsAppModal({ isOpen, onClose, onRefreshData
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
+      onClick={fermerSiFond(onClose)}
+    >
       <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col h-[650px] max-h-[90vh]">
         {/* WhatsApp Header */}
         <div className="bg-emerald-700 px-4 py-3 flex items-center justify-between text-white">

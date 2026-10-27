@@ -20,6 +20,7 @@ import {
 } from '@/lib/supabase/services';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 import { AlertTriangle, CheckCircle2, Cog, FileText, HardHat, MessageCircle, Package, Siren, Truck } from 'lucide-react';
+import { useFermetureModale, fermerSiFond } from '@/lib/use-fermeture-modale';
 
 type Commande = CommandeStore;
 
@@ -44,6 +45,7 @@ export default function UsineDashboard() {
   const [stocksCharges, setStocksCharges] = useState(false);
 
   const [modalReappro, setModalReappro] = useState<string | null>(null);
+  useFermetureModale(modalReappro !== null, () => setModalReappro(null));
   const [quantiteAjout, setQuantiteAjout] = useState<number>(20);
   const [alertStockMessage, setAlertStockMessage] = useState<string | null>(null);
   const [modalWhatsAppSimulateur, setModalWhatsAppSimulateur] = useState(false);
@@ -590,7 +592,10 @@ export default function UsineDashboard() {
 
             {/* Modal Réapprovisionnement Silo */}
             {modalReappro && (
-              <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+              <div
+                className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+                onClick={fermerSiFond(() => setModalReappro(null))}
+              >
                 <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-150">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-black text-lg text-[#002B5B]">

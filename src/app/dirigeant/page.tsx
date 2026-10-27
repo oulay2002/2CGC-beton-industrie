@@ -9,6 +9,7 @@ import { formatFCFA } from '@/lib/utils';
 import { CRMAgenticCopilot } from '@/components/crm/CRMAgenticCopilot';
 import { CRMAgenticLogsModal } from '@/components/crm/CRMAgenticLogsModal';
 import { BarChart3, Bot, ClipboardList, Download, Factory, Files, FolderOpen, KeyRound, PartyPopper, Smartphone, Truck, User, Users } from 'lucide-react';
+import { useFermetureModale } from '@/lib/use-fermeture-modale';
 
 export default function DirigeantDashboard() {
   const { user, logout, creerUtilisateur, getUtilisateurs, isLoading } = useAuth();
@@ -24,6 +25,7 @@ export default function DirigeantDashboard() {
 
   // Modal d'enregistrement rapide Chauffeur / Chef d'Usine
   const [showModalRapide, setShowModalRapide] = useState(false);
+  useFermetureModale(showModalRapide, () => setShowModalRapide(false));
   const [roleRapide, setRoleRapide] = useState<'chauffeur' | 'chef_usine'>('chauffeur');
   const [nomRapide, setNomRapide] = useState('');
   const [telephoneRapide, setTelephoneRapide] = useState('');
