@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   History, 
   X, 
@@ -24,15 +24,27 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAction, setFilterAction] = useState<string>('all');
 
-  // Le journal se lit directement depuis le magasin : le garder aussi en etat
-  // local obligeait a le resynchroniser par un effet a chaque ouverture, donc
-  // a un second rendu. Le compteur sert au bouton d actualisation.
+  // Le journal est desormais tenu en base, donc lu de facon asynchrone a
+  // l'ouverture. Le compteur sert au bouton d'actualisation.
+  const [logs, setLogs] = useState<AgentActionLog[]>([]);
+  const [chargement, setChargement] = useState(false);
   const [rafraichissements, setRafraichissements] = useState(0);
-  const logs: AgentActionLog[] = useMemo(
-    () => (isOpen ? getAgentLogs() : []),
-    [isOpen, rafraichissements],
-  );
   const reloadLogs = () => setRafraichissements((n) => n + 1);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let annule = false;
+    // Lecture d'une ressource serveur a l'ouverture : c'est l'usage prevu
+    // d'un effet, et la faire pendant le rendu n'aurait pas de sens.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setChargement(true);
+    void getAgentLogs().then((entrees) => {
+      if (annule) return;
+      setLogs(entrees);
+      setChargement(false);
+    });
+    return () => { annule = true; };
+  }, [isOpen, rafraichissements]);
 
   if (!isOpen) return null;
 
@@ -109,7 +121,7 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
             >
               <option value="all">Toutes les actions</option>
               <option value="score_lead">Scorage de prospects</option>
-              <option value="trigger_relance">Relances autonomes</option>
+              <option value="trigger_relance">Relances groupées</option>
               <option value="send_to_factory">Dispatch usine Daloa</option>
               <option value="autonomous_rule">Règles système</option>
             </select>
@@ -118,10 +130,12 @@ export function CRMAgenticLogsModal({ isOpen, onClose }: CRMAgenticLogsModalProp
 
         {/* Liste des Logs */}
         <div className="flex-1 overflow-y-auto p-5 space-y-3">
-          {filteredLogs.length === 0 ? (
+          {chargement ? (
+            <div className="text-center py-12 text-gray-500 text-sm">Lecture du journal…</div>
+          ) : filteredLogs.length === 0 ? (
             <div className="text-center py-12 text-slate-500">
               <Bot className="w-12 h-12 mx-auto mb-3 opacity-30 text-amber-400" />
-              <p className="text-sm">Aucun événement d'agent enregistré pour le moment.</p>
+              <p className="text-sm">Aucune action automatisée enregistrée pour le moment.</p>
             </div>
           ) : (
             filteredLogs.map((log) => (

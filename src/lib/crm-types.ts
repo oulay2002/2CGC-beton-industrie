@@ -197,7 +197,11 @@ Pouvons-nous convenir d'un court échange ou vous transmettre notre grille tarif
 
 Bien cordialement,
 KEITA BOUBACAR — Directeur Général
-2CGC SARL Unipersonnel — Quartier Commerce non loin de la Pharmacie Appaul, BP 129 Daloa (Côte d'Ivoire)`,
+2CGC SARL Unipersonnel — Quartier Commerce non loin de la Pharmacie Appaul, BP 129 Daloa (Côte d'Ivoire)
+
+———
+Vous recevez ce message parce que votre entreprise exerce dans le bâtiment en Côte d'Ivoire. Pour ne plus en recevoir, répondez « STOP » à cet email ou écrivez à cheicknaconstruction@gmail.com : votre adresse sera retirée de nos listes sous 48 heures.
+2CGC — Quartier Commerce, BP 129 Daloa, Côte d'Ivoire. Conformément à la loi n° 2013-450 relative à la protection des données à caractère personnel.`,
 
   },
 };
@@ -220,7 +224,9 @@ Nous accompagnons les professionnels et entrepreneurs du BTP en Côte d'Ivoire d
 Souhaitez-vous recevoir notre catalogue B2B avec tarifs professionnels 2026 ?
 
 _KEITA BOUBACAR — DG 2CGC Daloa_
-📞 +225 07 07 62 17 99`,
+📞 +225 07 07 62 17 99
+
+_Repondez STOP si vous ne souhaitez plus recevoir nos messages._`,
   bienvenue: `Bonjour {nom} 👋
 
 Merci pour votre intérêt pour nos produits 2CGC !

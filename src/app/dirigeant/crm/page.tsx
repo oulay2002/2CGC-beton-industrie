@@ -322,6 +322,29 @@ export default function CRMDashboard() {
       return;
     }
 
+    // Le repertoire est livre avec la plateforme et ses coordonnees ne sont pas
+    // verifiees : l'encart au-dessus le dit. Envoyer en masse depuis cette
+    // liste contredisait cet avertissement, et faisait porter deux risques au
+    // domaine d'envoi — des rebonds sur des adresses inexistantes, qui abiment
+    // la delivrabilite des proformas, et du demarchage non sollicite si une
+    // adresse se trouve etre reelle.
+    //
+    // L'envoi groupe est donc precede d'une confirmation explicite, nominative,
+    // qui rappelle ce que l'operateur engage.
+    const destinataires = aEnvoyer.map((p) => `${p.entreprise} — ${p.email}`).join('\n');
+    const confirme = window.confirm(
+      `Vous allez envoyer un email de prospection commerciale depuis le domaine 2CGC ` +
+        `a ${aEnvoyer.length} destinataire(s) :\n\n${destinataires}\n\n` +
+        `Ces coordonnees sont livrees avec la plateforme et n'ont pas ete verifiees. ` +
+        `Un envoi vers une adresse inexistante degrade la reputation du domaine, ` +
+        `et donc la bonne reception de vos devis et factures.\n\n` +
+        `Confirmez-vous avoir verifie ces adresses ?`,
+    );
+    if (!confirme) {
+      afficherNotif('Campagne annulee.', 'info');
+      return;
+    }
+
     // Assurer l'importation préalable dans le CRM
     handleImporterSelection();
 
@@ -1211,7 +1234,7 @@ export default function CRMDashboard() {
                     ) : (
                       <>
                         <Mail className="w-4 h-4" />
-                        <span>Email Partenariat B2B</span>
+                        <span>Démarcher par email ({selectionProspects.length})</span>
                       </>
                     )}
                   </button>

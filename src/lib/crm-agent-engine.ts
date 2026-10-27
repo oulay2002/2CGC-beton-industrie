@@ -55,66 +55,48 @@ export interface CRMLeadAgentic extends CRMLead {
   aiScore?: LeadAIScore;
 }
 
-const AGENT_LOGS_STORAGE_KEY = 'crm_agentic_logs_v1';
+// =============================================
+// JOURNAL DES ACTIONS AUTOMATISEES
+//
+// Il vivait dans le localStorage : propre a chaque poste, perdu au vidage du
+// cache, et different entre l'ordinateur et le telephone du dirigeant. Pour
+// une trace de relances envoyees, ce n'etait pas un support acceptable. Il
+// est desormais tenu en base, via /api/journal.
+//
+// Deux entrees etaient par ailleurs fabriquees quand le journal etait vide,
+// portant sur des prospects inexistants et horodatees a l'instant present.
+// Un journal vide se presente maintenant comme vide.
+// =============================================
 
-// =============================================
-// GESTION DU JOURNAL DES ACTIONS AGENTIQUES
-// =============================================
-export function getAgentLogs(): AgentActionLog[] {
+export async function getAgentLogs(): Promise<AgentActionLog[]> {
   if (typeof window === 'undefined') return [];
   try {
-    const saved = localStorage.getItem(AGENT_LOGS_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : getInitialLogs();
-  } catch {
-    return getInitialLogs();
+    const res = await fetch('/api/journal', { credentials: 'same-origin' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data?.entrees) ? data.entrees : [];
+  } catch (err) {
+    console.error('[journal] lecture', err);
+    return [];
   }
 }
 
-export function saveAgentLogs(logs: AgentActionLog[]) {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(AGENT_LOGS_STORAGE_KEY, JSON.stringify(logs.slice(0, 100))); // Garder les 100 plus récents
+export async function logAgentAction(
+  log: Omit<AgentActionLog, 'id' | 'timestamp'>,
+): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
+  try {
+    const res = await fetch('/api/journal', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(log),
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('[journal] ecriture', err);
+    return false;
   }
-}
-
-export function logAgentAction(log: Omit<AgentActionLog, 'id' | 'timestamp'>): AgentActionLog {
-  const newLog: AgentActionLog = {
-    ...log,
-    id: `LOG-AGENT-${Date.now().toString().slice(-6)}`,
-    timestamp: new Date().toISOString(),
-  };
-  const logs = getAgentLogs();
-  logs.unshift(newLog);
-  saveAgentLogs(logs);
-  return newLog;
-}
-
-function getInitialLogs(): AgentActionLog[] {
-  return [
-    {
-      id: 'LOG-AGENT-001',
-      timestamp: new Date().toISOString(),
-      agentName: 'Agent Qualification',
-      leadId: 'LEAD-001',
-      leadNom: 'M. Koné Drissa',
-      actionType: 'score_lead',
-      thought: 'Le prospect demande un volume important (2000 briques) avec un budget estimé à 2.5M FCFA. Source direct devis auto.',
-      toolUsed: 'scoreLead',
-      status: 'success',
-      details: { score: 92, priorite: 'haute' }
-    },
-    {
-      id: 'LOG-AGENT-002',
-      timestamp: new Date(Date.now() - 3600000).toISOString(),
-      agentName: 'Agent Relances Autonomes',
-      leadId: 'LEAD-003',
-      leadNom: 'M. Coulibaly Jean',
-      actionType: 'trigger_relance',
-      thought: 'Devis envoyé depuis 5 jours sans réponse. Déclenchement automatique de la relance WhatsApp J+5 avec rappel avantage stock.',
-      toolUsed: 'triggerAutonomousRelance',
-      status: 'success',
-      details: { canal: 'whatsapp' }
-    }
-  ];
 }
 
 // =============================================

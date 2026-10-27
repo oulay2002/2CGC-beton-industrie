@@ -85,7 +85,7 @@ export function CRMAgenticCopilot({ onRefreshLeads, onOpenLogsModal }: CRMAgenti
         {
           id: `err-${Date.now()}`,
           sender: 'agent',
-          text: 'Désolé, une erreur est survenue lors de l\'exécution de l\'action agentique.',
+          text: 'Désolé, une erreur est survenue lors de l\'exécution de l\'action.',
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
         }
       ]);
