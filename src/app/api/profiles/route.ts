@@ -156,10 +156,20 @@ export async function POST(req: NextRequest) {
 
 /**
  * GET /api/profiles — liste les profils. Reserve au dirigeant.
+ *
+ * `?role=chauffeur` est la seule exception : le chef d'usine en a besoin pour
+ * affecter une livraison. Il ne recoit alors que les chauffeurs, et de chacun
+ * le strict necessaire — nom, email, vehicule, telephone. Sans cela l'ecran
+ * usine en etait reduit a une liste de noms inventes, qui ne correspondaient
+ * a aucun compte : aucun chauffeur ne voyait jamais ses livraisons.
  */
 export async function GET(req: NextRequest) {
   const session = await verifySessionToken(req.cookies.get(COOKIE_NAME)?.value);
-  if (session?.role !== 'dirigeant') {
+  const roleDemande = req.nextUrl.searchParams.get('role');
+  const estDirigeant = session?.role === 'dirigeant';
+  const listeChauffeurs = roleDemande === 'chauffeur' && session?.role === 'chef_usine';
+
+  if (!estDirigeant && !listeChauffeurs) {
     return NextResponse.json({ error: 'Acces non autorise.' }, { status: 403 });
   }
 
@@ -168,12 +178,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Persistance indisponible.' }, { status: 503 });
   }
 
-  const { data, error } = await admin
-    .from('profiles')
-    .select(
-      'email, nom, entreprise, telephone, adresse, role, points_fidelite, tarif_special, vehicule, permis'
-    )
-    .order('email');
+  const colonnes = estDirigeant
+    ? 'email, nom, entreprise, telephone, adresse, role, points_fidelite, tarif_special, vehicule, permis'
+    : 'email, nom, telephone, role, vehicule';
+
+  let requete = admin.from('profiles').select(colonnes).order('email');
+  if (roleDemande && ROLES_VALIDES.includes(roleDemande as RoleValide)) {
+    requete = requete.eq('role', roleDemande);
+  }
+
+  const { data, error } = await requete;
 
   if (error) {
     console.error('[api/profiles] select', error.message);

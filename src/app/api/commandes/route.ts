@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
       client_telephone: texte(c.client?.telephone, 40),
       client_adresse: texte(c.client?.adresse, 400),
       chauffeur: texte(c.chauffeur) || null,
+      chauffeur_email: texte(c.chauffeurEmail, 160).toLowerCase() || null,
       signature: c.signature ?? null,
       date_livraison_effective: c.dateLivraisonEffective || null,
     }));
@@ -103,6 +104,7 @@ export async function POST(req: NextRequest) {
     const { error: errArt } = await admin.from('commande_articles').insert(
       cmd.articles.slice(0, 100).map((a) => ({
         commande_id: id,
+        produit_id: texte(a.produitId, 40) || null,
         nom: texte(a.nom),
         quantite: Number(a.quantite) || 0,
         prix: Number(a.prix) || 0,
@@ -141,17 +143,25 @@ export async function GET(req: NextRequest) {
   }
 
   const ids = (cmds ?? []).map((c) => c.id);
-  const articlesParCommande = new Map<string, { nom: string; quantite: number; prix: number }[]>();
+  const articlesParCommande = new Map<
+    string,
+    { produitId?: string; nom: string; quantite: number; prix: number }[]
+  >();
 
   if (ids.length > 0) {
     const { data: arts } = await admin
       .from('commande_articles')
-      .select('commande_id, nom, quantite, prix')
+      .select('commande_id, produit_id, nom, quantite, prix')
       .in('commande_id', ids);
 
     for (const a of arts ?? []) {
       const liste = articlesParCommande.get(a.commande_id) ?? [];
-      liste.push({ nom: a.nom, quantite: a.quantite, prix: Number(a.prix) });
+      liste.push({
+        produitId: a.produit_id ?? undefined,
+        nom: a.nom,
+        quantite: a.quantite,
+        prix: Number(a.prix),
+      });
       articlesParCommande.set(a.commande_id, liste);
     }
   }
@@ -170,6 +180,7 @@ export async function GET(req: NextRequest) {
       adresse: c.client_adresse,
     },
     chauffeur: c.chauffeur,
+    chauffeurEmail: c.chauffeur_email ?? null,
     signature: c.signature,
     dateLivraisonEffective: c.date_livraison_effective,
     articles: articlesParCommande.get(c.id) ?? [],

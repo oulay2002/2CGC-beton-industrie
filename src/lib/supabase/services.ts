@@ -81,6 +81,89 @@ export async function updateStockMatiere(
   return sendJson('/api/stocks', 'PATCH', { id, quantiteTonnes: nouvelleQuantiteTonnes });
 }
 
+export interface StockProduit {
+  produitId: string;
+  categorie: string;
+  nom: string;
+  quantite: number;
+  seuilAlerte: number;
+}
+
+/** Stocks de produits finis. Reserve a l'equipe de production. */
+export async function fetchStocksProduits(): Promise<StockProduit[] | null> {
+  const data = await getJson<{ stocks: StockProduit[] }>('/api/stocks-produits');
+  return data?.stocks ?? null;
+}
+
+/** Ajoute une quantite sortie de presse, sans relire le stock courant. */
+export async function ajouterStockProduit(produitId: string, ajout: number): Promise<boolean> {
+  return sendJson('/api/stocks-produits', 'PATCH', { produitId, ajout });
+}
+
+export interface ChauffeurDisponible {
+  email: string;
+  nom: string;
+  telephone?: string | null;
+  vehicule?: string | null;
+}
+
+/** Chauffeurs reellement enregistres, pour l'affectation des livraisons. */
+export async function fetchChauffeurs(): Promise<ChauffeurDisponible[] | null> {
+  const data = await getJson<{ profiles: ChauffeurDisponible[] }>('/api/profiles?role=chauffeur');
+  return data?.profiles ?? null;
+}
+
+export interface LigneBonEmis {
+  produitId?: string;
+  nom: string;
+  quantite: number;
+  prix?: number;
+}
+
+export interface ResultatEmission {
+  ok: boolean;
+  numero?: string;
+  erreur?: string;
+  manquants?: { produit_id: string; demande: number; disponible: number; motif: string }[];
+}
+
+/**
+ * Emet un bon : le numero est attribue par le serveur, et le stock est
+ * decremente dans la meme transaction que sa verification.
+ */
+export async function emettreBon(payload: {
+  type: 'commande' | 'livraison';
+  commandeId: string;
+  client: Record<string, unknown>;
+  articles: LigneBonEmis[];
+  total?: number;
+  chauffeur?: string;
+  chauffeurEmail?: string;
+  immatriculation?: string;
+}): Promise<ResultatEmission> {
+  try {
+    const res = await fetch('/api/bons', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, erreur: data?.error ?? `HTTP ${res.status}`, manquants: data?.manquants };
+    }
+    return { ok: true, numero: data?.numero };
+  } catch (err) {
+    console.error('[bons] emission', err);
+    return { ok: false, erreur: 'Service injoignable.' };
+  }
+}
+
+/** Attache la signature du receptionnaire a un bon deja emis. */
+export async function signerBon(numero: string, signature: string): Promise<boolean> {
+  return sendJson('/api/bons', 'PATCH', { numero, signature });
+}
+
 /** Prospects du pipeline commercial. Reserve au dirigeant. */
 export async function fetchProspectsCRM(): Promise<ProspectCRM[] | null> {
   const data = await getJson<{ prospects: ProspectCRM[] }>('/api/prospects');

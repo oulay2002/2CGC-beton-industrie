@@ -131,6 +131,7 @@ function ReassortRapidePageInner() {
     const articles = panier.map(p => {
       const produit = PRODUITS_FREQUENTS.find(prod => prod.id === p.produitId);
       return {
+        produitId: p.produitId,
         nom: produit?.nom || '',
         quantite: p.quantite,
         prix: produit?.prix || 0,

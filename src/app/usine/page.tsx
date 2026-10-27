@@ -1,14 +1,23 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { getCommandes, saveCommandes, Commande as CommandeStore } from '@/lib/commandes-store';
+import { getCommandes, saveCommande, Commande as CommandeStore } from '@/lib/commandes-store';
 import BonLivraison from '@/components/BonLivraison';
 import { genererBonLivraison as genererBonLivraisonPDF } from '@/lib/generer-bons';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
-import { updateStockMatiere } from '@/lib/supabase/services';
+import {
+  fetchStocksMatieres,
+  fetchStocksProduits,
+  fetchChauffeurs,
+  updateStockMatiere,
+  emettreBon,
+  type StockMatiere,
+  type StockProduit,
+  type ChauffeurDisponible,
+} from '@/lib/supabase/services';
 import SimulateurWhatsAppModal from '@/components/SimulateurWhatsAppModal';
 import { AlertTriangle, CheckCircle2, Cog, FileText, HardHat, MessageCircle, Package, Siren, Truck } from 'lucide-react';
 
@@ -21,62 +30,18 @@ export default function UsineDashboard() {
   const [commandeSelectionnee, setCommandeSelectionnee] = useState<Commande | null>(null);
   const [chauffeurSelectionne, setChauffeurSelectionne] = useState('');
   const [vehiculeSelectionne, setVehiculeSelectionne] = useState('');
+  const [numeroBonEmis, setNumeroBonEmis] = useState<string | null>(null);
   const [notificationAction, setNotificationAction] = useState<string | null>(null);
 
-  // Stocks disponibles sur parc de produits finis (palettes/unités prêtes à être chargées)
-  const [stocksProduitsFinis, setStocksProduitsFinis] = useState<Record<string, number>>({
-    'Agglo 20x20x50 Plein': 1200,
-    'Agglo 15x20x50 Creux': 2500,
-    'Pavé Autobloquant 20x10x8': 5000,
-    'Pavé Hollandais 20x10x6': 1500,
-    'Bordure T2 100x25x15': 400,
-    'Bordure T4 100x25x27': 250,
-    'Hourdis 16x20x50 B50': 3000,
-  });
-
-  // État des stocks de matières premières & silos usine (Daloa)
-  const [stocksMatieres, setStocksMatieres] = useState([
-    {
-      id: 'ciment',
-      nom: 'Ciment CPJ 42.5 (Silo Principal)',
-      quantiteTonnes: 18.5,
-      capaciteMaxTonnes: 80,
-      seuilCritiqueTonnes: 20,
-      unite: 'Tonnes',
-      fournisseur: 'Cimaf / Dangote San Pedro',
-      consommationMoyenne: '4.2 T / jour',
-    },
-    {
-      id: 'sable',
-      nom: 'Sable Fin Silicieux 0/4',
-      quantiteTonnes: 62.0,
-      capaciteMaxTonnes: 120,
-      seuilCritiqueTonnes: 25,
-      unite: 'Tonnes',
-      fournisseur: 'Carrière Sassandra Daloa',
-      consommationMoyenne: '8.5 T / jour',
-    },
-    {
-      id: 'gravier',
-      nom: 'Gravier Granitique Concassé 4/10',
-      quantiteTonnes: 74.0,
-      capaciteMaxTonnes: 150,
-      seuilCritiqueTonnes: 30,
-      unite: 'Tonnes',
-      fournisseur: 'Carrière Granit Haut-Sassandra',
-      consommationMoyenne: '11.0 T / jour',
-    },
-    {
-      id: 'adjuvant',
-      nom: 'Adjuvant Plastifiant & Accélérateur',
-      quantiteTonnes: 2.8,
-      capaciteMaxTonnes: 10,
-      seuilCritiqueTonnes: 3.0,
-      unite: 'Tonnes (Fûts)',
-      fournisseur: 'Sika Côte d\'Ivoire',
-      consommationMoyenne: '0.3 T / jour',
-    },
-  ]);
+  // Les stocks viennent de la base, et non plus d'une copie en memoire : une
+  // valeur saisie ici devait etre visible du dirigeant, et survivre au
+  // rechargement de la page. Tant que la lecture n'a pas abouti, les listes
+  // restent vides et l'ecran le dit, plutot que d'afficher des chiffres
+  // inventes.
+  const [stocksProduits, setStocksProduits] = useState<StockProduit[]>([]);
+  const [stocksMatieres, setStocksMatieres] = useState<StockMatiere[]>([]);
+  const [chauffeurs, setChauffeurs] = useState<ChauffeurDisponible[]>([]);
+  const [stocksCharges, setStocksCharges] = useState(false);
 
   const [modalReappro, setModalReappro] = useState<string | null>(null);
   const [quantiteAjout, setQuantiteAjout] = useState<number>(20);
@@ -100,32 +65,60 @@ export default function UsineDashboard() {
     }
   }, [user, isLoading, router]);
 
+  const rechargerStocks = useCallback(async () => {
+    const [produits, matieres] = await Promise.all([
+      fetchStocksProduits(),
+      fetchStocksMatieres(),
+    ]);
+    if (produits) setStocksProduits(produits);
+    if (matieres) setStocksMatieres(matieres);
+    setStocksCharges(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoading || !user) return;
+    // Lecture des stocks et des comptes apres le montage : ces donnees
+    // n'existent pas au rendu serveur, et les poser pendant le rendu ferait
+    // diverger l'hydratation.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void rechargerStocks();
+    // La liste des chauffeurs vient des comptes reels : l'ecran affichait
+    // auparavant deux noms inventes, qui ne correspondaient a aucun compte,
+    // si bien qu'aucune livraison affectee n'atteignait son destinataire.
+    void fetchChauffeurs().then((liste) => { if (liste) setChauffeurs(liste); });
+  }, [isLoading, user, rechargerStocks]);
+
+  /**
+   * Disponibilite d'une commande, ligne par ligne.
+   *
+   * Le rapprochement se fait par identifiant de produit. L'ancienne version
+   * comparait des libelles et se repliait sur « 1000 unites » des qu'un nom
+   * manquait a sa table : comme aucun des sept libelles ne correspondait au
+   * catalogue, toute commande etait declaree disponible. Ici, une ligne dont
+   * le produit reste introuvable est signalee comme telle, jamais supposee
+   * servie.
+   */
   const verifierDisponibiliteStock = (articles: Commande['articles']) => {
-    // Vérifie pour chaque article si stock >= quantite
-    const details = articles.map(art => {
-      const stockDispo = stocksProduitsFinis[art.nom] ?? 1000;
-      const suffisant = stockDispo >= art.quantite;
+    const parId = new Map(stocksProduits.map((s) => [s.produitId, s]));
+
+    const details = articles.map((art) => {
+      const stock = art.produitId ? parId.get(art.produitId) : undefined;
+      const connu = stock !== undefined;
+      const disponible = stock?.quantite ?? 0;
+      const suffisant = connu && disponible >= art.quantite;
       return {
         nom: art.nom,
         demande: art.quantite,
-        disponible: stockDispo,
+        disponible,
+        connu,
         suffisant,
-        manquant: suffisant ? 0 : art.quantite - stockDispo,
+        manquant: suffisant ? 0 : Math.max(0, art.quantite - disponible),
       };
     });
-    const estTotalementEnStock = details.every(d => d.suffisant);
-    return { estTotalementEnStock, details };
-  };
 
-  const deduireStockProduits = (articles: Commande['articles']) => {
-    setStocksProduitsFinis(prev => {
-      const nouveauStock = { ...prev };
-      articles.forEach(art => {
-        const actuel = nouveauStock[art.nom] ?? 1000;
-        nouveauStock[art.nom] = Math.max(0, actuel - art.quantite);
-      });
-      return nouveauStock;
-    });
+    // Tant que les stocks ne sont pas charges, on ne conclut pas.
+    const estTotalementEnStock = stocksCharges && details.every((d) => d.suffisant);
+    return { estTotalementEnStock, details };
   };
 
   if (isLoading) {
@@ -150,73 +143,170 @@ export default function UsineDashboard() {
       return updated;
     });
     setCommandes(updatedList);
-    void saveCommandes(updatedList);
+    const modifiee = updatedList.find((c) => c.id === id);
+    if (modifiee) void saveCommande(modifiee);
   };
 
-  const validerEtGenererBLDirect = (cmd: Commande, chauffeurNom: string, immat: string) => {
-    // 1. Déduire le stock de produits finis
-    deduireStockProduits(cmd.articles);
-
-    // 2. Mettre à jour la commande en statut 'prete' avec chauffeur assigné
-    const updatedList = commandes.map(c => {
-      if (c.id !== cmd.id) return c;
-      return {
-        ...c,
-        statutProduction: 'prete' as Commande['statutProduction'],
-        statut: 'en_cours' as Commande['statut'],
-        chauffeur: chauffeurNom,
-      };
+  /**
+   * Emet le bon de livraison : le serveur attribue son numero et decremente
+   * le stock dans la meme transaction que sa verification. Rien n'est ecrit
+   * localement tant qu'il n'a pas repondu — une emission refusee faute de
+   * stock ne doit pas laisser la commande marquee prete.
+   */
+  const validerEtGenererBLDirect = async (
+    cmd: Commande,
+    chauffeurNom: string,
+    chauffeurEmail: string,
+    immat: string,
+  ) => {
+    const resultat = await emettreBon({
+      type: 'livraison',
+      commandeId: cmd.id,
+      client: cmd.client,
+      articles: cmd.articles.map((a) => ({
+        produitId: a.produitId,
+        nom: a.nom,
+        quantite: a.quantite,
+        prix: a.prix,
+      })),
+      total: cmd.total,
+      chauffeur: chauffeurNom,
+      chauffeurEmail,
+      immatriculation: immat,
     });
-    setCommandes(updatedList);
-    void saveCommandes(updatedList);
 
-    // 3. Générer le Bon de Livraison Officiel PDF 2CGC
+    if (!resultat.ok) {
+      const detail = resultat.manquants?.length
+        ? resultat.manquants
+            .map((m) => `${m.produit_id} : ${m.disponible} dispo pour ${m.demande} demandes`)
+            .join(' · ')
+        : resultat.erreur;
+      setAlertStockMessage(`Bon non emis — ${detail}`);
+      setTimeout(() => setAlertStockMessage(null), 8000);
+      return;
+    }
+
+    const updatedList = commandes.map((c) =>
+      c.id === cmd.id
+        ? {
+            ...c,
+            statutProduction: 'prete' as Commande['statutProduction'],
+            statut: 'en_cours' as Commande['statut'],
+            chauffeur: chauffeurNom,
+            chauffeurEmail,
+          }
+        : c,
+    );
+    setCommandes(updatedList);
+    const modifiee = updatedList.find((c) => c.id === cmd.id);
+    if (modifiee) void saveCommande(modifiee);
+    void rechargerStocks();
+
     genererBonLivraisonPDF({
       reference: cmd.id,
       date: cmd.date,
-      numeroBon: `BL-${cmd.id}`,
+      numeroBon: resultat.numero,
       dateLivraisonPrevue: new Date().toISOString(),
       chauffeur: chauffeurNom,
       immatriculation: immat,
-      client: {
-        nom: cmd.client.nom,
-        entreprise: cmd.client.entreprise,
-        email: 'client@btp.ci',
-        telephone: cmd.client.telephone,
-        adresse: cmd.client.adresse,
-      },
-      articles: cmd.articles.map(a => ({ nom: a.nom, quantite: a.quantite, prix: a.prix })),
+      client: cmd.client,
+      articles: cmd.articles.map((a) => ({ nom: a.nom, quantite: a.quantite, prix: a.prix })),
       type: 'livraison',
     });
 
-    setNotificationAction(`Stock suffisant ! Bon de Livraison généré pour ${cmd.id} et affecté à ${chauffeurNom}.`);
-    setTimeout(() => setNotificationAction(null), 5000);
+    setNotificationAction(
+      `Bon ${resultat.numero} emis pour ${cmd.id}, affecte a ${chauffeurNom}. Stock mis a jour.`,
+    );
+    setTimeout(() => setNotificationAction(null), 6000);
   };
 
-  const genererBonLivraison = (cmd: Commande) => {
-    if (!chauffeurSelectionne || !vehiculeSelectionne) {
-      alert('Veuillez sélectionner un chauffeur et un véhicule');
+  const genererBonLivraison = async (cmd: Commande) => {
+    const ch = CHAUFFEURS.find((c) => c.email === chauffeurSelectionne);
+    if (!ch || !vehiculeSelectionne) {
+      setAlertStockMessage('Selectionnez un chauffeur et renseignez le vehicule.');
+      setTimeout(() => setAlertStockMessage(null), 6000);
       return;
     }
+
+    // Ouvrir l'apercu, c'est emettre : le numero est attribue maintenant, par
+    // le serveur, et le stock est decremente dans la meme transaction.
+    const resultat = await emettreBon({
+      type: 'livraison',
+      commandeId: cmd.id,
+      client: cmd.client,
+      articles: cmd.articles.map((a) => ({
+        produitId: a.produitId,
+        nom: a.nom,
+        quantite: a.quantite,
+        prix: a.prix,
+      })),
+      total: cmd.total,
+      chauffeur: ch.nom,
+      chauffeurEmail: ch.email,
+      immatriculation: vehiculeSelectionne,
+    });
+
+    if (!resultat.ok) {
+      const detail = resultat.manquants?.length
+        ? resultat.manquants
+            .map((m) => `${m.produit_id} : ${m.disponible} dispo pour ${m.demande} demandes`)
+            .join(' · ')
+        : resultat.erreur;
+      setAlertStockMessage(`Bon non emis — ${detail}`);
+      setTimeout(() => setAlertStockMessage(null), 8000);
+      return;
+    }
+
+    const updatedList = commandes.map((c) =>
+      c.id === cmd.id ? { ...c, chauffeur: ch.nom, chauffeurEmail: ch.email } : c,
+    );
+    setCommandes(updatedList);
+    const affectee = updatedList.find((c) => c.id === cmd.id);
+    if (affectee) void saveCommande(affectee);
+    void rechargerStocks();
+
+    setNumeroBonEmis(resultat.numero ?? null);
     setCommandeSelectionnee(cmd);
   };
 
-  const CHAUFFEURS = [
-    { nom: 'M. Kouadio', telephone: '+225 07 99 88 77', vehicules: ['1234 HK 01', '5678 AB 23'] },
-    { nom: 'M. Traoré', telephone: '+225 07 88 77 66', vehicules: ['9012 CD 45'] },
-  ];
+  // Les chauffeurs proviennent des comptes enregistres (cf. fetchChauffeurs).
+  const CHAUFFEURS = chauffeurs.map((c) => ({
+    email: c.email,
+    nom: c.nom,
+    telephone: c.telephone ?? '',
+    vehicules: c.vehicule ? [c.vehicule] : [],
+  }));
 
-  const reapprovisionnerMatiere = (id: string) => {
-    setStocksMatieres(prev => prev.map(m => {
-      if (m.id === id) {
-        const nouvelleQuantite = Math.min(m.capaciteMaxTonnes, Math.round((m.quantiteTonnes + Number(quantiteAjout)) * 10) / 10);
-        return { ...m, quantiteTonnes: nouvelleQuantite };
-      }
-      return m;
-    }));
-    setAlertStockMessage(`Réapprovisionnement de +${quantiteAjout} Tonnes enregistré avec succès.`);
+  /**
+   * Reapprovisionnement d'un silo. L'ancienne version ne touchait que l'etat
+   * React : la saisie disparaissait au rechargement et le dirigeant ne la
+   * voyait jamais. L'ecriture passe desormais par l'API, et l'affichage n'est
+   * mis a jour qu'une fois le serveur confirme.
+   */
+  const reapprovisionnerMatiere = async (id: string) => {
+    const matiere = stocksMatieres.find((m) => m.id === id);
+    if (!matiere) return;
+
+    const nouvelleQuantite = Math.min(
+      matiere.capaciteMaxTonnes,
+      Math.round((matiere.quantiteTonnes + Number(quantiteAjout)) * 10) / 10,
+    );
+
+    const ok = await updateStockMatiere(id, nouvelleQuantite);
+    if (!ok) {
+      setAlertStockMessage("Le reapprovisionnement n'a pas pu etre enregistre.");
+      setTimeout(() => setAlertStockMessage(null), 6000);
+      return;
+    }
+
+    setStocksMatieres((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, quantiteTonnes: nouvelleQuantite } : m)),
+    );
+    setAlertStockMessage(
+      `Silo ${matiere.nom} : +${quantiteAjout} T enregistrees (${nouvelleQuantite} T au total).`,
+    );
     setModalReappro(null);
-    setTimeout(() => setAlertStockMessage(null), 4000);
+    setTimeout(() => setAlertStockMessage(null), 5000);
   };
 
   const genererLienWhatsAppAlerteDG = (matiere: typeof stocksMatieres[0]) => {
@@ -324,6 +414,73 @@ export default function UsineDashboard() {
             )}
 
             {/* SECTION 1 : Suivi des Silos & Matières Premières Usine */}
+            {/* Stock de produits finis : ce que l'usine peut charger aujourd'hui.
+                Il determine si une commande part directement ou passe en
+                fabrication, d'ou sa place avant les matieres premieres. */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 mb-8">
+              <div className="flex flex-wrap justify-between items-center gap-4 mb-5 pb-4 border-b border-gray-100">
+                <div>
+                  <h2 className="text-xl font-black text-[#002B5B] flex items-center gap-2">
+                    <Package className="w-4 h-4" /> Stock de produits finis
+                  </h2>
+                  <p className="text-gray-500 text-xs mt-1">
+                    Unités disponibles sur parc, prêtes à être chargées. Déduites
+                    automatiquement à l'émission d'un bon de livraison.
+                  </p>
+                </div>
+                <button
+                  onClick={() => void rechargerStocks()}
+                  className="text-xs font-bold text-[#002B5B] border border-[#002B5B]/20 rounded-xl px-3 py-2 hover:bg-[#002B5B]/5 transition-colors"
+                >
+                  Actualiser
+                </button>
+              </div>
+
+              {!stocksCharges ? (
+                <p className="text-sm text-gray-500">Lecture des stocks…</p>
+              ) : stocksProduits.length === 0 ? (
+                <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3">
+                  Aucun stock enregistré. La table des produits finis n'a pas encore
+                  été créée en base (migration 007).
+                </p>
+              ) : (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {stocksProduits.map((s) => {
+                    const critique = s.quantite <= s.seuilAlerte;
+                    return (
+                      <div
+                        key={s.produitId}
+                        className={`rounded-xl border p-3 ${
+                          critique
+                            ? 'border-red-300 bg-red-50/60'
+                            : 'border-slate-200 bg-slate-50/60'
+                        }`}
+                      >
+                        <div className="text-xs font-bold text-[#002B5B] leading-snug">{s.nom}</div>
+                        <div className="flex items-baseline justify-between mt-1.5">
+                          <span
+                            className={`text-xl font-black tabular-nums ${
+                              critique ? 'text-red-700' : 'text-[#002B5B]'
+                            }`}
+                          >
+                            {s.quantite.toLocaleString('fr-FR')}
+                          </span>
+                          <span className="text-[11px] text-gray-500">
+                            seuil {s.seuilAlerte.toLocaleString('fr-FR')}
+                          </span>
+                        </div>
+                        {critique && (
+                          <div className="text-[11px] font-bold text-red-700 mt-1">
+                            Sous le seuil d'alerte
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8">
               <div className="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                 <div>
@@ -479,7 +636,7 @@ export default function UsineDashboard() {
 
                   <div className="flex gap-3">
                     <button
-                      onClick={() => reapprovisionnerMatiere(modalReappro)}
+                      onClick={() => void reapprovisionnerMatiere(modalReappro)}
                       className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer"
                     >
                       Confirmer l'ajout
@@ -568,7 +725,15 @@ export default function UsineDashboard() {
                                     </div>
                                     <div className="flex flex-col sm:flex-row gap-2">
                                       <button
-                                        onClick={() => validerEtGenererBLDirect(cmd, CHAUFFEURS[0].nom, CHAUFFEURS[0].vehicules[0])}
+                                        onClick={() => {
+                                          const ch = CHAUFFEURS.find((c) => c.email === chauffeurSelectionne) ?? CHAUFFEURS[0];
+                                          if (!ch) {
+                                            setAlertStockMessage("Aucun compte chauffeur enregistre : creez-en un avant d'emettre un bon.");
+                                            setTimeout(() => setAlertStockMessage(null), 8000);
+                                            return;
+                                          }
+                                          void validerEtGenererBLDirect(cmd, ch.nom, ch.email, vehiculeSelectionne || ch.vehicules[0] || '');
+                                        }}
                                         className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-black text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                                       >
                                         <FileText className="w-4 h-4" /> Émettre Bon de Livraison Direct (Stock dispo)
@@ -665,27 +830,37 @@ export default function UsineDashboard() {
                             <label className="block text-sm font-bold text-gray-700 mb-2">Chauffeur assigné *</label>
                             <select
                               value={chauffeurSelectionne}
-                              onChange={(e) => setChauffeurSelectionne(e.target.value)}
+                              onChange={(e) => {
+                                setChauffeurSelectionne(e.target.value);
+                                // Le vehicule suit le compte, et reste modifiable
+                                // si le chauffeur prend un autre camion.
+                                const ch = CHAUFFEURS.find((c) => c.email === e.target.value);
+                                setVehiculeSelectionne(ch?.vehicules[0] ?? '');
+                              }}
                               className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none min-h-[44px] bg-white"
                             >
-                              <option value="">Sélectionner un chauffeur</option>
-                              {CHAUFFEURS.map((c, idx) => (
-                                <option key={idx} value={c.nom}>{c.nom} - {c.telephone}</option>
+                              <option value="">
+                                {CHAUFFEURS.length === 0
+                                  ? 'Aucun compte chauffeur enregistré'
+                                  : 'Sélectionner un chauffeur'}
+                              </option>
+                              {CHAUFFEURS.map((c) => (
+                                <option key={c.email} value={c.email}>
+                                  {c.nom}{c.telephone ? ` — ${c.telephone}` : ''}
+                                </option>
                               ))}
                             </select>
                           </div>
                           <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2">Véhicule *</label>
-                            <select
+                            <input
+                              type="text"
                               value={vehiculeSelectionne}
                               onChange={(e) => setVehiculeSelectionne(e.target.value)}
+                              placeholder="Immatriculation — ex : 1234 HK 01"
+                              maxLength={40}
                               className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-[#FFD700] focus:outline-none min-h-[44px] bg-white"
-                            >
-                              <option value="">Sélectionner un véhicule</option>
-                              <option value="1234 HK 01">1234 HK 01 - Benne 20T</option>
-                              <option value="5678 AB 23">5678 AB 23 - Benne 15T</option>
-                              <option value="9012 CD 45">9012 CD 45 - Benne 25T</option>
-                            </select>
+                            />
                           </div>
                         </div>
 
@@ -720,7 +895,7 @@ export default function UsineDashboard() {
             </button>
 
             <BonLivraison
-              numero={`BL-2026-${commandeSelectionnee.id.split('-')[2]}`}
+              numero={numeroBonEmis ?? commandeSelectionnee.id}
               date={commandeSelectionnee.date}
               statut="chargement"
               usine={{
@@ -739,8 +914,8 @@ export default function UsineDashboard() {
               }}
               vehicule={vehiculeSelectionne}
               chauffeur={{
-                nom: chauffeurSelectionne,
-                telephone: CHAUFFEURS.find(c => c.nom === chauffeurSelectionne)?.telephone || '',
+                nom: CHAUFFEURS.find((c) => c.email === chauffeurSelectionne)?.nom ?? '',
+                telephone: CHAUFFEURS.find((c) => c.email === chauffeurSelectionne)?.telephone || '',
               }}
               articles={commandeSelectionnee.articles.map(a => ({
                 designation: a.nom,

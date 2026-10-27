@@ -13,6 +13,14 @@
 // src/lib/commandes-server.ts, pas par ce module.
 
 export interface CommandeArticle {
+  /**
+   * Identifiant du produit au catalogue. Rapprocher une ligne du stock par
+   * son libelle etait fragile : la moindre refonte des noms rompait le lien
+   * en silence, et c'est precisement ce qui s'etait produit — aucun des sept
+   * libelles du stock usine ne correspondait a un produit du catalogue.
+   * Optionnel : les commandes anterieures a ce changement n'en portent pas.
+   */
+  produitId?: string;
   nom: string;
   quantite: number;
   prix: number;
@@ -31,7 +39,10 @@ export interface Commande {
     telephone: string;
     adresse: string;
   };
+  /** Nom affiche sur le bon de livraison. */
   chauffeur: string | null;
+  /** Lien stable vers le compte : un renommage ne doit pas rompre l'affectation. */
+  chauffeurEmail?: string | null;
   articles: CommandeArticle[];
   dateLivraisonEffective?: string;
   signature?: string | null;
@@ -68,6 +79,18 @@ export async function getCommandes(): Promise<Commande[]> {
 }
 
 /** Enregistre un lot de commandes. */
+/**
+ * Enregistre une seule commande.
+ *
+ * `saveCommandes` renvoyait toute la liste a chaque geste : deux postes
+ * agissant en meme temps se reecrivaient mutuellement, et les signatures
+ * deja enregistrees repartaient a chaque fois sur le reseau. La route faisant
+ * un `upsert` par identifiant, n'envoyer que la ligne touchee suffit.
+ */
+export async function saveCommande(commande: Commande): Promise<boolean> {
+  return saveCommandes([commande]);
+}
+
 export async function saveCommandes(commandes: Commande[]): Promise<boolean> {
   if (commandes.length === 0) return true;
   try {

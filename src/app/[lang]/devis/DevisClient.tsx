@@ -293,6 +293,7 @@ function DevisInner({ lang }: { lang: Locale }) {
         adresse: clientInfo.codePostal || (optionLivraison ? zoneSelectionnee.label : isEn ? "Factory pickup Daloa" : "Retrait usine Daloa"),
       },
       articles: lignes.map((l) => ({
+        produitId: l.id,
         nom: l.nom,
         quantite: l.quantite,
         prix: l.prix,

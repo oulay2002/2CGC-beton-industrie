@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { getCommandes, saveCommandes, Commande, CommandeArticle } from '@/lib/commandes-store';
+import { getCommandes, saveCommande, Commande, CommandeArticle } from '@/lib/commandes-store';
 import { genererBonLivraison } from '@/lib/generer-bons';
+import { signerBon } from '@/lib/supabase/services';
 import Link from 'next/link';
 import { formatFCFA } from '@/lib/utils';
 import { CheckCircle2, MapPin, Smartphone, Truck } from 'lucide-react';
@@ -57,10 +58,16 @@ export default function ChauffeurDashboard() {
 
   if (!user || (user.role !== 'chauffeur' && user.role !== 'dirigeant')) return null;
 
-  // Si c'est le dirigeant en mode supervision, afficher les livraisons de M. Kouadio ou toutes
-  const nomChauffeurCible = user.role === 'chauffeur' ? user.nom : 'M. Kouadio';
-  const mesLivraisons = commandesList.filter(c => (c.chauffeur === nomChauffeurCible || user.role === 'dirigeant') && c.statut !== 'livree');
-  const mesLivraisonsTerminees = commandesList.filter(c => (c.chauffeur === nomChauffeurCible || user.role === 'dirigeant') && c.statut === 'livree');
+  // L'affectation se lit sur l'email du compte : un renommage ne doit pas
+  // faire disparaitre les courses du chauffeur. Le nom reste accepte en
+  // secours pour les commandes anterieures a ce changement.
+  const emailCible = user.email.toLowerCase();
+  const estAffectee = (c: Commande) =>
+    user.role === 'dirigeant' ||
+    (c.chauffeurEmail ?? '').toLowerCase() === emailCible ||
+    (!c.chauffeurEmail && c.chauffeur === user.nom);
+  const mesLivraisons = commandesList.filter(c => estAffectee(c) && c.statut !== 'livree');
+  const mesLivraisonsTerminees = commandesList.filter(c => estAffectee(c) && c.statut === 'livree');
 
   // Générateur de lien WhatsApp de suivi chantier pour le client
   const genererLienWhatsAppSuivi = (cmd: Commande, statutEtape: 'depart' | 'arrivee' | 'livre') => {
@@ -161,7 +168,7 @@ export default function ChauffeurDashboard() {
     }
   };
 
-  const validerLivraison = () => {
+  const validerLivraison = async () => {
     // Le typage a révélé ce manque : la fonction déréférençait `livraisonActive`
     // sans vérifier qu'une livraison était bien sélectionnée. Le `any` d'origine
     // masquait un plantage possible de l'écran chauffeur en pleine tournée.
@@ -174,14 +181,38 @@ export default function ChauffeurDashboard() {
       return;
     }
 
-    // 1. Générer le bon de livraison officiel PDF avec la signature capturée
+    // 1. Retrouver le bon emis par l'usine pour cette commande, et y attacher
+    //    la signature. Le numero imprime est celui de l'archive, non un
+    //    numero recompose a chaque edition.
+    let numeroBon = '';
+    try {
+      const res = await fetch(`/api/bons?commande=${encodeURIComponent(livraisonActive.id)}`, {
+        credentials: 'same-origin',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        numeroBon = data?.bons?.find((b: { type: string }) => b.type === 'livraison')?.numero ?? '';
+      }
+    } catch (err) {
+      console.error('[chauffeur] lecture du bon', err);
+    }
+
+    if (numeroBon) {
+      const signe = await signerBon(numeroBon, signatureData);
+      if (!signe) {
+        alert("La signature n'a pas pu etre enregistree. Reessayez avant de quitter le chantier.");
+        return;
+      }
+    }
+
+    // 2. Generer le PDF officiel avec la signature capturee
     genererBonLivraison({
       reference: livraisonActive.id,
       date: livraisonActive.date,
-      numeroBon: `BL-${livraisonActive.id}`,
+      numeroBon: numeroBon || livraisonActive.id,
       dateLivraisonPrevue: new Date().toISOString(),
       chauffeur: user.nom,
-      immatriculation: user.permis || 'Camion Plateau 15T',
+      immatriculation: user.vehicule || 'Vehicule non renseigne',
       client: livraisonActive.client,
       articles: livraisonActive.articles.map((a: { nom: string; quantite: number }) => ({ nom: a.nom, quantite: a.quantite })),
       type: 'livraison',
@@ -195,7 +226,8 @@ export default function ChauffeurDashboard() {
         : c
     );
     setCommandesList(updatedList);
-    void saveCommandes(updatedList);
+    const livree = updatedList.find((c) => c.id === livraisonActive.id);
+    if (livree) void saveCommande(livree);
 
     // 3. Ouvrir la notification WhatsApp de livraison terminée
     const lienNotification = genererLienWhatsAppSuivi(livraisonActive, 'livre');
@@ -427,7 +459,7 @@ export default function ChauffeurDashboard() {
 
               <div className="flex gap-3">
                 <button
-                  onClick={validerLivraison}
+                  onClick={() => void validerLivraison()}
                   className="flex-1 bg-green-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-600 min-h-[44px]"
                 >
                   Valider la livraison
