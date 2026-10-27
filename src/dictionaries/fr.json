@@ -73,7 +73,7 @@
     "heroDesc": "Depuis 15 ans, notre usine de Daloa produit briques, hourdis et pavés pour les chantiers de toute la Côte d'Ivoire. Livraison par camion-grue, déchargement compris.",
     "heroCTA1": "Obtenir mon devis",
     "heroCTA2": "Voir le catalogue",
-    "heroCTA3": "Télécharger PDF (8p)",
+    "heroCTA3": "Télécharger PDF (9p)",
     "heroScrollLabel": "Défiler",
     "heroSlide0Label": "Usine Daloa",
     "heroSlide1Label": "Livraison Agglos",
@@ -157,7 +157,7 @@
     "cataloguePdfBadge": "Brochure & Fiches Techniques",
     "cataloguePdfTitle": "Téléchargez le Catalogue Officiel 2CGC (PDF)",
     "cataloguePdfDesc": "Retrouvez nos produits avec dimensions exactes, poids réels, modèles d'hourdis et pavés, et tarifs officiels HT de l'entreprise.",
-    "telechargerPdf": "Télécharger le PDF (1.1 Mo)",
+    "telechargerPdf": "Télécharger le PDF (2 Mo)",
     "ouvrirPdf": "Ouvrir en plein écran",
     "statsTitle": "2CGC en chiffres",
     "statsDesc": "Des résultats qui parlent d'eux-mêmes",
@@ -246,7 +246,7 @@
     "heroSub": "Gamme certifiée 2CGC CHEICKNA",
     "title": "Catalogue",
     "desc24": "références certifiées avec dimensions et poids conformes.",
-    "telechargerPdf": "Télécharger PDF (1.1 Mo)",
+    "telechargerPdf": "Télécharger PDF (2 Mo)",
     "ouvrirPdf": "Ouvrir",
     "toutesCategories": "Tout",
     "categories": {
@@ -281,7 +281,7 @@
     "ctaTitle": "Un projet ? Obtenez votre devis en 2 minutes",
     "ctaDesc": "Nos équipes calculent automatiquement la quantité, le prix HT/TTC et les délais de livraison.",
     "ctaButton": "Devis Express",
-    "ctaPdf": "Catalogue PDF (1.1 Mo)"
+    "ctaPdf": "Catalogue PDF (2 Mo)"
   },
   "contact": {
     "heroBadge": "Daloa, Côte d'Ivoire",

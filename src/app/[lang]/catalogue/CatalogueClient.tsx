@@ -172,7 +172,7 @@ export default function CatalogueClient({ lang }: { lang: Locale }) {
     desc: isFr
       ? `${produits.length} références certifiées avec dimensions exactes, poids unitaires et résistance conforme aux normes UEMOA.`
       : `${produits.length} certified references with exact dimensions, unit weights and compliance with UEMOA standards.`,
-    telecharger: isFr ? "Télécharger PDF (1.1 Mo)" : "Download PDF (1.1 MB)",
+    telecharger: isFr ? "Télécharger PDF (2 Mo)" : "Download PDF (2 MB)",
     consulter: isFr ? "Consulter en ligne" : "View online",
     bannerText: isFr
       ? "Besoin d'un support imprimable ? Le catalogue officiel <strong>2CGC CHEICKNA</strong> contient toutes les dimensions, poids unitaires et prix HT."

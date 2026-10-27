@@ -73,7 +73,7 @@
     "heroDesc": "For 15 years, our Daloa plant has produced blocks, floor beams and pavers for building sites across Côte d’Ivoire. Delivered by crane truck, unloading included.",
     "heroCTA1": "Get my quote",
     "heroCTA2": "View catalogue",
-    "heroCTA3": "Download PDF (8p)",
+    "heroCTA3": "Download PDF (9p)",
     "heroScrollLabel": "Scroll",
     "heroSlide0Label": "Daloa Plant",
     "heroSlide1Label": "Block Delivery",
@@ -157,7 +157,7 @@
     "cataloguePdfBadge": "Brochure & Technical Sheets",
     "cataloguePdfTitle": "Download the Official 2CGC Catalogue (PDF)",
     "cataloguePdfDesc": "All our products with exact dimensions, real weights, floor beam and paving models, and official pre-tax company prices.",
-    "telechargerPdf": "Download PDF (1.1 MB)",
+    "telechargerPdf": "Download PDF (2 MB)",
     "ouvrirPdf": "Open full screen",
     "statsTitle": "2CGC by the numbers",
     "statsDesc": "Results that speak for themselves",
@@ -246,7 +246,7 @@
     "heroSub": "Certified 2CGC CHEICKNA range",
     "title": "Catalogue",
     "desc24": "certified references with exact dimensions and weights.",
-    "telechargerPdf": "Download PDF (1.1 MB)",
+    "telechargerPdf": "Download PDF (2 MB)",
     "ouvrirPdf": "Open",
     "toutesCategories": "All",
     "categories": {
@@ -281,7 +281,7 @@
     "ctaTitle": "A project? Get your quote in 2 minutes",
     "ctaDesc": "Our teams automatically calculate the quantity, pre/post-tax price and delivery times.",
     "ctaButton": "Express Quote",
-    "ctaPdf": "Catalogue PDF (1.1 MB)"
+    "ctaPdf": "Catalogue PDF (2 MB)"
   },
   "contact": {
     "heroBadge": "Daloa, Côte d'Ivoire",
