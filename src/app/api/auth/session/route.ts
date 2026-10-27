@@ -9,8 +9,21 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
+import { getAdminClient } from '@/lib/supabase/admin';
 
-/** GET — etat de la session courante. */
+/**
+ * GET — etat de la session courante, avec le profil complet.
+ *
+ * Cette route ne renvoyait que ce que porte le jeton : email, role et nom.
+ * Or c'est elle qui restaure l'utilisateur a chaque chargement de page, et le
+ * contexte d'authentification comblait les manques par des chaines vides.
+ * L'ecran chauffeur affichait donc « undefined • undefined » a la place de son
+ * vehicule, et l'espace client ne montrait ni l'entreprise ni l'adresse de
+ * livraison, pourtant enregistrees.
+ *
+ * Le jeton reste volontairement minimal — il est signe et voyage a chaque
+ * requete. Le profil se lit donc en base, a partir de l'email qu'il porte.
+ */
 export async function GET(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value;
   const session = await verifySessionToken(token);
@@ -19,12 +32,40 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 
+  // Repli sur le contenu du jeton : une base indisponible ne doit pas
+  // deconnecter l'utilisateur, seulement appauvrir son profil.
+  const minimal = { email: session.email, role: session.role, nom: session.nom ?? '' };
+
+  const admin = getAdminClient();
+  if (!admin) {
+    return NextResponse.json({ authenticated: true, user: minimal });
+  }
+
+  const { data, error } = await admin
+    .from('profiles')
+    .select('email, nom, entreprise, telephone, adresse, role, points_fidelite, tarif_special, vehicule, permis')
+    .eq('email', session.email.toLowerCase())
+    .maybeSingle();
+
+  if (error || !data) {
+    if (error) console.error('[api/auth/session] profil', error.message);
+    return NextResponse.json({ authenticated: true, user: minimal });
+  }
+
   return NextResponse.json({
     authenticated: true,
     user: {
-      email: session.email,
+      email: data.email,
+      nom: data.nom ?? session.nom ?? '',
+      entreprise: data.entreprise ?? '',
+      telephone: data.telephone ?? '',
+      adresse: data.adresse ?? undefined,
+      // Le role fait foi cote jeton : il est signe, la ligne ne l'est pas.
       role: session.role,
-      nom: session.nom,
+      pointsFidelite: data.points_fidelite ?? undefined,
+      tarifSpecial: data.tarif_special ?? undefined,
+      vehicule: data.vehicule ?? undefined,
+      permis: data.permis ?? undefined,
     },
   });
 }

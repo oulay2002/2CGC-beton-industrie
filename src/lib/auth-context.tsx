@@ -11,6 +11,8 @@ export interface User {
   entreprise: string;
   telephone: string;
   role: UserRole;
+  /** Adresse de livraison par defaut, propre au client (migration 006). */
+  adresse?: string;
   // Spécifique client
   pointsFidelite?: number;
   tarifSpecial?: number;
@@ -204,12 +206,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!annule && res.ok) {
           const data = await res.json();
           if (data?.authenticated && data.user) {
+            // La route renvoie desormais le profil complet. L'ancienne
+            // version forcait entreprise et telephone a vide et omettait le
+            // reste : au moindre chargement de page, le chauffeur perdait son
+            // vehicule et le client son adresse de livraison.
             const restaure: User = {
               email: data.user.email,
               nom: data.user.nom ?? '',
-              entreprise: '',
-              telephone: '',
+              entreprise: data.user.entreprise ?? '',
+              telephone: data.user.telephone ?? '',
+              adresse: data.user.adresse ?? undefined,
               role: data.user.role,
+              pointsFidelite: data.user.pointsFidelite ?? undefined,
+              tarifSpecial: data.user.tarifSpecial ?? undefined,
+              vehicule: data.user.vehicule ?? undefined,
+              permis: data.user.permis ?? undefined,
             };
             setUser(restaure);
             identifyUser(restaure);
