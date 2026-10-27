@@ -52,6 +52,14 @@ const PRODUITS: Produit[] = [
   { id: "5", categorie: "agglos", nom: "Brique 12 Pleine", nomEn: "Solid Block 12", prix: 430, stock: 3000, co2: 8.5, unite: "unité", uniteEn: "unit", poidsKg: 13, image: "/images/produits/page_1_img_12.jpeg" },
   { id: "6", categorie: "agglos", nom: "Brique 12 Creuse", nomEn: "Hollow Block 12", prix: 300, stock: 6000, co2: 5.5, unite: "unité", uniteEn: "unit", poidsKg: 9, image: "/images/produits/page_1_img_13.jpeg" },
   { id: "7", categorie: "agglos", nom: "Brique 10 Creuse", nomEn: "Hollow Block 10", prix: 260, stock: 7000, co2: 4.5, unite: "unité", uniteEn: "unit", poidsKg: 8, image: "/images/produits/page_1_img_14.jpeg" },
+
+  // Agglos double alvéoles — relevé client du 27/10/2026 (Keita Briques).
+  // Dimensions, prix et poids communiqués par le client. Le CO2 et le stock
+  // ne l'ont pas été : le CO2 suit le ratio masse de l'agglo plein de même
+  // format, et le stock reprend celui de l'équivalent creux. A confirmer.
+  { id: "27", categorie: "agglos", nom: "Agglo 20 Double Alvéoles", nomEn: "Double-Cell Block 20", prix: 485, stock: 8000, co2: 12.5, unite: "unité", uniteEn: "unit", poidsKg: 20, image: "/images/produits/agglo-double-20.jpg" },
+  { id: "26", categorie: "agglos", nom: "Agglo 15 Double Alvéoles", nomEn: "Double-Cell Block 15", prix: 320, stock: 10000, co2: 9.8, unite: "unité", uniteEn: "unit", poidsKg: 16, image: "/images/produits/agglo-double-15.jpg" },
+  { id: "25", categorie: "agglos", nom: "Agglo 12 Double Alvéoles", nomEn: "Double-Cell Block 12", prix: 285, stock: 6000, co2: 8.5, unite: "unité", uniteEn: "unit", poidsKg: 14, image: "/images/produits/agglo-double-12.jpg" },
   // Hourdis
   { id: "8", categorie: "hourdis", nom: "Hourdis 15 Français", nomEn: "Floor Beam 15 French", prix: 430, stock: 3500, co2: 7.2, unite: "unité", uniteEn: "unit", poidsKg: 12, image: "/images/produits/page_1_img_15.jpeg" },
   { id: "9", categorie: "hourdis", nom: "Hourdis 12 Français", nomEn: "Floor Beam 12 French", prix: 380, stock: 4000, co2: 6.8, unite: "unité", uniteEn: "unit", poidsKg: 10, image: "/images/produits/page_2_img_2.jpeg" },
@@ -71,14 +79,6 @@ const PRODUITS: Produit[] = [
   { id: "22", categorie: "paves", nom: "Pavé Z-6-s Rouge", nomEn: "Z-6-s Paver Red", prix: 7500, stock: 700, co2: 14.5, unite: "m²", uniteEn: "sqm", poidsKg: 140, image: "/images/produits/page_6_img_4.jpeg" },
   { id: "23", categorie: "paves", nom: "Pavé Z-6-s Gris", nomEn: "Z-6-s Paver Grey", prix: 6500, stock: 2000, co2: 13.5, unite: "m²", uniteEn: "sqm", poidsKg: 140, image: "/images/produits/page_7_img_3.jpeg" },
   { id: "24", categorie: "paves", nom: "Pavé Z-7 Mixte", nomEn: "Z-7 Paver Mix", prix: 7500, stock: 900, co2: 14.5, unite: "m²", uniteEn: "sqm", poidsKg: 140, image: "/images/produits/page_7_img_4.jpeg" },
-
-  // Agglos double alvéoles — relevé client du 27/10/2026 (Keita Briques).
-  // Dimensions, prix et poids communiqués par le client. Le CO2 et le stock
-  // ne l'ont pas été : le CO2 suit le ratio masse de l'agglo plein de même
-  // format, et le stock reprend celui de l'équivalent creux. A confirmer.
-  { id: "25", categorie: "agglos", nom: "Agglo 12 Double Alvéoles", nomEn: "Double-Cell Block 12", prix: 285, stock: 6000, co2: 8.5, unite: "unité", uniteEn: "unit", poidsKg: 14, image: "/images/produits/agglo-double-12.jpg" },
-  { id: "26", categorie: "agglos", nom: "Agglo 15 Double Alvéoles", nomEn: "Double-Cell Block 15", prix: 320, stock: 10000, co2: 9.8, unite: "unité", uniteEn: "unit", poidsKg: 16, image: "/images/produits/agglo-double-15.jpg" },
-  { id: "27", categorie: "agglos", nom: "Agglo 20 Double Alvéoles", nomEn: "Double-Cell Block 20", prix: 485, stock: 8000, co2: 12.5, unite: "unité", uniteEn: "unit", poidsKg: 20, image: "/images/produits/agglo-double-20.jpg" },
 ];
 
 function DevisInner({ lang }: { lang: Locale }) {

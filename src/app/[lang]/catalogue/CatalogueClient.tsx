@@ -75,6 +75,12 @@ const PRODUITS_FR = [
   { id: "5", categorie: "agglos", image: "/images/produits/page_1_img_12.jpeg", nom: "Brique 12 Pleine", description: "Brique pleine fine pour cloisons phoniques.", prix: 430, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "20 kg" } },
   { id: "6", categorie: "agglos", image: "/images/produits/page_1_img_13.jpeg", nom: "Brique 12 Creuse", description: "Brique creuse fine économique.", prix: 300, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "14 kg" } },
   { id: "7", categorie: "agglos", image: "/images/produits/page_1_img_14.jpeg", nom: "Brique 10 Creuse", description: "Brique creuse très fine pour doublages.", prix: 260, unite: "unité", specs: { dimensions: "450x100x200mm", poids: "12 kg" } },
+
+  // Agglos double alvéoles — relevé client du 27/10/2026 (Keita Briques).
+  // Dimensions, prix et poids communiqués par le client.
+  { id: "27", categorie: "agglos", image: "/images/produits/agglo-double-20.jpg", nom: "Agglo 20 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format porteur.", prix: 485, unite: "unité", specs: { dimensions: "450x200x200mm", poids: "20 kg" } },
+  { id: "26", categorie: "agglos", image: "/images/produits/agglo-double-15.jpg", nom: "Agglo 15 Double Alvéoles", description: "Agglo à double rangée d'alvéoles pour murs d'élévation.", prix: 320, unite: "unité", specs: { dimensions: "450x150x200mm", poids: "16 kg" } },
+  { id: "25", categorie: "agglos", image: "/images/produits/agglo-double-12.jpg", nom: "Agglo 12 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format mince pour cloisons.", prix: 285, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "14 kg" } },
   { id: "8", categorie: "hourdis", image: "/images/produits/page_1_img_15.jpeg", nom: "Hourdis 15 Français", description: "Hourdis standard pour planchers à poutrelles.", prix: 430, unite: "unité", specs: { dimensions: "500x150x200mm", poids: "19 kg" } },
   { id: "9", categorie: "hourdis", image: "/images/produits/page_2_img_2.jpeg", nom: "Hourdis 12 Français", description: "Hourdis mince pour planchers bas.", prix: 380, unite: "unité", specs: { dimensions: "500x120x200mm", poids: "18 kg" } },
   { id: "10", categorie: "hourdis", image: "/images/produits/page_2_img_6.jpeg", nom: "Hourdis 16 Américain", description: "Hourdis haute capacité type américain.", prix: 600, unite: "unité", specs: { dimensions: "500x160x200mm", poids: "17 kg" } },
@@ -92,12 +98,6 @@ const PRODUITS_FR = [
   { id: "22", categorie: "paves", image: "/images/produits/page_6_img_4.jpeg", nom: "Pavé Z-6-s Rouge", description: "Pavé rectangulaire rouge carrossable.", prix: 7500, unite: "m²", specs: { dimensions: "245x130x80mm", poids: "NC" } },
   { id: "23", categorie: "paves", image: "/images/produits/page_7_img_3.jpeg", nom: "Pavé Z-6-s Gris", description: "Pavé rectangulaire gris brut haute charge.", prix: 6500, unite: "m²", specs: { dimensions: "245x130x80mm", poids: "NC" } },
   { id: "24", categorie: "paves", image: "/images/produits/page_7_img_4.jpeg", nom: "Pavé Z-7 Mixte", description: "Pavé en Z multi-couleurs pour parkings.", prix: 7500, unite: "m²", specs: { dimensions: "Mixte", poids: "NC" } },
-
-  // Agglos double alvéoles — relevé client du 27/10/2026 (Keita Briques).
-  // Dimensions, prix et poids communiqués par le client.
-  { id: "25", categorie: "agglos", image: "/images/produits/agglo-double-12.jpg", nom: "Agglo 12 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format mince pour cloisons.", prix: 285, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "14 kg" } },
-  { id: "26", categorie: "agglos", image: "/images/produits/agglo-double-15.jpg", nom: "Agglo 15 Double Alvéoles", description: "Agglo à double rangée d'alvéoles pour murs d'élévation.", prix: 320, unite: "unité", specs: { dimensions: "450x150x200mm", poids: "16 kg" } },
-  { id: "27", categorie: "agglos", image: "/images/produits/agglo-double-20.jpg", nom: "Agglo 20 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format porteur.", prix: 485, unite: "unité", specs: { dimensions: "450x200x200mm", poids: "20 kg" } },
 ];
 
 const PRODUITS_EN = PRODUITS_FR.map((p) => {
