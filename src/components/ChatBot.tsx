@@ -28,15 +28,15 @@ const CONNAISSANCES: { motsCles: string[]; reponse: string }[] = [
   },
   {
     motsCles: ['pdf', 'télécharger', 'telecharger', 'brochure', 'fiche technique', 'document', 'fiche'],
-    reponse: "**Catalogue Officiel 2CGC CHEICKNA (PDF) :**\n\nVous pouvez télécharger notre brochure complète avec les dimensions exactes, poids réels et tarifs HT de nos 24 produits :\n\n [ Télécharger le Catalogue PDF (8 pages)](/catalogue-produits-2cgc.pdf)\n\nBesoin d'un devis immédiat ? Utilisez notre [configurateur de devis en ligne](/devis) !",
+    reponse: "**Catalogue Officiel 2CGC CHEICKNA (PDF) :**\n\nVous pouvez télécharger notre brochure complète avec les dimensions exactes, poids réels et tarifs HT de nos produits :\n\n [ Télécharger le Catalogue PDF (8 pages)](/catalogue-produits-2cgc.pdf)\n\nBesoin d'un devis immédiat ? Utilisez notre [configurateur de devis en ligne](/devis) !",
   },
   {
     motsCles: ['produit', 'catalogue', 'gamme', 'matériaux', 'matériau'],
-    reponse: "**Notre gamme complète 2CGC (24 produits certifiés) :**\n\n• **Briques & Agglomérés** (260 à 570 FCFA/unité) - Formats 10, 12, 15 et 20 (Pleines & Creuses)\n• **Hourdis** (380 à 700 FCFA/unité) - Modèles Français (12, 15) et Américains (16, 20)\n• **Pavés Autobloquants** (6 500 à 7 500 FCFA/m²) - Modèles Z-7, Z-13, Z-14 et Z-6-s (différentes couleurs)\n\n [Consulter le catalogue en ligne](/catalogue)\n [ Télécharger le Catalogue PDF officiel](/catalogue-produits-2cgc.pdf)",
+    reponse: "**Notre gamme complète 2CGC (27 produits certifiés) :**\n\n• **Briques & Agglomérés** (260 à 570 FCFA/unité) - Formats 10, 12, 15 et 20 (Pleines, Creuses & Double Alvéoles)\n• **Hourdis** (380 à 700 FCFA/unité) - Modèles Français (12, 15) et Américains (16, 20)\n• **Pavés Autobloquants** (6 500 à 7 500 FCFA/m²) - Modèles Z-7, Z-13, Z-14 et Z-6-s (différentes couleurs)\n\n [Consulter le catalogue en ligne](/catalogue)\n [ Télécharger le Catalogue PDF officiel](/catalogue-produits-2cgc.pdf)",
   },
   {
     motsCles: ['brique', 'briques', 'agglo', 'aggloméré', 'parpaing', 'bloc'],
-    reponse: "**Nos Briques & Agglomérés (dimensions & prix HT) :**\n\n• Brique 20 Pleine (36 kg) - **570 FCFA**\n• Brique 20 Creuse (18 kg) - **470 FCFA**\n• Brique 15 Pleine (28 kg) - **460 FCFA**\n• Brique 15 Creuse (16 kg) - **330 FCFA**\n• Brique 12 Pleine (20 kg) - **430 FCFA**\n• Brique 12 Creuse (14 kg) - **300 FCFA**\n• Brique 10 Creuse (12 kg) - **260 FCFA**\n\n Stock disponible immédiatement à notre usine de Daloa !\n [Télécharger les fiches techniques PDF](/catalogue-produits-2cgc.pdf)",
+    reponse: "**Nos Briques & Agglomérés (dimensions & prix HT) :**\n\n• Brique 20 Pleine (36 kg) - **570 FCFA**\n• Brique 20 Creuse (18 kg) - **470 FCFA**\n• Brique 15 Pleine (28 kg) - **460 FCFA**\n• Brique 15 Creuse (16 kg) - **330 FCFA**\n• Brique 12 Pleine (20 kg) - **430 FCFA**\n• Brique 12 Creuse (14 kg) - **300 FCFA**\n• Brique 10 Creuse (12 kg) - **260 FCFA**\n• Agglo 12 Double Alvéoles (14 kg) - **285 FCFA**\n• Agglo 15 Double Alvéoles (16 kg) - **320 FCFA**\n• Agglo 20 Double Alvéoles (20 kg) - **485 FCFA**\n\n Stock disponible immédiatement à notre usine de Daloa !\n [Télécharger les fiches techniques PDF](/catalogue-produits-2cgc.pdf)",
   },
   {
     motsCles: ['hourdis', 'plancher'],

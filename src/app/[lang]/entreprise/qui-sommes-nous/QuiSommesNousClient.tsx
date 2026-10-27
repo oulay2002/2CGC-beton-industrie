@@ -184,7 +184,7 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
                 href={`/${lang}/catalogue`}
                 className="bg-[#002B5B] text-white px-6 py-3.5 rounded-2xl font-bold text-sm hover:bg-[#FFD700] hover:text-[#002B5B] transition-all duration-300 shadow-md flex items-center gap-2"
               >
-                <Package className="w-4 h-4" /> {isEn ? "Explore our 24 products" : "Découvrir nos 24 produits"}
+                <Package className="w-4 h-4" /> {isEn ? "Explore our 27 products" : "Découvrir nos 27 produits"}
               </Link>
               <a
                 href="/catalogue-produits-2cgc.pdf"

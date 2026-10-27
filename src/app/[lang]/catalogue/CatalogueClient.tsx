@@ -92,6 +92,12 @@ const PRODUITS_FR = [
   { id: "22", categorie: "paves", image: "/images/produits/page_6_img_4.jpeg", nom: "Pavé Z-6-s Rouge", description: "Pavé rectangulaire rouge carrossable.", prix: 7500, unite: "m²", specs: { dimensions: "245x130x80mm", poids: "NC" } },
   { id: "23", categorie: "paves", image: "/images/produits/page_7_img_3.jpeg", nom: "Pavé Z-6-s Gris", description: "Pavé rectangulaire gris brut haute charge.", prix: 6500, unite: "m²", specs: { dimensions: "245x130x80mm", poids: "NC" } },
   { id: "24", categorie: "paves", image: "/images/produits/page_7_img_4.jpeg", nom: "Pavé Z-7 Mixte", description: "Pavé en Z multi-couleurs pour parkings.", prix: 7500, unite: "m²", specs: { dimensions: "Mixte", poids: "NC" } },
+
+  // Agglos double alvéoles — relevé client du 27/10/2026 (Keita Briques).
+  // Dimensions, prix et poids communiqués par le client.
+  { id: "25", categorie: "agglos", image: "/images/produits/agglo-double-12.jpg", nom: "Agglo 12 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format mince pour cloisons.", prix: 285, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "14 kg" } },
+  { id: "26", categorie: "agglos", image: "/images/produits/agglo-double-15.jpg", nom: "Agglo 15 Double Alvéoles", description: "Agglo à double rangée d'alvéoles pour murs d'élévation.", prix: 320, unite: "unité", specs: { dimensions: "450x150x200mm", poids: "16 kg" } },
+  { id: "27", categorie: "agglos", image: "/images/produits/agglo-double-20.jpg", nom: "Agglo 20 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format porteur.", prix: 485, unite: "unité", specs: { dimensions: "450x200x200mm", poids: "20 kg" } },
 ];
 
 const PRODUITS_EN = PRODUITS_FR.map((p) => {
@@ -120,6 +126,9 @@ const PRODUITS_EN = PRODUITS_FR.map((p) => {
     "22": "Rectangular red driveable paver.",
     "23": "Rectangular raw grey heavy-load paver.",
     "24": "Multi-colour Z-shaped paver for parking lots.",
+    "25": "Double-cell hollow block, thin format for partitions.",
+    "26": "Double-cell hollow block for elevation walls.",
+    "27": "Double-cell hollow block, load-bearing format.",
   };
   const nomMap: Record<string, string> = {
     "Brique 20 Pleine": "Solid Block 20",
@@ -128,6 +137,9 @@ const PRODUITS_EN = PRODUITS_FR.map((p) => {
     "Brique 15 Creuse": "Hollow Block 15",
     "Brique 12 Pleine": "Solid Block 12",
     "Brique 12 Creuse": "Hollow Block 12",
+    "Agglo 12 Double Alvéoles": "Double-Cell Block 12",
+    "Agglo 15 Double Alvéoles": "Double-Cell Block 15",
+    "Agglo 20 Double Alvéoles": "Double-Cell Block 20",
     "Brique 10 Creuse": "Hollow Block 10",
     "Hourdis 15 Français": "French Floor Beam 15",
     "Hourdis 12 Français": "French Floor Beam 12",
