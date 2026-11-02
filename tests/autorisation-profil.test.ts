@@ -12,7 +12,10 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { deciderEcritureProfil } from '../src/lib/autorisation-profil.ts';
+import {
+  deciderEcritureProfil,
+  exigerChangementMotDePasse,
+} from '../src/lib/autorisation-profil.ts';
 import type { RoleProfil } from '../src/lib/autorisation-profil.ts';
 import type { SessionPayload } from '../src/lib/session.ts';
 
@@ -99,5 +102,66 @@ describe('deciderEcritureProfil — chemins legitimes', () => {
   test("l'auto-inscription d'un nouveau client reste possible", () => {
     const d = deciderEcritureProfil(null, 'nouveau@btp.ci', 'client');
     assert.equal(d.verdict, 'autorise');
+  });
+});
+
+// Cette regle a bloque une demonstration devant le client : les comptes
+// creees pour l'occasion se connectaient, puis le proxy les renvoyait vers
+// l'ecran de changement de mot de passe sans jamais les laisser entrer.
+// Le drapeau etait pose des qu'un mot de passe accompagnait la requete —
+// y compris celui qu'un visiteur venait de choisir lui-meme.
+describe('exigerChangementMotDePasse', () => {
+  test("une auto-inscription n'impose pas de changer le mot de passe choisi", () => {
+    assert.equal(exigerChangementMotDePasse(null, 'nouveau@btp.ci'), false);
+  });
+
+  test('un client qui change le sien ne se le voit pas redemander', () => {
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('moi@btp.ci', 'client'), 'moi@btp.ci'),
+      false,
+    );
+  });
+
+  test('un mot de passe attribue par le dirigeant doit etre change', () => {
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('pdg@2cgc.ci', 'dirigeant'), 'chauffeur@2cgc.ci'),
+      true,
+    );
+  });
+
+  test('le dirigeant qui change le sien ne se le voit pas redemander', () => {
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('pdg@2cgc.ci', 'dirigeant'), 'pdg@2cgc.ci'),
+      false,
+    );
+  });
+
+  test("le dirigeant peut lever l'exigence pour un compte de demonstration", () => {
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('pdg@2cgc.ci', 'dirigeant'), 'demo@2cgc.ci', false),
+      false,
+    );
+  });
+
+  test("le dirigeant peut la reposer sur un compte deja debloque", () => {
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('pdg@2cgc.ci', 'dirigeant'), 'demo@2cgc.ci', true),
+      true,
+    );
+  });
+
+  test("un non-dirigeant ne peut pas se dispenser du changement", () => {
+    // Glisser le champ dans sa propre requete ne doit rien changer.
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('moi@btp.ci', 'client'), 'autre@btp.ci', false),
+      false,
+    );
+  });
+
+  test("la comparaison d'adresse ignore la casse", () => {
+    assert.equal(
+      exigerChangementMotDePasse(sessionDe('PDG@2CGC.ci', 'dirigeant'), 'pdg@2cgc.ci'),
+      false,
+    );
   });
 });

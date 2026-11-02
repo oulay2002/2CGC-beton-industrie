@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminClient } from '@/lib/supabase/admin';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
-import { deciderEcritureProfil } from '@/lib/autorisation-profil';
+import { deciderEcritureProfil, exigerChangementMotDePasse } from '@/lib/autorisation-profil';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { hacherMotDePasse, motifRejetMotDePasse } from '@/lib/password';
 
@@ -16,6 +16,12 @@ const ROLES_VALIDES = ['client', 'dirigeant', 'chef_usine', 'chauffeur'] as cons
 type RoleValide = (typeof ROLES_VALIDES)[number];
 
 interface ProfilPayload {
+  /**
+   * Un dirigeant peut lever l'exigence de changement a la premiere connexion,
+   * pour un compte de demonstration dont le mot de passe doit rester celui
+   * qu'il a communique. Absent, l'exigence s'applique.
+   */
+  exigerChangement?: boolean;
   email?: unknown;
   nom?: unknown;
   entreprise?: unknown;
@@ -139,9 +145,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: motif }, { status: 400 });
     }
     enregistrement.password_hash = await hacherMotDePasse(motDePasse);
-    enregistrement.must_change_password = true;
+
+    // On n'exige le changement que d'un mot de passe choisi par un tiers.
+    // La regle est isolee dans `autorisation-profil`, ou elle est testee.
+    enregistrement.must_change_password = exigerChangementMotDePasse(
+      session,
+      email,
+      body.exigerChangement,
+    );
     enregistrement.failed_login_count = 0;
     enregistrement.locked_until = null;
+  } else if (body.exigerChangement !== undefined && session?.role === 'dirigeant') {
+    // Sans nouveau mot de passe, le dirigeant peut tout de meme lever
+    // l'exigence sur un compte deja cree — c'est ce qui permet de debloquer
+    // un compte reste coince sur l'ecran de changement.
+    enregistrement.must_change_password = exigerChangementMotDePasse(
+      session,
+      email,
+      body.exigerChangement,
+    );
   }
 
   const { error } = await admin.from('profiles').upsert(enregistrement, { onConflict: 'email' });
@@ -179,7 +201,7 @@ export async function GET(req: NextRequest) {
   }
 
   const colonnes = estDirigeant
-    ? 'email, nom, entreprise, telephone, adresse, role, points_fidelite, tarif_special, vehicule, permis'
+    ? 'email, nom, entreprise, telephone, adresse, role, points_fidelite, tarif_special, vehicule, permis, must_change_password'
     : 'email, nom, telephone, role, vehicule';
 
   let requete = admin.from('profiles').select(colonnes).order('email');

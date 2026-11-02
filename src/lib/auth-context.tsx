@@ -68,6 +68,13 @@ export interface CompteUtilisateur {
   permis?: string;
   dateCreation?: string;
   creeParDirigeant?: boolean;
+  /**
+   * Vrai tant que le compte utilise le mot de passe remis par la Direction.
+   * Le proxy renvoie alors vers l'ecran de changement avant toute page
+   * privee — ce qui a bloque une demonstration : les comptes se connectaient
+   * sans jamais atteindre leur espace.
+   */
+  changementMotDePasseExige?: boolean;
 }
 
 /** Données de création d'un compte : le mot de passe ne transite que vers le serveur. */
@@ -124,6 +131,7 @@ interface AuthContextType {
   supprimerUtilisateur: (email: string) => Promise<ResultatAction>;
   mettreAJourMotDePasse: (email: string, nouveauMDP: string) => Promise<ResultatAction>;
   mettreAJourUtilisateur: (email: string, donnees: Partial<CompteUtilisateur>) => Promise<ResultatAction>;
+  leverChangementObligatoire: (email: string) => Promise<ResultatAction>;
   isLoading: boolean;
 }
 
@@ -163,6 +171,7 @@ interface LigneProfil {
   tarif_special?: number | null;
   vehicule?: string | null;
   permis?: string | null;
+  must_change_password?: boolean | null;
 }
 
 function versCompte(ligne: LigneProfil): CompteUtilisateur {
@@ -177,6 +186,7 @@ function versCompte(ligne: LigneProfil): CompteUtilisateur {
     tarifSpecial: ligne.tarif_special ?? undefined,
     vehicule: ligne.vehicule ?? undefined,
     permis: ligne.permis ?? undefined,
+    changementMotDePasseExige: ligne.must_change_password ?? false,
   };
 }
 
@@ -428,6 +438,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [comptes, rafraichirUtilisateurs]
   );
 
+  /**
+   * Leve l'exigence de changement de mot de passe sur un compte.
+   *
+   * Un compte dote d'un mot de passe provisoire se connecte, mais le proxy le
+   * renvoie aussitot vers l'ecran de changement : il n'atteint jamais son
+   * espace. C'est ce qui a bloque la demonstration. Le dirigeant peut
+   * desormais lever l'exigence sans toucher au mot de passe, pour un compte
+   * de demonstration ou lorsqu'il a deja transmis les identifiants de vive
+   * voix.
+   */
+  const leverChangementObligatoire = useCallback(
+    async (email: string): Promise<ResultatAction> => {
+      try {
+        const res = await fetch('/api/profiles', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, role: 'client', exigerChangement: false }),
+        });
+        if (!res.ok) {
+          return { success: false, error: await lireErreur(res, 'Échec de la mise à jour.') };
+        }
+        await rafraichirUtilisateurs();
+        return { success: true };
+      } catch (err) {
+        console.error('Erreur levee du changement obligatoire:', err);
+        return { success: false, error: 'Service injoignable.' };
+      }
+    },
+    [rafraichirUtilisateurs]
+  );
+
   const logout = useCallback(() => {
     if (user) resetPostHog();
 
@@ -453,6 +495,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         supprimerUtilisateur,
         mettreAJourMotDePasse,
         mettreAJourUtilisateur,
+        leverChangementObligatoire,
         isLoading,
       }}
     >

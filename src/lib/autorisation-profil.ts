@@ -64,3 +64,35 @@ export function deciderEcritureProfil(
 
   return { verdict: 'autorise', peutMettreAJour: true, peutEcrireChampsCommerciaux: false };
 }
+
+/**
+ * Faut-il exiger un changement de mot de passe a la premiere connexion ?
+ *
+ * La regle manquait a la creation de profil : le drapeau y etait pose sans
+ * condition des qu'un mot de passe accompagnait la requete. Un visiteur qui
+ * s'inscrivait avec son propre mot de passe se voyait donc somme d'en
+ * changer, et un compte cree pour une demonstration devenait inutilisable
+ * sans detour par cet ecran — ce qui s'est produit en presentation client.
+ *
+ * Le principe est simple : on n'exige le changement que d'un mot de passe
+ * qu'une autre personne a choisi a votre place.
+ *
+ * @param session           Session de l'auteur de la requete, ou `null`.
+ * @param email             Adresse du profil ecrit, en minuscules.
+ * @param exigerChangement  Choix explicite du dirigeant. `undefined` laisse
+ *                          la regle decider.
+ */
+export function exigerChangementMotDePasse(
+  session: SessionPayload | null,
+  email: string,
+  exigerChangement?: boolean,
+): boolean {
+  // Un dirigeant qui tranche explicitement a le dernier mot : il peut lever
+  // l'exigence pour un compte de demonstration, ou la reposer.
+  if (session?.role === 'dirigeant' && exigerChangement !== undefined) {
+    return exigerChangement;
+  }
+
+  const estSoiMeme = (session?.email ?? '').toLowerCase() === email.toLowerCase();
+  return session?.role === 'dirigeant' && !estSoiMeme;
+}

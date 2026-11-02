@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth, CompteUtilisateur, NouveauCompte, UserRole, genererMotDePasse } from '@/lib/auth-context';
-import { BarChart3, Briefcase, Factory, Files, Mail, MessageCircle, PartyPopper, Printer, RefreshCw, Search, Truck, User, Users } from 'lucide-react';
+import { BarChart3, Briefcase, Factory, Files, KeyRound, Mail, MessageCircle, PartyPopper, Printer, RefreshCw, Search, Truck, User, Users } from 'lucide-react';
 import {
   imprimerTrousseauCollaborateursPDF,
   imprimerFicheCollaborateurPDF,
@@ -34,7 +34,7 @@ const ROLES_INFO: Record<string, { label: string; badge: string; Icone: LucideIc
 };
 
 export default function EspaceIdentifiantsCollaborateurs() {
-  const { user, getUtilisateurs, creerUtilisateur, supprimerUtilisateur, mettreAJourMotDePasse, isLoading } = useAuth();
+  const { user, getUtilisateurs, creerUtilisateur, supprimerUtilisateur, mettreAJourMotDePasse, leverChangementObligatoire, isLoading } = useAuth();
   const router = useRouter();
 
   const [collaborateurs, setCollaborateurs] = useState<CompteUtilisateur[]>([]);
@@ -290,6 +290,24 @@ export default function EspaceIdentifiantsCollaborateurs() {
       setNouveauMDP('');
     } else {
       afficherNotif(`Erreur lors de la réinitialisation`, 'error');
+    }
+  };
+
+  /**
+   * Leve l'exigence de changement sur un compte deja cree.
+   *
+   * Un compte dote d'un mot de passe provisoire se connecte bel et bien, mais
+   * le proxy le renvoie aussitot vers l'ecran de changement : il n'atteint
+   * jamais son espace. Utile pour un compte de demonstration, ou lorsque les
+   * identifiants ont ete transmis de vive voix.
+   */
+  const handleDebloquer = async (c: CompteUtilisateur) => {
+    const res = await leverChangementObligatoire(c.email);
+    if (res.success) {
+      afficherNotif(`${c.nom} entre desormais sans changer son mot de passe.`, 'success');
+      charger();
+    } else {
+      afficherNotif(res.error || 'Echec de la mise a jour.', 'error');
     }
   };
 
@@ -599,6 +617,16 @@ export default function EspaceIdentifiantsCollaborateurs() {
                       </button>
 
                       <div className="flex items-center gap-2">
+                        {c.changementMotDePasseExige && (
+                          <button
+                            onClick={() => void handleDebloquer(c)}
+                            className="text-emerald-700 hover:text-emerald-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                            title="Ce compte reste bloqué sur l'écran de changement de mot de passe : lever l'exigence"
+                          >
+                            <KeyRound className="w-4 h-4" /> Débloquer
+                          </button>
+                        )}
+
                         <button
                           onClick={() => ouvrirModalReinitialiser(c)}
                           className="text-amber-700 hover:text-amber-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
