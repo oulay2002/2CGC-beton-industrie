@@ -239,7 +239,18 @@
     "ctaTitle": "Prêt à démarrer votre chantier ?",
     "ctaDesc": "Obtenez votre devis personnalisé en quelques minutes, directement en ligne.",
     "ctaDevis": "Créer mon devis maintenant",
-    "ctaCatalogue": "Parcourir le catalogue"
+    "ctaCatalogue": "Parcourir le catalogue",
+    "hero360": {
+      "longueur": "longueur",
+      "hauteur": "hauteur",
+      "epaisseur": "épaisseur",
+      "poids": "Poids unitaire",
+      "prixUnite": "F CFA / unité",
+      "choisirEpaisseur": "Épaisseur",
+      "indice": "Glissez pour tourner",
+      "alveoles": "alvéoles traversantes",
+      "manipuler": "Utilisez les flèches gauche et droite pour faire tourner le bloc."
+    }
   },
   "catalogue": {
     "heroBadge": "Usine de Daloa • Préfabriqués Béton",

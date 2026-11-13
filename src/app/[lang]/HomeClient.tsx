@@ -27,6 +27,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { ZONES } from "@/lib/zones-data";
+import Produit360 from "@/components/Produit360";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -149,7 +150,11 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
         <div className="absolute bottom-16 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float-delay pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10 w-full">
-          <div className="max-w-3xl lg:max-w-4xl xl:max-w-5xl">
+          {/* Le discours tient la colonne de gauche ; le produit, celle de
+              droite, ou il n'y avait jusqu'ici que du fond. Sous `lg`, le bloc
+              passe sous les boutons : on lit d'abord, on examine ensuite. */}
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-10 xl:gap-16">
+            <div className="max-w-3xl lg:max-w-none">
             {/* Trust Pill & Certification */}
             <div className="flex flex-wrap items-center gap-2.5 mb-7 animate-fade-in-up">
               <div className="h-12 w-auto flex items-center justify-center flex-shrink-0 opacity-90 hover:opacity-100 transition-opacity">
@@ -227,6 +232,9 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                 </div>
               ))}
             </div>
+            </div>
+
+            <Produit360 lang={lang} labels={dict.hero360} />
           </div>
         </div>
 

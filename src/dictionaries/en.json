@@ -239,7 +239,18 @@
     "ctaTitle": "Ready to start your project?",
     "ctaDesc": "Get your personalised quote in a few minutes, directly online.",
     "ctaDevis": "Create my quote now",
-    "ctaCatalogue": "Browse catalogue"
+    "ctaCatalogue": "Browse catalogue",
+    "hero360": {
+      "longueur": "length",
+      "hauteur": "height",
+      "epaisseur": "thickness",
+      "poids": "Unit weight",
+      "prixUnite": "F CFA / unit",
+      "choisirEpaisseur": "Thickness",
+      "indice": "Drag to rotate",
+      "alveoles": "through cells",
+      "manipuler": "Use the left and right arrow keys to rotate the block."
+    }
   },
   "catalogue": {
     "heroBadge": "Daloa Plant • Precast Concrete",

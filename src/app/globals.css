@@ -145,6 +145,214 @@ button, a, input, select, textarea {
 }
 
 /* ==========================================
+   BLOC 360 DU HERO — un agglo, a ses cotes reelles
+   ==========================================
+   La geometrie vient des millimetres du catalogue : `--l`, `--h` et `--e`
+   sont poses image par image par Produit360, en pixels deja mis a l'echelle.
+   `--ppm` est l'echelle elle-meme (pixels par millimetre) ; elle vit ici, et
+   non dans le composant, parce que c'est une affaire de point de rupture.
+   Le composant la relit pour poser ses cotes au bon endroit. */
+
+.b3d {
+  --ppm: 0.38;
+  /* Deux bruits superposes, pas un seul : le fin donne le sable, le large
+     donne les nuances de coulee. Un seul grain se lit comme une texture
+     plaquee, et des pastilles regulieres comme de l'eponge. */
+  /* Le granulat se lit comme des points sombres sur une matrice claire :
+     un bruit pousse vers le blanc par une gamma, puis multiplie. En
+     `overlay`, le meme bruit s'eteint sur un fond deja clair — le bloc
+     prenait alors des airs de polystyrene. */
+  --grain-fin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='gamma' exponent='0.3'/%3E%3CfeFuncG type='gamma' exponent='0.3'/%3E%3CfeFuncB type='gamma' exponent='0.3'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23s)'/%3E%3C/svg%3E");
+  --grain-large: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.22' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23l)' opacity='0.72'/%3E%3C/svg%3E");
+}
+
+@media (min-width: 640px) { .b3d { --ppm: 0.50; } }
+@media (min-width: 1024px) { .b3d { --ppm: 0.46; } }
+@media (min-width: 1280px) { .b3d { --ppm: 0.56; } }
+
+.b3d-scene {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+
+  /* Les cotes de l'agglo 20, au cas ou le script ne tourne pas : sans
+     JavaScript le bloc ne pivote pas, mais il existe, et a la bonne taille. */
+  --l: calc(450 * var(--ppm) * 1px);
+  --h: calc(200 * var(--ppm) * 1px);
+  --e: calc(200 * var(--ppm) * 1px);
+}
+
+/* Une lumiere d'atelier, fixe a l'ecran : elle ne tourne pas avec le bloc.
+   Le beton est mat, un halo doux suffit a donner le relief. */
+.b3d-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 55% at 34% 24%, rgba(255, 245, 215, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.b3d-sol {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--h, 100px) * 0.48 + var(--e, 100px) * 0.14 + 17px);
+  width: var(--l, 250px);
+  height: calc(var(--l, 250px) * 0.13);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 7, 18, 0.85) 0%, rgba(0, 7, 18, 0.45) 44%, transparent 72%);
+  filter: blur(8px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.b3d-bloc {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(-16deg) rotateY(var(--rot, -34deg));
+}
+
+.b3d-face {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  backface-visibility: hidden;
+  border-radius: 2px;
+  background-color: var(--face);
+  background-image: var(--grain-fin), var(--grain-large), var(--face-voile);
+  background-size: 90px 90px, 220px 220px, 100% 100%;
+  background-blend-mode: multiply, soft-light, normal;
+  /* Arete vive en haut, matiere qui s'assombrit en bas : le bloc est coule,
+     pas moule dans du plastique. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 0 0 1px rgba(120, 114, 102, 0.22),
+    inset 0 -14px 22px -14px rgba(52, 48, 40, 0.55);
+}
+
+.b3d-avant,
+.b3d-arriere {
+  width: var(--l);
+  height: var(--h);
+  --face: #c9c5b8;
+  --face-voile: linear-gradient(168deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.03) 36%, rgba(74, 70, 60, 0.26) 100%);
+}
+
+.b3d-gauche,
+.b3d-droite {
+  width: var(--e);
+  height: var(--h);
+  --face: #aeaa9d;
+  --face-voile: linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.01) 34%, rgba(62, 58, 50, 0.32) 100%);
+}
+
+.b3d-dessus {
+  width: var(--l);
+  height: var(--e);
+  --face: #dcd8cb;
+  --face-voile: linear-gradient(160deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(92, 88, 78, 0.16) 100%);
+}
+
+.b3d-dessous {
+  width: var(--l);
+  height: var(--e);
+  --face: #7e7b72;
+  --face-voile: linear-gradient(170deg, rgba(36, 34, 29, 0.34), rgba(36, 34, 29, 0.14));
+}
+
+.b3d-avant { transform: translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
+.b3d-arriere { transform: rotateY(180deg) translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
+.b3d-droite { transform: rotateY(90deg) translateZ(calc(var(--l) / 2)) translate(-50%, -50%); }
+.b3d-gauche { transform: rotateY(-90deg) translateZ(calc(var(--l) / 2)) translate(-50%, -50%); }
+.b3d-dessus {
+  transform: rotateX(90deg) translateZ(calc(var(--h) / 2)) translate(-50%, -50%);
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--ppm) * 26px);
+  padding: calc(var(--ppm) * 24px) calc(var(--ppm) * 27px);
+}
+.b3d-dessous {
+  transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)) translate(-50%, -50%);
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--ppm) * 26px);
+  padding: calc(var(--ppm) * 24px) calc(var(--ppm) * 27px);
+}
+
+/* Les alveoles traversent le bloc de part en part. Vues du dessus, elles
+   s'enfoncent : clair sur la levre sciee, noir au fond. */
+.b3d-alveole {
+  flex: 1;
+  border-radius: 3px;
+  background: linear-gradient(
+    to bottom,
+    #212220 0%,
+    #2a2b29 16%,
+    #474947 50%,
+    #373836 76%,
+    #1e1f1e 100%
+  );
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.72),
+    inset 0 -3px 4px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Par-dessous, aucune lumiere n'entre : la meme alveole y est un trou noir. */
+.b3d-alveole-fond {
+  background: linear-gradient(to bottom, #1b1c1b 0%, #111211 100%);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ── Les cotes ──────────────────────────────────────────────────────────── */
+
+.b3d-cotes {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.b3d-ligne {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1px;
+  transform-origin: 0 50%;
+  opacity: 0;
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.75), rgba(255, 215, 0, 0.75));
+}
+
+/* Les deux traits d'extremite, comme sur un plan. */
+.b3d-ligne::before,
+.b3d-ligne::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 9px;
+  background: rgba(255, 215, 0, 0.75);
+}
+.b3d-ligne::before { left: 0; }
+.b3d-ligne::after { right: 0; }
+
+.b3d-etiquette {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(0, 16, 36, 0.9);
+}
+
+/* ==========================================
    CLASSES UTILITAIRES DE DESIGN LUXE
    ========================================== */
 
