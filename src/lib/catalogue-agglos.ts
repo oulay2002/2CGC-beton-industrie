@@ -114,10 +114,12 @@ const FORMES: Record<string, { type: TypeAgglo; alveoles: number; rangees: numbe
   '27': { type: 'double', alveoles: 3, rangees: 2 },
 };
 
+// Ces libelles sont lus par le client, pas par un developpeur : ils portent
+// leurs accents, a la difference des commentaires de ce depot.
 const USAGES: Record<string, { fr: string; en: string }> = {
   plein: { fr: 'Murs porteurs et fondations', en: 'Load-bearing walls and foundations' },
-  creux: { fr: "Murs d'elevation et cloisons", en: 'Elevation walls and partitions' },
-  double: { fr: 'Double rangee, meilleure isolation', en: 'Double cell row, better insulation' },
+  creux: { fr: "Murs d'élévation et cloisons", en: 'Elevation walls and partitions' },
+  double: { fr: 'Double rangée, meilleure isolation', en: 'Double cell row, better insulation' },
 };
 
 const NOMS_EN: Record<TypeAgglo, string> = {
@@ -142,7 +144,7 @@ export const AGGLOS_3D: GeometrieAgglo[] = AGGLOS_CATALOGUE.flatMap((p) => {
     {
       id: p.id,
       nom: `Agglo ${Math.round(cotes.epaisseurMm / 10)} ${
-        forme.type === 'double' ? 'double alveoles' : forme.type
+        forme.type === 'double' ? 'double alvéoles' : forme.type
       }`,
       nomEn: `${NOMS_EN[forme.type]} ${Math.round(cotes.epaisseurMm / 10)}`,
       type: forme.type,
