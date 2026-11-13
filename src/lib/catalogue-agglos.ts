@@ -48,6 +48,41 @@ export const JOINT_MM = 15;
 
 export type TypeAgglo = 'creux' | 'plein' | 'double';
 
+/** Les trois tons de beton d'un produit, du dessus au petit cote. */
+export interface TeinteBeton {
+  dessus: string;
+  avant: string;
+  cote: string;
+}
+
+/**
+ * La couleur reelle de chaque reference, relevee sur sa photo de production.
+ *
+ * Le hero donnait la meme teinte aux dix references. Les photos disent le
+ * contraire : le 15 plein tire au vert, le 10 creux au jaune, les double
+ * alveoles au gris froid. Trois quantiles de la matiere donnent les trois
+ * faces — le dessus prend la lumiere, l'avant est a mi-ton, le petit cote
+ * est dans l'ombre.
+ *
+ * La clarte, elle, est ramenee a une valeur commune. L'ecart d'exposition
+ * entre deux prises de vue n'est pas une propriete du produit : l'afficher
+ * tel quel ferait passer une photo sous-exposee pour un beton sombre.
+ */
+const TEINTES: Record<string, TeinteBeton> = {
+  '1': { dessus: '#d9d9c8', avant: '#c9c8b5', cote: '#afae9c' },
+  '2': { dessus: '#d7dacc', avant: '#c8c8b7', cote: '#adae9d' },
+  '3': { dessus: '#ccddc7', avant: '#bbccb7', cote: '#a3b19e' },
+  '4': { dessus: '#d8dac3', avant: '#c7c9b1', cote: '#adaf98' },
+  '5': { dessus: '#d8d9cb', avant: '#cbc8b2', cote: '#b3ae95' },
+  '6': { dessus: '#d8dbbe', avant: '#c7caae', cote: '#aeaf95' },
+  '7': { dessus: '#e2d8ba', avant: '#d2c7a8', cote: '#b8ad8c' },
+  '25': { dessus: '#ded8cb', avant: '#ccc6c3', cote: '#b6aba8' },
+  '26': { dessus: '#dcd8d0', avant: '#cec5c2', cote: '#b6aba5' },
+  '27': { dessus: '#d7d8d8', avant: '#c1c8cd', cote: '#a9aeaa' },
+};
+
+const TEINTE_PAR_DEFAUT: TeinteBeton = { dessus: '#dcd8cb', avant: '#c9c5b8', cote: '#aeaa9d' };
+
 export interface GeometrieAgglo {
   id: string;
   nom: string;
@@ -66,6 +101,8 @@ export interface GeometrieAgglo {
   rangees: number;
   usage: string;
   usageEn: string;
+  /** Couleur du beton de cette reference, relevee sur sa photo. */
+  teinte: TeinteBeton;
 }
 
 /**
@@ -156,6 +193,7 @@ export const AGGLOS_3D: GeometrieAgglo[] = AGGLOS_CATALOGUE.flatMap((p) => {
       rangees: forme.rangees,
       usage: USAGES[forme.type].fr,
       usageEn: USAGES[forme.type].en,
+      teinte: TEINTES[p.id] ?? TEINTE_PAR_DEFAUT,
     },
   ];
 }).sort((a, b) => b.epaisseurMm - a.epaisseurMm || a.type.localeCompare(b.type));

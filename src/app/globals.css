@@ -234,7 +234,7 @@ button, a, input, select, textarea {
 .b3d-arriere {
   width: var(--l);
   height: var(--h);
-  --face: #c9c5b8;
+  --face: var(--beton-avant, #c9c5b8);
   --face-voile: linear-gradient(168deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.03) 36%, rgba(74, 70, 60, 0.26) 100%);
 }
 
@@ -242,14 +242,14 @@ button, a, input, select, textarea {
 .b3d-droite {
   width: var(--e);
   height: var(--h);
-  --face: #aeaa9d;
+  --face: var(--beton-cote, #aeaa9d);
   --face-voile: linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.01) 34%, rgba(62, 58, 50, 0.32) 100%);
 }
 
 .b3d-dessus {
   width: var(--l);
   height: var(--e);
-  --face: #dcd8cb;
+  --face: var(--beton-dessus, #dcd8cb);
   --face-voile: linear-gradient(160deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(92, 88, 78, 0.16) 100%);
 }
 

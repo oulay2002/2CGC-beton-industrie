@@ -364,6 +364,15 @@ export default function Produit360({ lang, labels }: Produit360Props) {
         }}
         onKeyDown={surClavier}
         className="b3d-scene relative h-[250px] w-full cursor-grab touch-pan-y rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2 focus-visible:ring-offset-[#001D3D] active:cursor-grabbing sm:h-[290px] xl:h-[330px]"
+        style={
+          {
+            // La couleur du beton vient de la photo de cette reference :
+            // changer d'epaisseur change aussi la matiere, comme en vrai.
+            "--beton-dessus": format.teinte.dessus,
+            "--beton-avant": format.teinte.avant,
+            "--beton-cote": format.teinte.cote,
+          } as React.CSSProperties
+        }
       >
         <div ref={ombre} className="b3d-sol" aria-hidden="true" />
 
