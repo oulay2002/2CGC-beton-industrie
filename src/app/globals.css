@@ -290,30 +290,42 @@ button, a, input, select, textarea {
   gap: calc(var(--ech) * 26px);
 }
 
-/* Les alveoles traversent le bloc de part en part. Vues du dessus, elles
-   s'enfoncent : clair sur la levre sciee, noir au fond. */
+/* Les alveoles traversent le bloc de part en part — mais on n'y voit pas
+   du noir. Sous seize degres d'elevation, le regard ne plonge pas dans le
+   creux : il bute sur la paroi du fond, a peine quarante millimetres plus
+   bas, et cette paroi est du beton eclaire.
+   Les valeurs sont relevees sur les photos de production : le point le plus
+   sombre d'un agglo y vaut #afb09d sur la planche claire, #6e716d sur la
+   sombre — soit deux tiers de la luminance du beton voisin, jamais un vide.
+   Profil releve a l'interieur meme d'une alveole : 180, 177, 176, 173 du
+   haut vers le bas sur la planche claire ; 125, 121, 121, 122 sur la sombre.
+   C'est donc presque uniforme. Ce qui creuse l'alveole n'est pas un degrade
+   — un degrade marque se lit comme une peinture — mais l'arete franche de
+   l'ouverture : ombre nette sous la levre du fond, levre sciee qui accroche
+   la lumiere cote proche. */
 .b3d-alveole {
   flex: 1;
   border-radius: 3px;
-  background: linear-gradient(
-    to bottom,
-    #212220 0%,
-    #2a2b29 16%,
-    #474947 50%,
-    #373836 76%,
-    #1e1f1e 100%
-  );
+  background: linear-gradient(to bottom, #918f86 0%, #8a887f 55%, #817f76 100%);
   box-shadow:
-    inset 0 3px 6px rgba(0, 0, 0, 0.72),
-    inset 0 -3px 4px rgba(0, 0, 0, 0.5),
-    0 1px 0 rgba(255, 255, 255, 0.5),
-    0 -1px 0 rgba(0, 0, 0, 0.2);
+    /* L'arete de l'ouverture, franche sur tout son pourtour. */
+    inset 0 0 0 1px rgba(58, 55, 47, 0.5),
+    /* L'ombre portee par la levre du fond, juste sous le bord. */
+    inset 0 4px 5px -2px rgba(42, 39, 33, 0.72),
+    /* La levre sciee, cote proche, qui accroche la lumiere. */
+    0 1px 0 rgba(255, 255, 255, 0.6),
+    /* Occlusion : le beton s'assombrit au bord de l'ouverture. */
+    0 0 6px 1px rgba(74, 70, 60, 0.3);
 }
 
-/* Par-dessous, aucune lumiere n'entre : la meme alveole y est un trou noir. */
+/* Par-dessous, aucune lumiere n'entre : la meme alveole s'y assombrit
+   franchement, sans virer au noir pour autant. */
 .b3d-alveole-fond {
-  background: linear-gradient(to bottom, #1b1c1b 0%, #111211 100%);
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.12);
+  background: linear-gradient(to bottom, #55534c 0%, #4a4842 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(26, 24, 21, 0.5),
+    inset 0 3px 5px -1px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 /* ── Le pan de mur ──────────────────────────────────────────────────────────
