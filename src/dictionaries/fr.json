@@ -249,7 +249,21 @@
       "choisirEpaisseur": "Épaisseur",
       "indice": "Glissez pour tourner",
       "alveoles": "alvéoles traversantes",
-      "manipuler": "Utilisez les flèches gauche et droite pour faire tourner le bloc."
+      "manipuler": "Utilisez les flèches gauche et droite pour faire tourner.",
+      "choisirType": "Type",
+      "typeCreux": "Creux",
+      "typePlein": "Plein",
+      "typeDouble": "Double alvéoles",
+      "vueBloc": "Bloc",
+      "vueMur": "Mur",
+      "choisirVue": "Vue",
+      "murNom": "Mur en",
+      "murRangs": "rangs à joints croisés, joint 15 mm",
+      "murAgglos": "agglos",
+      "murParM2": "agglos / m²",
+      "murSurface": "de mur",
+      "prixM2": "F CFA / m² d’agglos",
+      "pleinSansAlveole": "bloc plein"
     }
   },
   "catalogue": {

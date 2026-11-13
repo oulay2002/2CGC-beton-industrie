@@ -4,42 +4,32 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
 import posthog from "posthog-js";
+import { AGGLOS_3D, agglosParM2 } from "@/lib/catalogue-agglos";
 
 interface BlocsM2ClientProps {
   lang: Locale;
 }
 
+/**
+ * Combien d'unites couvrent un metre carre.
+ *
+ * Les agglos ne portent plus de chiffre ecrit a la main. Il valait 12,5 pour
+ * tous les formats, soit 1 / (0,40 x 0,20) : le compte d'un bloc de 40 cm,
+ * quand le catalogue en vend de 45. Un client qui suivait ce calculateur
+ * commandait un quart d'agglos de trop. Le ratio se deduit maintenant des
+ * cotes du catalogue et du joint de 15 mm, et suit donc le catalogue.
+ *
+ * Les paves gardent leur ratio ecrit a la main, qui reste a verifier avec
+ * l'usine : 50 unites/m2 supposent un pave de 200 x 100 mm, quand le
+ * catalogue annonce 240 x 240.
+ */
 const PRODUITS_CONFIG = [
-  {
-    id: "1",
-    nomFr: "Brique 20 Pleine (Mur porteur)",
-    nomEn: "Solid Block 20 (Load-bearing wall)",
-    ratio: 12.5,
-  },
-  {
-    id: "2",
-    nomFr: "Brique 20 Creuse (Mur standard)",
-    nomEn: "Hollow Block 20 (Standard wall)",
-    ratio: 12.5,
-  },
-  {
-    id: "3",
-    nomFr: "Brique 15 Pleine (Mur intermédiaire)",
-    nomEn: "Solid Block 15 (Intermediate wall)",
-    ratio: 12.5,
-  },
-  {
-    id: "4",
-    nomFr: "Brique 15 Creuse (Cloison de séparation)",
-    nomEn: "Hollow Block 15 (Partition wall)",
-    ratio: 12.5,
-  },
-  {
-    id: "6",
-    nomFr: "Brique 12 Creuse (Cloison légère)",
-    nomEn: "Hollow Block 12 (Lightweight partition)",
-    ratio: 12.5,
-  },
+  ...AGGLOS_3D.filter((a) => ['1', '2', '3', '4', '6'].includes(a.id)).map((a) => ({
+    id: a.id,
+    nomFr: `${a.nom} (${a.usage})`,
+    nomEn: `${a.nomEn} (${a.usageEn})`,
+    ratio: Math.round(agglosParM2(a) * 10) / 10,
+  })),
   {
     id: "16",
     nomFr: "Pavé Z-7 Gris (Terrasse / Voirie)",

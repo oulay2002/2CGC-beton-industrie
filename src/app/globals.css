@@ -145,16 +145,14 @@ button, a, input, select, textarea {
 }
 
 /* ==========================================
-   BLOC 360 DU HERO — un agglo, a ses cotes reelles
+   LE HERO EN VOLUME — un agglo, puis un mur, a leurs cotes reelles
    ==========================================
-   La geometrie vient des millimetres du catalogue : `--l`, `--h` et `--e`
-   sont poses image par image par Produit360, en pixels deja mis a l'echelle.
-   `--ppm` est l'echelle elle-meme (pixels par millimetre) ; elle vit ici, et
-   non dans le composant, parce que c'est une affaire de point de rupture.
-   Le composant la relit pour poser ses cotes au bon endroit. */
+   La geometrie vient des millimetres du catalogue. `--l`, `--h`, `--e` et
+   l'echelle `--ech` sont poses image par image par Produit360, qui ajuste
+   l'echelle pour que l'objet montre — un bloc, ou un panneau de dix agglos —
+   tienne dans la scene avec ses lignes de cote. */
 
 .b3d {
-  --ppm: 0.38;
   /* Deux bruits superposes, pas un seul : le fin donne le sable, le large
      donne les nuances de coulee. Un seul grain se lit comme une texture
      plaquee, et des pastilles regulieres comme de l'eponge. */
@@ -166,19 +164,18 @@ button, a, input, select, textarea {
   --grain-large: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.22' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23l)' opacity='0.72'/%3E%3C/svg%3E");
 }
 
-@media (min-width: 640px) { .b3d { --ppm: 0.50; } }
-@media (min-width: 1024px) { .b3d { --ppm: 0.46; } }
-@media (min-width: 1280px) { .b3d { --ppm: 0.56; } }
-
 .b3d-scene {
   perspective: 1400px;
   perspective-origin: 50% 50%;
 
-  /* Les cotes de l'agglo 20, au cas ou le script ne tourne pas : sans
-     JavaScript le bloc ne pivote pas, mais il existe, et a la bonne taille. */
-  --l: calc(450 * var(--ppm) * 1px);
-  --h: calc(200 * var(--ppm) * 1px);
-  --e: calc(200 * var(--ppm) * 1px);
+  /* L'agglo 20, au cas ou le script ne tourne pas : sans JavaScript le bloc
+     ne pivote pas, mais il existe, et a la bonne taille. `--ech` est
+     l'echelle en pixels par millimetre, que le composant recalcule a chaque
+     image pour que l'objet tienne dans la scene. */
+  --ech: 0.5;
+  --l: calc(450 * var(--ech) * 1px);
+  --h: calc(200 * var(--ech) * 1px);
+  --e: calc(200 * var(--ech) * 1px);
 }
 
 /* Une lumiere d'atelier, fixe a l'ecran : elle ne tourne pas avec le bloc.
@@ -269,17 +266,28 @@ button, a, input, select, textarea {
 .b3d-gauche { transform: rotateY(-90deg) translateZ(calc(var(--l) / 2)) translate(-50%, -50%); }
 .b3d-dessus {
   transform: rotateX(90deg) translateZ(calc(var(--h) / 2)) translate(-50%, -50%);
-  display: flex;
-  align-items: stretch;
-  gap: calc(var(--ppm) * 26px);
-  padding: calc(var(--ppm) * 24px) calc(var(--ppm) * 27px);
 }
 .b3d-dessous {
   transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)) translate(-50%, -50%);
+}
+
+/* Les alveoles se posent en rangees : une pour un agglo creux, deux pour un
+   double alveoles. Les parois gardent leurs 24 mm reels quelle que soit
+   l'epaisseur du bloc, donc les alveoles d'un 12 sont plus etroites que
+   celles d'un 20 — exactement comme en production. */
+.b3d-dessus,
+.b3d-dessous {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ech) * 24px);
+  padding: calc(var(--ech) * 24px) calc(var(--ech) * 27px);
+}
+
+.b3d-rangee {
+  flex: 1;
   display: flex;
   align-items: stretch;
-  gap: calc(var(--ppm) * 26px);
-  padding: calc(var(--ppm) * 24px) calc(var(--ppm) * 27px);
+  gap: calc(var(--ech) * 26px);
 }
 
 /* Les alveoles traversent le bloc de part en part. Vues du dessus, elles
@@ -306,6 +314,58 @@ button, a, input, select, textarea {
 .b3d-alveole-fond {
   background: linear-gradient(to bottom, #1b1c1b 0%, #111211 100%);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ── Le pan de mur ──────────────────────────────────────────────────────────
+   Chaque piece est un petit repere pose dans le panneau ; ses faces y
+   reprennent les memes transformations que le bloc seul. Seules les faces
+   qu'on peut voir sont dessinees : les flancs interieurs sont caches par le
+   bloc voisin, et le dessous d'un mur ne se voit jamais. */
+
+.b3d-piece {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: translate3d(var(--cx), var(--cy), 0);
+}
+
+.b3d-p-avant,
+.b3d-p-arriere {
+  width: var(--pl);
+  height: var(--bh);
+}
+
+.b3d-p-gauche,
+.b3d-p-droite {
+  width: var(--e);
+  height: var(--bh);
+}
+
+.b3d-p-dessus {
+  width: var(--pl);
+  height: var(--e);
+}
+
+.b3d-p-avant { transform: translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
+.b3d-p-arriere { transform: rotateY(180deg) translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
+.b3d-p-droite { transform: rotateY(90deg) translateZ(calc(var(--pl) / 2)) translate(-50%, -50%); }
+.b3d-p-gauche { transform: rotateY(-90deg) translateZ(calc(var(--pl) / 2)) translate(-50%, -50%); }
+.b3d-p-dessus { transform: rotateX(90deg) translateZ(calc(var(--bh) / 2)) translate(-50%, -50%); }
+
+/* Le mortier : un plan au coeur du mur, que l'on apercoit au fond de chaque
+   joint. Il se voit des deux cotes, donc il garde sa face arriere. */
+.b3d-mortier {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--l);
+  height: var(--h);
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  background: linear-gradient(170deg, #4a4740 0%, #332f29 100%);
 }
 
 /* ── Les cotes ──────────────────────────────────────────────────────────── */

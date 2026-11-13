@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/dictionaries";
+import { AGGLOS_CATALOGUE } from "@/lib/catalogue-agglos";
 import {
   Boxes,
   Grid,
@@ -68,19 +69,9 @@ const CATEGORIES_EN = [
 ];
 
 const PRODUITS_FR = [
-  { id: "1", categorie: "agglos", image: "/images/produits/page_0_img_12.jpeg", nom: "Brique 20 Pleine", description: "Brique pleine robuste pour murs porteurs et fondations.", prix: 570, unite: "unité", specs: { dimensions: "450x200x200mm", poids: "36 kg" } },
-  { id: "2", categorie: "agglos", image: "/images/produits/page_0_img_13.jpeg", nom: "Brique 20 Creuse", description: "Brique creuse pour cloisons et murs d'élévation.", prix: 470, unite: "unité", specs: { dimensions: "450x200x200mm", poids: "18 kg" } },
-  { id: "3", categorie: "agglos", image: "/images/produits/page_0_img_14.jpeg", nom: "Brique 15 Pleine", description: "Brique pleine pour murs intermédiaires renforcés.", prix: 460, unite: "unité", specs: { dimensions: "450x150x200mm", poids: "28 kg" } },
-  { id: "4", categorie: "agglos", image: "/images/produits/page_0_img_15.jpeg", nom: "Brique 15 Creuse", description: "Brique creuse légère et polyvalente.", prix: 330, unite: "unité", specs: { dimensions: "450x150x200mm", poids: "16 kg" } },
-  { id: "5", categorie: "agglos", image: "/images/produits/page_1_img_12.jpeg", nom: "Brique 12 Pleine", description: "Brique pleine fine pour cloisons phoniques.", prix: 430, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "20 kg" } },
-  { id: "6", categorie: "agglos", image: "/images/produits/page_1_img_13.jpeg", nom: "Brique 12 Creuse", description: "Brique creuse fine économique.", prix: 300, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "14 kg" } },
-  { id: "7", categorie: "agglos", image: "/images/produits/page_1_img_14.jpeg", nom: "Brique 10 Creuse", description: "Brique creuse très fine pour doublages.", prix: 260, unite: "unité", specs: { dimensions: "450x100x200mm", poids: "12 kg" } },
-
-  // Agglos double alvéoles — relevé client du 27/10/2026 (Keita Briques).
-  // Dimensions, prix et poids communiqués par le client.
-  { id: "27", categorie: "agglos", image: "/images/produits/agglo-double-20.jpg", nom: "Agglo 20 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format porteur.", prix: 485, unite: "unité", specs: { dimensions: "450x200x200mm", poids: "20 kg" } },
-  { id: "26", categorie: "agglos", image: "/images/produits/agglo-double-15.jpg", nom: "Agglo 15 Double Alvéoles", description: "Agglo à double rangée d'alvéoles pour murs d'élévation.", prix: 320, unite: "unité", specs: { dimensions: "450x150x200mm", poids: "16 kg" } },
-  { id: "25", categorie: "agglos", image: "/images/produits/agglo-double-12.jpg", nom: "Agglo 12 Double Alvéoles", description: "Agglo à double rangée d'alvéoles, format mince pour cloisons.", prix: 285, unite: "unité", specs: { dimensions: "450x120x200mm", poids: "14 kg" } },
+  // Les dix agglos vivent dans `catalogue-agglos` : le hero les montre en
+  // volume, et deux listes qui doivent concorder finissent par diverger.
+  ...AGGLOS_CATALOGUE,
   { id: "8", categorie: "hourdis", image: "/images/produits/page_1_img_15.jpeg", nom: "Hourdis 15 Français", description: "Hourdis standard pour planchers à poutrelles.", prix: 430, unite: "unité", specs: { dimensions: "500x150x200mm", poids: "19 kg" } },
   { id: "9", categorie: "hourdis", image: "/images/produits/page_2_img_2.jpeg", nom: "Hourdis 12 Français", description: "Hourdis mince pour planchers bas.", prix: 380, unite: "unité", specs: { dimensions: "500x120x200mm", poids: "18 kg" } },
   { id: "10", categorie: "hourdis", image: "/images/produits/page_2_img_6.jpeg", nom: "Hourdis 16 Américain", description: "Hourdis haute capacité type américain.", prix: 600, unite: "unité", specs: { dimensions: "500x160x200mm", poids: "17 kg" } },
