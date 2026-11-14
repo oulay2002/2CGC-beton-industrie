@@ -154,13 +154,6 @@ export default function JsonLd({ lang }: JsonLdProps) {
               ]
             }
           ]
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "128",
-          "bestRating": "5",
-          "worstRating": "1"
         }
       },
       {

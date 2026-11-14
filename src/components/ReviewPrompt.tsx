@@ -115,7 +115,7 @@ export default function ReviewPrompt({
             />
           </svg>
           <span className="text-[10px] text-gray-400 font-medium">
-            Avis Google · 4.9 ★ (128 avis)
+            Votre avis compte sur Google
           </span>
         </div>
       </div>

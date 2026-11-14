@@ -41,68 +41,51 @@
     }
   },
   "home": {
-    "heroSlides": [
-      {
-        "tag": "Usine Industrielle Daloa",
-        "title": "Parc de Préfabrication & Presse Hydraulique",
-        "badge": "Capacité +50 000 blocs / mois"
-      },
-      {
-        "tag": "Livraison Chantier Clé en Main",
-        "title": "Flotte Camion-Grue & Déchargement sur Chantier",
-        "badge": "Livraison express Daloa & Côte d'Ivoire"
-      }
-    ],
     "heroStats": [
       {
-        "val": "15+",
-        "label": "Ans d'expérience"
+        "val": "2013",
+        "label": "Usine à Daloa · RCCM"
       },
       {
-        "val": "500+",
-        "label": "Chantiers livrés"
+        "val": "27",
+        "label": "Références au catalogue"
       },
       {
-        "val": "4,9/5",
-        "label": "128 avis Google"
+        "val": "10",
+        "label": "Agglos par m² de mur"
       }
     ],
     "heroH1Line1": "Fabriqués à Daloa,",
     "heroH1Line2": "livrés sur votre chantier",
     "heroH1Line3": "Briques · Hourdis · Pavés · Électrification · Forage",
-    "heroDesc": "Depuis 15 ans, notre usine de Daloa produit briques, hourdis et pavés pour les chantiers de toute la Côte d'Ivoire. Livraison par camion-grue, déchargement compris.",
+    "heroDesc": "Depuis 2013, notre usine de Daloa produit briques, hourdis et pavés pour les chantiers de toute la Côte d’Ivoire. Livraison par camion-grue, déchargement compris.",
     "heroCTA1": "Obtenir mon devis",
     "heroCTA2": "Voir le catalogue",
-    "heroCTA3": "Télécharger PDF (9p)",
     "heroScrollLabel": "Défiler",
-    "heroSlide0Label": "Usine Daloa",
-    "heroSlide1Label": "Livraison Agglos",
-    "heroPrevSlide": "Diapositive précédente",
-    "heroNextSlide": "Diapositive suivante",
     "ticker": [
       {
-        "label": "ISO 9001",
-        "sub": "Certifié"
+        "label": "Normes UEMOA",
+        "sub": "Rc ≥ 4.0 MPa"
       },
       {
-        "label": "Normes NF",
-        "sub": "Construction"
+        "label": "27 références",
+        "sub": "Briques · Hourdis · Pavés"
       },
       {
-        "label": "Conformité CE",
-        "sub": "Européenne"
+        "label": "10 agglos / m²",
+        "sub": "Format 450 × 200 mm"
       },
       {
-        "label": "Résistance B60",
-        "sub": "Certifiée"
+        "label": "Camion-grue",
+        "sub": "Déchargement compris"
       },
       {
-        "label": "Livraison 48h",
-        "sub": "Daloa & environs"
+        "label": "Devis gratuit",
+        "sub": "Réponse sous 24 h ouvrées"
       },
       {
-        "label": "Support client",
-        "sub": "Lun–Sam"
+        "label": "Daloa",
+        "sub": "Côte d’Ivoire · depuis 2013"
       }
     ],
     "engagementsBadge": "Nos engagements",
@@ -163,16 +146,16 @@
     "statsDesc": "Des résultats qui parlent d'eux-mêmes",
     "stats": [
       {
-        "label": "Années d'expérience"
+        "label": "Références au catalogue"
       },
       {
-        "label": "Chantiers livrés"
+        "label": "Agglos par m² de mur"
       },
       {
-        "label": "Unités / mois"
+        "label": "Familles : briques, hourdis, pavés"
       },
       {
-        "label": "Avis Google · 4,9/5"
+        "label": "Longueur d’un agglo (mm)"
       }
     ],
     "calcBadge": "Outils gratuits",
@@ -264,7 +247,8 @@
       "murSurface": "de mur",
       "prixM2": "F CFA / m² d’agglos",
       "pleinSansAlveole": "bloc plein"
-    }
+    },
+    "heroTag": "Usine industrielle · Daloa"
   },
   "catalogue": {
     "heroBadge": "Usine de Daloa • Préfabriqués Béton",

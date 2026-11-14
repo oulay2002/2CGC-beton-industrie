@@ -80,7 +80,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
     },
     {
       critere: isEn ? "Production capacity" : "Capacité de production",
-      cgc: isEn ? "+50,000 units/month with permanent stock" : "+50 000 unités/mois avec stock permanent",
+      cgc: isEn ? "Hydraulic press, permanent stock" : "Presse hydraulique, stock permanent",
       artisanal: isEn ? "Slow manual output (uncertain delays)" : "Production manuelle lente (délais incertains)",
     },
     {

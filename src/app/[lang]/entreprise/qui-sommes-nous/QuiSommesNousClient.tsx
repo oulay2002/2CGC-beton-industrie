@@ -16,8 +16,8 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
       Icone: Factory,
       titre: isEn ? "Industrial Capacity" : "Capacité Industrielle",
       description: isEn
-        ? "Automated production units in Daloa capable of churning out over 50,000 blocks and pavers per month to supply all construction sites."
-        : "Unités de production automatisées à Daloa capables de débiter plus de 50 000 blocs et pavés par mois pour alimenter tous types de chantiers.",
+        ? "Hydraulic-press production units in Daloa, with permanent stock, to supply all construction sites."
+        : "Unités de production à presse hydraulique à Daloa, avec stock permanent, pour alimenter tous types de chantiers.",
     },
     {
       Icone: Microscope,
@@ -42,26 +42,29 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
     },
   ];
 
+  // Chaque chiffre renvoie a une piece : le registre du commerce, le
+  // catalogue, le calcul au joint de 15 mm. Les « 15 ans », « 500 chantiers »
+  // et « 98 % » affiches auparavant n'en avaient aucune.
   const chiffres = [
     {
-      valeur: "15+",
-      label: isEn ? "Years of experience" : "Ans d'expérience",
-      detail: isEn ? "Serving construction since 2010" : "Depuis 2010 dans le BTP",
+      valeur: "2013",
+      label: isEn ? "Established in Daloa" : "Implantés à Daloa",
+      detail: isEn ? "Trade register CI DAL 2013 B. 20779" : "RCCM CI DAL 2013 B. 20779",
     },
     {
-      valeur: "50 000+",
-      label: isEn ? "Units / month" : "Unités / mois",
-      detail: isEn ? "Continuous production capacity" : "Capacité de production",
+      valeur: "27",
+      label: isEn ? "Catalogue references" : "Références au catalogue",
+      detail: isEn ? "Blocks, beam blocks, pavers" : "Briques, hourdis, pavés",
     },
     {
-      valeur: "500+",
-      label: isEn ? "Completed projects" : "Chantiers livrés",
-      detail: isEn ? "In Daloa & Ivory Coast" : "À Daloa et en Côte d'Ivoire",
+      valeur: "10",
+      label: isEn ? "Blocks per m² of wall" : "Agglos par m² de mur",
+      detail: isEn ? "450 × 200 mm format, 15 mm joint" : "Format 450 × 200 mm, joint 15 mm",
     },
     {
-      valeur: "98%",
-      label: isEn ? "Client satisfaction" : "Satisfaction client",
-      detail: isEn ? "Renewed client trust" : "Confiance renouvelée",
+      valeur: "4.0",
+      label: isEn ? "MPa minimum strength" : "MPa de résistance minimale",
+      detail: isEn ? "UEMOA standards" : "Normes UEMOA",
     },
   ];
 

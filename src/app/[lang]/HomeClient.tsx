@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { Dictionary, Locale } from "@/lib/dictionaries";
 import {
   ShieldCheck,
@@ -16,14 +16,11 @@ import {
   Timer,
   CheckCircle2,
   Building2,
-  Clock,
-  ThumbsUp,
   Gift,
   Star,
   Sparkles,
   PhoneCall,
   ChevronRight,
-  TrendingUp,
   MapPin,
 } from "lucide-react";
 import { ZONES } from "@/lib/zones-data";
@@ -39,16 +36,6 @@ interface HomePageProps {
 // ─── Composant client ─────────────────────────────────────────────────────────
 
 export default function HomeClient({ lang, dict }: HomePageProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const heroSlides = dict.heroSlides;
-
-  useEffect(() => {
-    const slideTimer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
-    return () => clearInterval(slideTimer);
-  }, [heroSlides.length]);
-
   // Compteurs animés avec IntersectionObserver
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -81,13 +68,18 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
     return () => observer.disconnect();
   }, [lang]);
 
-  const STATS_ICONS = [Clock, Building2, Boxes, ThumbsUp];
+  // Chaque chiffre a une source : le catalogue (27 references, trois
+  // familles, format 450 mm) et le calcul au joint de 15 mm (10 agglos/m2).
+  // Les « 15 ans », « 500 chantiers » et « 128 avis » qui vivaient ici
+  // n'en avaient aucune ; un visiteur qui verifie Google ne les y trouvait
+  // pas, et c'est tout le site qu'il cessait de croire.
+  const STATS_ICONS = [Boxes, Calculator, Building2, ShieldCheck];
 
   const STATS_DATA = [
-    { value: 15, suffix: "+", ...dict.stats[0], icon: STATS_ICONS[0] },
-    { value: 500, suffix: "+", ...dict.stats[1], icon: STATS_ICONS[1] },
-    { value: 50000, suffix: "+", ...dict.stats[2], icon: STATS_ICONS[2] },
-    { value: 128, suffix: "", ...dict.stats[3], icon: STATS_ICONS[3] },
+    { value: 27, suffix: "", ...dict.stats[0], icon: STATS_ICONS[0] },
+    { value: 10, suffix: "", ...dict.stats[1], icon: STATS_ICONS[1] },
+    { value: 3, suffix: "", ...dict.stats[2], icon: STATS_ICONS[2] },
+    { value: 450, suffix: "", ...dict.stats[3], icon: STATS_ICONS[3] },
   ];
 
   const ENGAGEMENTS_HREFS = [
@@ -122,38 +114,23 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
   return (
     <main className="min-h-screen bg-[#F5F5F0] overflow-x-hidden">
       {/* ========== HERO INDUSTRIEL PREMIUM ========== */}
-      <section className="relative bg-[#001D3D] text-white pt-32 pb-24 px-4 md:px-6 overflow-hidden min-h-[92vh] flex items-center">
-        {/* Background slider with smooth crossfade */}
-        <div className="absolute inset-0 overflow-hidden">
-          {heroSlides.map((slide, idx) => (
-            <div
-              key={idx}
-              className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out transform ${
-                currentSlide === idx
-                  ? "opacity-35 scale-105 filter blur-0"
-                  : "opacity-0 scale-100 filter blur-sm pointer-events-none"
-              }`}
-              style={{
-                backgroundImage: `url('${
-                  idx === 0 ? "/images/hero-bg.jpg" : "/images/hero-livraison-agglos.jpg"
-                }')`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Graduated lighting overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#001D3D] via-[#002B5B]/85 to-[#002B5B]/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D] via-transparent to-transparent" />
-        <div className="absolute inset-0 grid-pattern opacity-10" />
-        <div className="absolute top-24 right-16 w-96 h-96 bg-[#FFD700]/10 rounded-full blur-3xl animate-float pointer-events-none" />
-        <div className="absolute bottom-16 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float-delay pointer-events-none" />
+      <section className="relative bg-[#001D3D] text-white pt-28 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 overflow-hidden min-h-[92vh] flex items-center">
+        {/* Un seul fond, tres assombri. Le diaporama d'usine, ses halos et sa
+            grille se battaient avec les produits : l'anneau se lit sur du
+            calme, et l'usine reste la, en arriere-plan, sans parler plus
+            fort que ce qu'elle fabrique. */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#001D3D] via-[#001D3D]/85 to-[#002B5B]/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D] via-transparent to-[#001D3D]/40" />
 
         <div className="max-w-7xl mx-auto relative z-10 w-full">
           {/* Le discours tient la colonne de gauche ; le produit, celle de
               droite, ou il n'y avait jusqu'ici que du fond. Sous `lg`, le bloc
               passe sous les boutons : on lit d'abord, on examine ensuite. */}
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-10 xl:gap-16">
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_460px] xl:gap-16">
             <div className="max-w-3xl lg:max-w-none">
             {/* Trust Pill & Certification */}
             <div className="flex flex-wrap items-center gap-2.5 mb-7 animate-fade-in-up">
@@ -166,7 +143,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
               </div>
 
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-[#FFD700] tracking-wide">
-                <span>{heroSlides[currentSlide].tag}</span>
+                <span>{dict.heroTag}</span>
               </div>
 
               <div className="hidden sm:inline-flex items-center gap-1.5 bg-[#FFD700]/15 border border-[#FFD700]/30 text-white/90 text-xs px-3 py-1.5 rounded-full font-mono font-medium backdrop-blur-sm">
@@ -209,14 +186,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
                 <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition-transform shrink-0" />
               </Link>
 
-              <a
-                href="/catalogue-produits-2cgc.pdf"
-                download="Catalogue-2CGC-Produits-Officiel.pdf"
-                className="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/15 text-[#FFD700] border border-[#FFD700]/40 px-4 sm:px-5 py-3.5 rounded-2xl font-bold text-xs sm:text-sm backdrop-blur-sm transition-all duration-300 min-h-[50px] whitespace-nowrap shrink-0"
-              >
-                <Download className="w-4 h-4 shrink-0" />
-                <span className="whitespace-nowrap">{dict.heroCTA3}</span>
-              </a>
             </div>
 
             {/* Métriques Hero */}
@@ -238,43 +207,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
           </div>
         </div>
 
-        {/* Contrôles du Carrousel modernisés */}
-        <div className="absolute bottom-6 right-6 z-20 hidden md:flex items-center gap-3 bg-[#001D3D]/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/15 shadow-2xl">
-          <div className="flex items-center gap-1.5">
-            {heroSlides.map((slide, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  currentSlide === idx ? "w-8 bg-[#FFD700]" : "w-2 bg-white/30 hover:bg-white/60"
-                }`}
-                title={slide.title}
-                aria-label={`Slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-          <span className="text-[11px] text-white/90 font-bold uppercase tracking-wider border-l border-white/20 pl-3">
-            {currentSlide === 0 ? dict.heroSlide0Label : dict.heroSlide1Label}
-          </span>
-          <div className="flex items-center gap-1 pl-1">
-            <button
-              onClick={() =>
-                setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))
-              }
-              className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/25 flex items-center justify-center text-xs text-white font-bold transition-colors cursor-pointer"
-              aria-label={dict.heroPrevSlide}
-            >
-              &lsaquo;
-            </button>
-            <button
-              onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
-              className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/25 flex items-center justify-center text-xs text-white font-bold transition-colors cursor-pointer"
-              aria-label={dict.heroNextSlide}
-            >
-              &rsaquo;
-            </button>
-          </div>
-        </div>
       </section>
 
       {/* ========== TICKER DE RÉASSURANCE INDUSTRIELLE ========== */}

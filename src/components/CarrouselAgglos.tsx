@@ -301,7 +301,7 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
           relacher();
         }}
         onKeyDown={surClavier}
-        className="anneau-scene relative h-[250px] w-full cursor-grab touch-pan-y rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2 focus-visible:ring-offset-[#001D3D] active:cursor-grabbing sm:h-[290px] xl:h-[330px]"
+        className="anneau-scene relative h-[250px] w-full overflow-hidden cursor-grab touch-pan-y rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2 focus-visible:ring-offset-[#001D3D] active:cursor-grabbing sm:h-[290px] xl:h-[330px]"
         style={{ perspective: `${PERSPECTIVE}px` }}
       >
         <div className="anneau-sol" aria-hidden="true" />
@@ -406,7 +406,9 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
             </p>
           </div>
 
-          <div role="group" aria-label={labels.choisirType} className="flex items-center gap-1.5">
+          {/* Vocabulaire de catalogue : sur un telephone, l'accueil n'en a pas
+              besoin, et chaque rangee de moins est un ecran de moins. */}
+          <div role="group" aria-label={labels.choisirType} className="hidden sm:flex items-center gap-1.5">
             <span className="w-[58px] shrink-0 text-[10px] uppercase leading-tight tracking-[0.12em] text-white/45">
               {labels.choisirType}
             </span>

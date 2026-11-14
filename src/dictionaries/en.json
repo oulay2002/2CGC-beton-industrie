@@ -41,68 +41,51 @@
     }
   },
   "home": {
-    "heroSlides": [
-      {
-        "tag": "Industrial Plant Daloa",
-        "title": "Prefabrication Park & Hydraulic Press",
-        "badge": "Capacity +50,000 blocks / month"
-      },
-      {
-        "tag": "Turnkey Site Delivery",
-        "title": "Crane-Truck Fleet & On-Site Unloading",
-        "badge": "Express delivery Daloa & Côte d'Ivoire"
-      }
-    ],
     "heroStats": [
       {
-        "val": "15+",
-        "label": "Years of experience"
+        "val": "2013",
+        "label": "Daloa plant · trade register"
       },
       {
-        "val": "500+",
-        "label": "Sites delivered"
+        "val": "27",
+        "label": "Catalogue references"
       },
       {
-        "val": "4.9/5",
-        "label": "128 Google reviews"
+        "val": "10",
+        "label": "Blocks per m² of wall"
       }
     ],
     "heroH1Line1": "Made in Daloa,",
     "heroH1Line2": "delivered to your site",
     "heroH1Line3": "Blocks · Floor beams · Paving · Electrification · Drilling",
-    "heroDesc": "For 15 years, our Daloa plant has produced blocks, floor beams and pavers for building sites across Côte d’Ivoire. Delivered by crane truck, unloading included.",
+    "heroDesc": "Since 2013, our Daloa plant has produced blocks, floor beams and pavers for building sites across Côte d’Ivoire. Delivered by crane truck, unloading included.",
     "heroCTA1": "Get my quote",
     "heroCTA2": "View catalogue",
-    "heroCTA3": "Download PDF (9p)",
     "heroScrollLabel": "Scroll",
-    "heroSlide0Label": "Daloa Plant",
-    "heroSlide1Label": "Block Delivery",
-    "heroPrevSlide": "Previous slide",
-    "heroNextSlide": "Next slide",
     "ticker": [
       {
-        "label": "ISO 9001",
-        "sub": "Certified"
+        "label": "UEMOA standards",
+        "sub": "Rc ≥ 4.0 MPa"
       },
       {
-        "label": "NF Standards",
-        "sub": "Construction"
+        "label": "27 references",
+        "sub": "Blocks · Beam blocks · Pavers"
       },
       {
-        "label": "CE Compliance",
-        "sub": "European"
+        "label": "10 blocks / m²",
+        "sub": "450 × 200 mm format"
       },
       {
-        "label": "B60 Strength",
-        "sub": "Certified"
+        "label": "Crane truck",
+        "sub": "Unloading included"
       },
       {
-        "label": "48h Delivery",
-        "sub": "Daloa & surroundings"
+        "label": "Free quote",
+        "sub": "Reply within 1 business day"
       },
       {
-        "label": "Customer support",
-        "sub": "Mon–Sat"
+        "label": "Daloa",
+        "sub": "Côte d’Ivoire · since 2013"
       }
     ],
     "engagementsBadge": "Our commitments",
@@ -163,16 +146,16 @@
     "statsDesc": "Results that speak for themselves",
     "stats": [
       {
-        "label": "Years of experience"
+        "label": "Catalogue references"
       },
       {
-        "label": "Sites delivered"
+        "label": "Blocks per m² of wall"
       },
       {
-        "label": "Units / month"
+        "label": "Families: blocks, beam blocks, pavers"
       },
       {
-        "label": "Google rating · 4.9/5"
+        "label": "Block length (mm)"
       }
     ],
     "calcBadge": "Free tools",
@@ -264,7 +247,8 @@
       "murSurface": "of wall",
       "prixM2": "F CFA / m² of blocks",
       "pleinSansAlveole": "solid block"
-    }
+    },
+    "heroTag": "Industrial plant · Daloa"
   },
   "catalogue": {
     "heroBadge": "Daloa Plant • Precast Concrete",

@@ -383,7 +383,7 @@ export default function Footer({ lang, dict }: FooterProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs text-[#FFD700] hover:underline font-semibold"
             >
-              <Star className="w-3.5 h-3.5 fill-current" /><span>{lang === "fr" ? "Laisser un avis Google (4.9/5)" : "Leave a Google Review (4.9/5)"}</span>
+              <Star className="w-3.5 h-3.5 fill-current" /><span>{lang === "fr" ? "Laisser un avis Google" : "Leave a Google review"}</span>
               <ArrowUpRight className="w-3 h-3" />
             </a>
           </div>
