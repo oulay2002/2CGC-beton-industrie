@@ -40,8 +40,8 @@ export default function PartenairesClient({ lang }: PartenairesClientProps) {
     {
       titre: isEn ? "Architects & Technical Control Bureaus" : "Architectes & Bureaux de Contrôle",
       description: isEn
-        ? "Prescription of our technical data sheets, verification of B50/B60 compressive strengths and compliance with Ivorian standards."
-        : "Prescription de nos fiches techniques, vérification des résistances B50/B60 et respect des normes ivoiriennes.",
+        ? "Prescription of our technical data sheets, verification of compressive strengths (Rc ≥ 4.0 MPa) and compliance with Ivorian standards."
+        : "Prescription de nos fiches techniques, vérification des résistances (Rc ≥ 4.0 MPa) et respect des normes ivoiriennes.",
       Icone: Ruler,
       exemples: [
         {

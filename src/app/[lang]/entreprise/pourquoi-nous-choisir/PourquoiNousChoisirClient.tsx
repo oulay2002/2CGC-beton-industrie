@@ -14,10 +14,10 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
   const atoutsTechniques = [
     {
       Icone: Gem,
-      titre: isEn ? "Mechanical Resistance B60 & B50" : "Résistance Mécanique B60 & B50",
+      titre: isEn ? "Mechanical strength Rc ≥ 4.0 MPa" : "Résistance mécanique Rc ≥ 4.0 MPa",
       description: isEn
-        ? "Our concrete products achieve certified compressive strengths up to 60 bars (B60), ensuring the safety of load-bearing structures even for multi-story buildings."
-        : "Nos bétons atteignent des résistances à la compression certifiées jusqu'à 60 bars (B60), garantissant la sécurité des structures porteuses même en R+3 et plus.",
+        ? "Our concrete products achieve certified compressive strengths up to 60 bars (Rc ≥ 4.0 MPa), ensuring the safety of load-bearing structures even for multi-story buildings."
+        : "Nos bétons atteignent des résistances à la compression certifiées jusqu'à 60 bars (Rc ≥ 4.0 MPa), garantissant la sécurité des structures porteuses même en R+3 et plus.",
       tag: isEn ? "BTP Standard" : "Norme BTP",
     },
     {
@@ -65,7 +65,7 @@ export default function PourquoiNousChoisirClient({ lang }: PourquoiNousChoisirC
   const comparatif = [
     {
       critere: isEn ? "Compressive strength" : "Résistance à la compression",
-      cgc: isEn ? "B50 to B60 certified in laboratory" : "B50 à B60 certifiée en laboratoire",
+      cgc: isEn ? "B50 to Rc ≥ 4.0 MPa certified in laboratory" : "B50 à Rc ≥ 4.0 MPa certifiée en laboratoire",
       artisanal: isEn ? "Random (often < B25), high crumbling risk" : "Aléatoire (souvent < B25), risque d'effritement",
     },
     {

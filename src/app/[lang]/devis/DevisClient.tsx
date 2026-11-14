@@ -225,7 +225,7 @@ function DevisInner({ lang }: { lang: Locale }) {
           ? isEn ? "High density compressed interlocking paver" : "Pavé autobloquant comprimé haute densité"
           : l.nom.includes("Hourdis")
           ? isEn ? "Lightweight floor beam B50" : "Hourdis de plancher allégé B50"
-          : isEn ? "Certified vibrated concrete block B50/B60" : "Bloc béton vibré certifié B50/B60",
+          : isEn ? "Vibrated concrete block, Rc ≥ 4.0 MPa" : "Bloc béton vibré, Rc ≥ 4.0 MPa",
       })),
       ...(optionLivraison
         ? [

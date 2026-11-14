@@ -23,8 +23,8 @@ export default function QuiSommesNousClient({ lang }: QuiSommesNousClientProps) 
       Icone: Microscope,
       titre: isEn ? "Certified Formulation & Batching" : "Formulation & Dosage Certifiés",
       description: isEn
-        ? "Exclusive use of high-performance CPJ cement and washed, screened aggregates ensuring flawless B50 and B60 compressive strengths."
-        : "Utilisation exclusive de ciment haute performance CPJ et d'agrégats lavés et criblés pour garantir des résistances B50 et B60 irréprochables.",
+        ? "Exclusive use of high-performance CPJ cement and washed, screened aggregates ensuring flawless B50 and Rc ≥ 4.0 MPa compressive strengths."
+        : "Utilisation exclusive de ciment haute performance CPJ et d'agrégats lavés et criblés pour garantir des résistances B50 et Rc ≥ 4.0 MPa irréprochables.",
     },
     {
       Icone: Truck,

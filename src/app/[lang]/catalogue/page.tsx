@@ -17,8 +17,8 @@ export async function generateMetadata({
     ? "Catalogue Préfabriqués Béton | Briques, Hourdis, Pavés — 2CGC Daloa"
     : "Precast Concrete Catalog | Blocks, Floor Beams, Pavers — 2CGC Daloa";
   const description = isFr
-    ? "Consultez notre catalogue complet de préfabriqués béton à Daloa : briques pleines 15/20 B60, briques creuses, hourdis de plancher et pavés autobloquants. Fiches techniques et tarifs."
-    : "Explore our complete precast concrete catalog in Daloa: B60 solid blocks 15/20, hollow blocks, floor beams, and interlocking pavers. Technical specs and prices.";
+    ? "Consultez notre catalogue complet de préfabriqués béton à Daloa : briques pleines 15/20, briques creuses, hourdis de plancher et pavés autobloquants. Fiches techniques et tarifs."
+    : "Explore our complete precast concrete catalog in Daloa: solid blocks (Rc ≥ 4.0 MPa) 15/20, hollow blocks, floor beams, and interlocking pavers. Technical specs and prices.";
 
   return {
     title,

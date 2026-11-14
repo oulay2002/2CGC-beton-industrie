@@ -194,7 +194,7 @@ ${articles.map(a => `• ${a.quantite.toLocaleString('fr-FR')} ${a.nom} : ${(a.p
 ----------------------------------
 
 ✨ *Avantages 2CGC inclus :*
-✓ Résistance mécanique certifiée B50 / B60
+✓ Résistance mécanique certifiée B50 / Rc ≥ 4.0 MPa
 ✓ Arêtes nettes & calibrage robotisé
 ✓ Facture officielle avec mentions fiscales (RCCM & CC N° 8104005 C)
 

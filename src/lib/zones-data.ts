@@ -35,8 +35,8 @@ export const ZONES: ZoneData[] = [
       en: "Precast Concrete in Daloa | Blocks, Floor Beams, Pavers — 2CGC",
     },
     metaDescription: {
-      fr: "2CGC, fabricant de briques pleines & creuses, hourdis et pavés autobloquants à Daloa. Usine industrielle, livraison express 24h, devis gratuit en ligne. Normes B60 certifiées.",
-      en: "2CGC, manufacturer of solid & hollow blocks, floor beams and interlocking pavers in Daloa. Industrial factory, 24h express delivery, free online quote. Certified B60 standards.",
+      fr: "2CGC, fabricant de briques pleines & creuses, hourdis et pavés autobloquants à Daloa. Usine industrielle, livraison express 24h, devis gratuit en ligne. Normes UEMOA, Rc ≥ 4.0 MPa.",
+      en: "2CGC, manufacturer of solid & hollow blocks, floor beams and interlocking pavers in Daloa. Industrial factory, 24h express delivery, free online quote. UEMOA standards, Rc ≥ 4.0 MPa.",
     },
     heroTitle: {
       fr: "Votre Fournisseur Béton de Référence à Daloa",
@@ -80,8 +80,8 @@ export const ZONES: ZoneData[] = [
       en: "130 km from Daloa · Delivery within 48h · Dedicated fleet",
     },
     localContent: {
-      fr: "La capitale politique ivoirienne connaît un essor immobilier remarquable. 2CGC accompagne les entreprises de BTP et promoteurs de Yamoussoukro avec des préfabriqués béton de qualité industrielle, livrés sous 48h directement sur chantier. Notre flotte camion-grue assure le transport sécurisé sur l'axe Daloa–Yamoussoukro. Nous fournissons briques pleines B60 pour murs porteurs, briques creuses pour cloisons, hourdis pour planchers et pavés autobloquants pour voiries et aménagements urbains.",
-      en: "The Ivorian political capital is experiencing remarkable real estate growth. 2CGC supports construction companies and property developers in Yamoussoukro with industrial-quality precast concrete, delivered within 48h directly to the construction site. Our crane-truck fleet ensures secure transport on the Daloa–Yamoussoukro route. We supply B60 solid blocks for load-bearing walls, hollow blocks for partitions, floor beams and interlocking pavers for roads and urban developments.",
+      fr: "La capitale politique ivoirienne connaît un essor immobilier remarquable. 2CGC accompagne les entreprises de BTP et promoteurs de Yamoussoukro avec des préfabriqués béton de qualité industrielle, livrés sous 48h directement sur chantier. Notre flotte camion-grue assure le transport sécurisé sur l'axe Daloa–Yamoussoukro. Nous fournissons briques pleines (Rc ≥ 4.0 MPa) pour murs porteurs, briques creuses pour cloisons, hourdis pour planchers et pavés autobloquants pour voiries et aménagements urbains.",
+      en: "The Ivorian political capital is experiencing remarkable real estate growth. 2CGC supports construction companies and property developers in Yamoussoukro with industrial-quality precast concrete, delivered within 48h directly to the construction site. Our crane-truck fleet ensures secure transport on the Daloa–Yamoussoukro route. We supply solid blocks (Rc ≥ 4.0 MPa) for load-bearing walls, hollow blocks for partitions, floor beams and interlocking pavers for roads and urban developments.",
     },
   },
   {
@@ -101,8 +101,8 @@ export const ZONES: ZoneData[] = [
       en: "Precast Concrete Abidjan | Block & Beam Delivery — 2CGC",
     },
     metaDescription: {
-      fr: "Fournisseur de briques, agglos, hourdis et pavés pour Abidjan. Livraison 72h depuis l'usine 2CGC Daloa. Qualité B60 certifiée, devis en ligne immédiat.",
-      en: "Supplier of blocks, floor beams and pavers for Abidjan. 72h delivery from the 2CGC Daloa factory. Certified B60 quality, instant online quote.",
+      fr: "Fournisseur de briques, agglos, hourdis et pavés pour Abidjan. Livraison 72h depuis l'usine 2CGC Daloa. Rc ≥ 4.0 MPa, normes UEMOA, devis en ligne immédiat.",
+      en: "Supplier of blocks, floor beams and pavers for Abidjan. 72h delivery from the 2CGC Daloa factory. Rc ≥ 4.0 MPa, UEMOA standards, instant online quote.",
     },
     heroTitle: {
       fr: "Votre Fournisseur Béton pour les Chantiers d'Abidjan",
@@ -113,8 +113,8 @@ export const ZONES: ZoneData[] = [
       en: "380 km from Daloa · Delivery within 72h · Large volumes",
     },
     localContent: {
-      fr: "Abidjan, moteur économique de la Côte d'Ivoire, concentre les plus grands chantiers du pays. 2CGC approvisionne la capitale économique en préfabriqués béton de qualité industrielle : briques pleines B60 pour les immeubles R+3 et plus, hourdis pour planchers haute portée, et pavés autobloquants pour les aménagements urbains. Notre logistique optimisée sur l'axe Daloa–Abidjan garantit une livraison sous 72h pour les commandes de gros volumes.",
-      en: "Abidjan, the economic engine of Ivory Coast, hosts the country's largest construction projects. 2CGC supplies the economic capital with industrial-quality precast concrete: B60 solid blocks for R+3 buildings and above, floor beams for high-span floors, and interlocking pavers for urban developments. Our optimized logistics on the Daloa–Abidjan route guarantee delivery within 72h for large volume orders.",
+      fr: "Abidjan, moteur économique de la Côte d'Ivoire, concentre les plus grands chantiers du pays. 2CGC approvisionne la capitale économique en préfabriqués béton de qualité industrielle : briques pleines (Rc ≥ 4.0 MPa) pour les immeubles R+3 et plus, hourdis pour planchers haute portée, et pavés autobloquants pour les aménagements urbains. Notre logistique optimisée sur l'axe Daloa–Abidjan garantit une livraison sous 72h pour les commandes de gros volumes.",
+      en: "Abidjan, the economic engine of Ivory Coast, hosts the country's largest construction projects. 2CGC supplies the economic capital with industrial-quality precast concrete: solid blocks (Rc ≥ 4.0 MPa) for R+3 buildings and above, floor beams for high-span floors, and interlocking pavers for urban developments. Our optimized logistics on the Daloa–Abidjan route guarantee delivery within 72h for large volume orders.",
     },
   },
   {
@@ -134,8 +134,8 @@ export const ZONES: ZoneData[] = [
       en: "Blocks & Concrete Materials in Bouaflé | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Livraison de briques pleines, creuses, hourdis et pavés à Bouaflé sous 24–48h. Usine 2CGC Daloa, normes B60 certifiées, devis gratuit.",
-      en: "Delivery of solid blocks, hollow blocks, floor beams and pavers to Bouaflé within 24–48h. 2CGC Daloa factory, certified B60 standards, free quote.",
+      fr: "Livraison de briques pleines, creuses, hourdis et pavés à Bouaflé sous 24–48h. Usine 2CGC Daloa, normes UEMOA, Rc ≥ 4.0 MPa, devis gratuit.",
+      en: "Delivery of solid blocks, hollow blocks, floor beams and pavers to Bouaflé within 24–48h. 2CGC Daloa factory, UEMOA standards, Rc ≥ 4.0 MPa, free quote.",
     },
     heroTitle: {
       fr: "Matériaux de Construction Livrés à Bouaflé",
@@ -167,8 +167,8 @@ export const ZONES: ZoneData[] = [
       en: "Precast Concrete in Issia | Express Delivery — 2CGC",
     },
     metaDescription: {
-      fr: "Briques, hourdis et pavés livrés à Issia sous 24h depuis l'usine 2CGC Daloa. 45 km, livraison express, devis en ligne, qualité B60 certifiée.",
-      en: "Blocks, floor beams and pavers delivered to Issia within 24h from the 2CGC Daloa factory. 45 km, express delivery, online quote, certified B60 quality.",
+      fr: "Briques, hourdis et pavés livrés à Issia sous 24h depuis l'usine 2CGC Daloa. 45 km, livraison express, devis en ligne, Rc ≥ 4.0 MPa, normes UEMOA.",
+      en: "Blocks, floor beams and pavers delivered to Issia within 24h from the 2CGC Daloa factory. 45 km, express delivery, online quote, Rc ≥ 4.0 MPa, UEMOA standards.",
     },
     heroTitle: {
       fr: "Béton & Briques Livrés à Issia en Express",
@@ -179,8 +179,8 @@ export const ZONES: ZoneData[] = [
       en: "45 km from Daloa · 24h express delivery",
     },
     localContent: {
-      fr: "À seulement 45 km de notre usine de Daloa, Issia bénéficie d'une livraison express sous 24 heures. Les chantiers d'Issia et de ses environs sont approvisionnés en briques pleines B60, briques creuses, hourdis français et américains, ainsi qu'en pavés autobloquants. Notre proximité nous permet d'offrir les meilleurs tarifs de livraison de la région du Haut-Sassandra.",
-      en: "Just 45 km from our Daloa factory, Issia benefits from 24-hour express delivery. Construction sites in Issia and its surroundings are supplied with B60 solid blocks, hollow blocks, French and American floor beams, and interlocking pavers. Our proximity allows us to offer the best delivery rates in the Haut-Sassandra region.",
+      fr: "À seulement 45 km de notre usine de Daloa, Issia bénéficie d'une livraison express sous 24 heures. Les chantiers d'Issia et de ses environs sont approvisionnés en briques pleines (Rc ≥ 4.0 MPa), briques creuses, hourdis français et américains, ainsi qu'en pavés autobloquants. Notre proximité nous permet d'offrir les meilleurs tarifs de livraison de la région du Haut-Sassandra.",
+      en: "Just 45 km from our Daloa factory, Issia benefits from 24-hour express delivery. Construction sites in Issia and its surroundings are supplied with solid blocks (Rc ≥ 4.0 MPa), hollow blocks, French and American floor beams, and interlocking pavers. Our proximity allows us to offer the best delivery rates in the Haut-Sassandra region.",
     },
   },
   {
@@ -278,8 +278,8 @@ export const ZONES: ZoneData[] = [
       en: "200 km from Daloa · Delivery within 48–72h",
     },
     localContent: {
-      fr: "Bouaké, deuxième ville de Côte d'Ivoire et carrefour du centre du pays, est desservie par 2CGC avec des livraisons régulières de préfabriqués béton sous 48 à 72 heures. Les entreprises de BTP et promoteurs immobiliers de Bouaké comptent sur notre qualité B60 certifiée pour leurs projets de construction. Du parpaing à l'hourdis en passant par les pavés autobloquants, tous nos produits sont disponibles pour la région de Gbêkê.",
-      en: "Bouaké, Ivory Coast's second largest city and central crossroads, is served by 2CGC with regular deliveries of precast concrete within 48 to 72 hours. Construction companies and property developers in Bouaké rely on our certified B60 quality for their building projects. From blocks to floor beams and interlocking pavers, all our products are available for the Gbêkê region.",
+      fr: "Bouaké, deuxième ville de Côte d'Ivoire et carrefour du centre du pays, est desservie par 2CGC avec des livraisons régulières de préfabriqués béton sous 48 à 72 heures. Les entreprises de BTP et promoteurs immobiliers de Bouaké comptent sur notre Rc ≥ 4.0 MPa, normes UEMOA pour leurs projets de construction. Du parpaing à l'hourdis en passant par les pavés autobloquants, tous nos produits sont disponibles pour la région de Gbêkê.",
+      en: "Bouaké, Ivory Coast's second largest city and central crossroads, is served by 2CGC with regular deliveries of precast concrete within 48 to 72 hours. Construction companies and property developers in Bouaké rely on our Rc ≥ 4.0 MPa, UEMOA standards for their building projects. From blocks to floor beams and interlocking pavers, all our products are available for the Gbêkê region.",
     },
   },
   // --- NOUVELLES ZONES DESSERVIES (GRAND OUEST, MARAHOUÉ & WORODOUGOU) ---
@@ -301,8 +301,8 @@ export const ZONES: ZoneData[] = [
       en: "Concrete Blocks & Precast in Guiglo | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Livraison de briques pleines, creuses, hourdis et pavés à Guiglo sous 48h depuis l'usine 2CGC Daloa. Qualité B60 certifiée, devis gratuit.",
-      en: "Delivery of solid, hollow blocks, floor beams and pavers to Guiglo within 48h from 2CGC Daloa. Certified B60 quality, free quote.",
+      fr: "Livraison de briques pleines, creuses, hourdis et pavés à Guiglo sous 48h depuis l'usine 2CGC Daloa. Rc ≥ 4.0 MPa, normes UEMOA, devis gratuit.",
+      en: "Delivery of solid, hollow blocks, floor beams and pavers to Guiglo within 48h from 2CGC Daloa. Rc ≥ 4.0 MPa, UEMOA standards, free quote.",
     },
     heroTitle: {
       fr: "Béton Préfabriqué Livré à Guiglo",
@@ -313,8 +313,8 @@ export const ZONES: ZoneData[] = [
       en: "135 km from Daloa · Cavally Region · Delivery within 48h",
     },
     localContent: {
-      fr: "Guiglo, carrefour stratégique du Cavally et du Grand Ouest ivoirien, connaît un développement soutenu de ses infrastructures publiques et résidentielles. 2CGC assure l'approvisionnement des chantiers de Guiglo et de ses environs en briques pleines B60, hourdis de plancher et pavés carrossables, avec une livraison sécurisée par camion-grue sous 48h depuis notre usine de Daloa.",
-      en: "Guiglo, strategic crossroads of Cavally and the Grand West, experiences steady infrastructure and residential growth. 2CGC provides supply to Guiglo sites with B60 solid blocks, floor beams, and drivable pavers delivered by crane-truck within 48h from our Daloa plant.",
+      fr: "Guiglo, carrefour stratégique du Cavally et du Grand Ouest ivoirien, connaît un développement soutenu de ses infrastructures publiques et résidentielles. 2CGC assure l'approvisionnement des chantiers de Guiglo et de ses environs en briques pleines (Rc ≥ 4.0 MPa), hourdis de plancher et pavés carrossables, avec une livraison sécurisée par camion-grue sous 48h depuis notre usine de Daloa.",
+      en: "Guiglo, strategic crossroads of Cavally and the Grand West, experiences steady infrastructure and residential growth. 2CGC provides supply to Guiglo sites with solid blocks (Rc ≥ 4.0 MPa), floor beams, and drivable pavers delivered by crane-truck within 48h from our Daloa plant.",
     },
   },
   {
@@ -326,16 +326,16 @@ export const ZONES: ZoneData[] = [
     distanceFromDaloa: 100,
     deliveryDelay: { fr: "Livraison sous 24–48h", en: "Delivery within 24–48h" },
     description: {
-      fr: "Carrefour commercial majeur de la région du Guémon et porte du Grand Ouest. 2CGC dessert tous les chantiers de Duékoué en briques et pavés certifiés B60.",
-      en: "Major commercial crossroads of the Guémon region. 2CGC serves all construction sites in Duékoué with certified B60 blocks and pavers.",
+      fr: "Carrefour commercial majeur de la région du Guémon et porte du Grand Ouest. 2CGC dessert tous les chantiers de Duékoué en briques et pavés aux normes UEMOA.",
+      en: "Major commercial crossroads of the Guémon region. 2CGC serves all construction sites in Duékoué with UEMOA-standard blocks and pavers.",
     },
     metaTitle: {
       fr: "Préfabriqués Béton à Duékoué | Livraison Rapide — 2CGC",
       en: "Precast Concrete in Duékoué | Fast Delivery — 2CGC",
     },
     metaDescription: {
-      fr: "Fournisseur de briques, hourdis et pavés pour Duékoué. Livraison 24–48h depuis l'usine 2CGC Daloa (100 km). Norme B60, devis proforma en ligne.",
-      en: "Supplier of blocks, floor beams and pavers for Duékoué. 24–48h delivery from 2CGC Daloa (100 km). B60 standard, online quote.",
+      fr: "Fournisseur de briques, hourdis et pavés pour Duékoué. Livraison 24–48h depuis l'usine 2CGC Daloa (100 km). Norme Rc ≥ 4.0 MPa, devis proforma en ligne.",
+      en: "Supplier of blocks, floor beams and pavers for Duékoué. 24–48h delivery from 2CGC Daloa (100 km). Rc ≥ 4.0 MPa standard, online quote.",
     },
     heroTitle: {
       fr: "Fournisseur Béton de Référence à Duékoué",
@@ -346,8 +346,8 @@ export const ZONES: ZoneData[] = [
       en: "100 km from Daloa · Direct route · Delivery within 24–48h",
     },
     localContent: {
-      fr: "Située à 100 km de Daloa sur l'axe principal du Grand Ouest, la ville de Duékoué bénéficie d'une liaison logistique directe avec l'usine 2CGC. Nos camions approvisionnent rapidement les chantiers résidentiels, commerciaux et industriels de la région du Guémon avec des matériaux certifiés B60 prêts pour les élévations porteuses et fondations.",
-      en: "Located 100 km from Daloa on the main western axis, Duékoué benefits from direct logistics links with the 2CGC factory. Our trucks promptly supply residential, commercial and industrial sites across Guémon with certified B60 materials ready for load-bearing elevations and foundations.",
+      fr: "Située à 100 km de Daloa sur l'axe principal du Grand Ouest, la ville de Duékoué bénéficie d'une liaison logistique directe avec l'usine 2CGC. Nos camions approvisionnent rapidement les chantiers résidentiels, commerciaux et industriels de la région du Guémon avec des matériaux aux normes UEMOA (Rc ≥ 4.0 MPa) prêts pour les élévations porteuses et fondations.",
+      en: "Located 100 km from Daloa on the main western axis, Duékoué benefits from direct logistics links with the 2CGC factory. Our trucks promptly supply residential, commercial and industrial sites across Guémon with UEMOA-standard materials ready for load-bearing elevations and foundations.",
     },
   },
   {
@@ -367,8 +367,8 @@ export const ZONES: ZoneData[] = [
       en: "Concrete Blocks & Materials in Danané | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Livraison de préfabriqués béton à Danané (Tonkpi) sous 48–72h. Briques pleines B60, hourdis, pavés depuis l'usine 2CGC de Daloa. Devis gratuit.",
-      en: "Precast concrete delivery to Danané (Tonkpi) within 48–72h. B60 solid blocks, floor beams, pavers from 2CGC Daloa factory. Free quote.",
+      fr: "Livraison de préfabriqués béton à Danané (Tonkpi) sous 48–72h. Briques pleines Rc ≥ 4.0 MPa, hourdis, pavés depuis l'usine 2CGC de Daloa. Devis gratuit.",
+      en: "Precast concrete delivery to Danané (Tonkpi) within 48–72h. solid blocks (Rc ≥ 4.0 MPa), floor beams, pavers from 2CGC Daloa factory. Free quote.",
     },
     heroTitle: {
       fr: "Matériaux Béton Livrés à Danané",
@@ -400,8 +400,8 @@ export const ZONES: ZoneData[] = [
       en: "Precast Concrete in Man | Blocks & Floor Beams — 2CGC",
     },
     metaDescription: {
-      fr: "Fabricant et fournisseur de préfabriqués béton pour la ville de Man. Livraison sous 48h depuis Daloa. Briques B60, hourdis, pavés autobloquants.",
-      en: "Precast concrete manufacturer for Man. 48h delivery from Daloa. B60 blocks, floor beams, interlocking pavers. Free online quote.",
+      fr: "Fabricant et fournisseur de préfabriqués béton pour la ville de Man. Livraison sous 48h depuis Daloa. Briques Rc ≥ 4.0 MPa, hourdis, pavés autobloquants.",
+      en: "Precast concrete manufacturer for Man. 48h delivery from Daloa. Rc ≥ 4.0 MPa blocks, floor beams, interlocking pavers. Free online quote.",
     },
     heroTitle: {
       fr: "Votre Partenaire Béton pour les Chantiers de Man",
@@ -412,8 +412,8 @@ export const ZONES: ZoneData[] = [
       en: "190 km from Daloa · Montagnes District · Delivery within 48h",
     },
     localContent: {
-      fr: "La ville aux 18 montagnes connaît un dynamisme architectural fort avec la construction de complexes hôteliers, résidences et bâtiments administratifs. 2CGC approvisionne les professionnels et particuliers de Man en briques pleines B60, hourdis légers pour planchers et pavés autobloquants, transportés et déchargés avec camion-grue sur site.",
-      en: "Man, the city of 18 mountains, is undergoing major architectural growth with hotels, residences and public buildings. 2CGC supplies professionals and private builders in Man with B60 solid blocks, lightweight floor beams, and interlocking pavers, with crane-truck unloading on site.",
+      fr: "La ville aux 18 montagnes connaît un dynamisme architectural fort avec la construction de complexes hôteliers, résidences et bâtiments administratifs. 2CGC approvisionne les professionnels et particuliers de Man en briques pleines (Rc ≥ 4.0 MPa), hourdis légers pour planchers et pavés autobloquants, transportés et déchargés avec camion-grue sur site.",
+      en: "Man, the city of 18 mountains, is undergoing major architectural growth with hotels, residences and public buildings. 2CGC supplies professionals and private builders in Man with solid blocks (Rc ≥ 4.0 MPa), lightweight floor beams, and interlocking pavers, with crane-truck unloading on site.",
     },
   },
   {
@@ -467,8 +467,8 @@ export const ZONES: ZoneData[] = [
       en: "Precast Concrete in Zouan-Hounien | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Livraison de briques industrielles B60, hourdis et pavés à Zouan-Hounien sous 48–72h depuis Daloa. 2CGC, spécialiste du BTP en Côte d'Ivoire.",
-      en: "Industrial B60 blocks, floor beams and pavers delivered to Zouan-Hounien within 48–72h from Daloa. 2CGC construction specialist.",
+      fr: "Livraison de briques industrielles Rc ≥ 4.0 MPa, hourdis et pavés à Zouan-Hounien sous 48–72h depuis Daloa. 2CGC, spécialiste du BTP en Côte d'Ivoire.",
+      en: "Industrial Rc ≥ 4.0 MPa blocks, floor beams and pavers delivered to Zouan-Hounien within 48–72h from Daloa. 2CGC construction specialist.",
     },
     heroTitle: {
       fr: "Préfabriqués Béton pour Zouan-Hounien",
@@ -479,8 +479,8 @@ export const ZONES: ZoneData[] = [
       en: "300 km from Daloa · Tonkpi Region · Large projects",
     },
     localContent: {
-      fr: "Avec son activité économique et minière florissante, Zouan-Hounien exige des matériaux de haute technicité. 2CGC répond aux besoins des entreprises minières, prestataires de travaux et promoteurs avec des briques B60 certifiées et des pavés haute densité pour voiries lourdes.",
-      en: "With its flourishing economic and mining activity, Zouan-Hounien demands high-spec building materials. 2CGC meets the needs of mining firms, contractors and developers with certified B60 blocks and heavy-duty pavers.",
+      fr: "Avec son activité économique et minière florissante, Zouan-Hounien exige des matériaux de haute technicité. 2CGC répond aux besoins des entreprises minières, prestataires de travaux et promoteurs avec des briques Rc ≥ 4.0 MPa certifiées et des pavés haute densité pour voiries lourdes.",
+      en: "With its flourishing economic and mining activity, Zouan-Hounien demands high-spec building materials. 2CGC meets the needs of mining firms, contractors and developers with UEMOA-standard blocks and heavy-duty pavers.",
     },
   },
   {
@@ -525,16 +525,16 @@ export const ZONES: ZoneData[] = [
     distanceFromDaloa: 140,
     deliveryDelay: { fr: "Livraison sous 48h", en: "Delivery within 48h" },
     description: {
-      fr: "Chef-lieu de la région du Worodougou et grand pôle économique du nord-ouest. 2CGC dessert Séguéla en briques pleines B60, hourdis et pavés.",
-      en: "Capital of the Worodougou region and economic hub of the northwest. 2CGC serves Séguéla with B60 solid blocks, floor beams and pavers.",
+      fr: "Chef-lieu de la région du Worodougou et grand pôle économique du nord-ouest. 2CGC dessert Séguéla en briques pleines (Rc ≥ 4.0 MPa), hourdis et pavés.",
+      en: "Capital of the Worodougou region and economic hub of the northwest. 2CGC serves Séguéla with solid blocks (Rc ≥ 4.0 MPa), floor beams and pavers.",
     },
     metaTitle: {
       fr: "Préfabriqués Béton à Séguéla | 2CGC depuis Daloa",
       en: "Precast Concrete in Séguéla | 2CGC from Daloa",
     },
     metaDescription: {
-      fr: "Livraison de briques pleines B60, hourdis et pavés à Séguéla sous 48h depuis Daloa (140 km). Tarifs usine, qualité industrielle certifiée.",
-      en: "Delivery of B60 solid blocks, floor beams and pavers to Séguéla within 48h from Daloa (140 km). Factory pricing, certified industrial quality.",
+      fr: "Livraison de briques pleines (Rc ≥ 4.0 MPa), hourdis et pavés à Séguéla sous 48h depuis Daloa (140 km). Tarifs usine, qualité industrielle certifiée.",
+      en: "Delivery of solid blocks (Rc ≥ 4.0 MPa), floor beams and pavers to Séguéla within 48h from Daloa (140 km). Factory pricing, certified industrial quality.",
     },
     heroTitle: {
       fr: "Fournisseur Béton pour Séguéla et le Worodougou",
@@ -545,8 +545,8 @@ export const ZONES: ZoneData[] = [
       en: "140 km from Daloa · Vavoua–Séguéla route · Delivery within 48h",
     },
     localContent: {
-      fr: "Séguéla, métropole en plein essor minier et urbain dans le Worodougou, est reliée directement à Daloa via l'axe bitumé de Vavoua. 2CGC fournit les briques de fondation B60, hourdis de plancher et pavés autobloquants nécessaires aux grands travaux d'aménagement de Séguéla.",
-      en: "Séguéla, a booming mining and urban center in Worodougou, connects directly to Daloa via the paved Vavoua road. 2CGC supplies B60 foundation blocks, floor beams and pavers needed for major building works in Séguéla.",
+      fr: "Séguéla, métropole en plein essor minier et urbain dans le Worodougou, est reliée directement à Daloa via l'axe bitumé de Vavoua. 2CGC fournit les briques de fondation Rc ≥ 4.0 MPa, hourdis de plancher et pavés autobloquants nécessaires aux grands travaux d'aménagement de Séguéla.",
+      en: "Séguéla, a booming mining and urban center in Worodougou, connects directly to Daloa via the paved Vavoua road. 2CGC supplies Rc ≥ 4.0 MPa foundation blocks, floor beams and pavers needed for major building works in Séguéla.",
     },
   },
   {
@@ -579,8 +579,8 @@ export const ZONES: ZoneData[] = [
       en: "22 km from Daloa factory · 24h express delivery",
     },
     localContent: {
-      fr: "À seulement 22 km de nos installations de Daloa sur la route nationale vers Bouaflé, Gonaté bénéficie d'une réactivité logistique maximale. Les chantiers de construction y sont livrés en quelques heures avec nos briques B60, hourdis et pavés au meilleur tarif transport du marché.",
-      en: "Only 22 km from our Daloa plant on the national road to Bouaflé, Gonaté enjoys ultra-fast delivery. Construction sites are supplied within hours with our B60 blocks, floor beams and pavers at minimal freight costs.",
+      fr: "À seulement 22 km de nos installations de Daloa sur la route nationale vers Bouaflé, Gonaté bénéficie d'une réactivité logistique maximale. Les chantiers de construction y sont livrés en quelques heures avec nos briques Rc ≥ 4.0 MPa, hourdis et pavés au meilleur tarif transport du marché.",
+      en: "Only 22 km from our Daloa plant on the national road to Bouaflé, Gonaté enjoys ultra-fast delivery. Construction sites are supplied within hours with our Rc ≥ 4.0 MPa blocks, floor beams and pavers at minimal freight costs.",
     },
   },
   {
@@ -600,8 +600,8 @@ export const ZONES: ZoneData[] = [
       en: "Concrete Blocks & Materials in Bonon | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Fournisseur de briques pleines, creuses, hourdis et pavés à Bonon sous 24h depuis Daloa (55 km). Qualité certifiée B60, devis proforma immédiat.",
-      en: "Supplier of blocks, floor beams and pavers to Bonon within 24h from Daloa (55 km). Certified B60 quality, instant proforma quote.",
+      fr: "Fournisseur de briques pleines, creuses, hourdis et pavés à Bonon sous 24h depuis Daloa (55 km). Qualité certifiée Rc ≥ 4.0 MPa, devis proforma immédiat.",
+      en: "Supplier of blocks, floor beams and pavers to Bonon within 24h from Daloa (55 km). Rc ≥ 4.0 MPa, UEMOA standards, instant proforma quote.",
     },
     heroTitle: {
       fr: "Matériaux Béton Livrés à Bonon",
@@ -633,8 +633,8 @@ export const ZONES: ZoneData[] = [
       en: "Precast Concrete in Bédiala | 24h Delivery — 2CGC",
     },
     metaDescription: {
-      fr: "Livraison de briques, agglos et hourdis à Bédiala sous 24h depuis l'usine 2CGC Daloa (40 km). Qualité B60 certifiée, devis gratuit.",
-      en: "Delivery of blocks and floor beams to Bédiala within 24h from 2CGC Daloa (40 km). Certified B60 quality, free quote.",
+      fr: "Livraison de briques, agglos et hourdis à Bédiala sous 24h depuis l'usine 2CGC Daloa (40 km). Rc ≥ 4.0 MPa, normes UEMOA, devis gratuit.",
+      en: "Delivery of blocks and floor beams to Bédiala within 24h from 2CGC Daloa (40 km). Rc ≥ 4.0 MPa, UEMOA standards, free quote.",
     },
     heroTitle: {
       fr: "Préfabriqués Béton pour Bédiala",
@@ -667,8 +667,8 @@ export const ZONES: ZoneData[] = [
       en: "Concrete & Blocks in Zuénoula | 2CGC Daloa",
     },
     metaDescription: {
-      fr: "Fournisseur de briques B60, hourdis et pavés pour Zuénoula. Livraison 24–48h depuis l'usine 2CGC Daloa. Tarifs direct usine, devis en ligne.",
-      en: "Supplier of B60 blocks, floor beams and pavers for Zuénoula. 24–48h delivery from 2CGC Daloa. Factory direct prices, online quote.",
+      fr: "Fournisseur de briques Rc ≥ 4.0 MPa, hourdis et pavés pour Zuénoula. Livraison 24–48h depuis l'usine 2CGC Daloa. Tarifs direct usine, devis en ligne.",
+      en: "Supplier of Rc ≥ 4.0 MPa blocks, floor beams and pavers for Zuénoula. 24–48h delivery from 2CGC Daloa. Factory direct prices, online quote.",
     },
     heroTitle: {
       fr: "Béton Préfabriqué Livré à Zuénoula",
@@ -679,8 +679,8 @@ export const ZONES: ZoneData[] = [
       en: "100 km from Daloa · Marahoué · Delivery within 24–48h",
     },
     localContent: {
-      fr: "Bassin agro-industriel de premier plan dans la Marahoué, Zuénoula fait appel aux préfabriqués 2CGC pour ses entrepôts, logements de fonction, commerces et résidences. Nos blocs B60 certifiés garantissent la solidité d'édifices soumis à un usage intensif.",
-      en: "A premier agro-industrial basin in Marahoué, Zuénoula relies on 2CGC precast products for warehouses, staff housing, shops and residences. Our certified B60 blocks guarantee structural durability under intensive use.",
+      fr: "Bassin agro-industriel de premier plan dans la Marahoué, Zuénoula fait appel aux préfabriqués 2CGC pour ses entrepôts, logements de fonction, commerces et résidences. Nos blocs Rc ≥ 4.0 MPa certifiés garantissent la solidité d'édifices soumis à un usage intensif.",
+      en: "A premier agro-industrial basin in Marahoué, Zuénoula relies on 2CGC precast products for warehouses, staff housing, shops and residences. Our UEMOA-standard blocks guarantee structural durability under intensive use.",
     },
   },
   {
@@ -692,8 +692,8 @@ export const ZONES: ZoneData[] = [
     distanceFromDaloa: 200,
     deliveryDelay: { fr: "Livraison sous 48–72h", en: "Delivery within 48–72h" },
     description: {
-      fr: "Département du Worodougou au nord de Séguéla. 2CGC approvisionne les chantiers de Kani en préfabriqués béton industriels certifiés B60.",
-      en: "Worodougou department north of Séguéla. 2CGC supplies Kani jobsites with industrial B60-certified precast concrete.",
+      fr: "Département du Worodougou au nord de Séguéla. 2CGC approvisionne les chantiers de Kani en préfabriqués béton industriels aux normes UEMOA.",
+      en: "Worodougou department north of Séguéla. 2CGC supplies Kani jobsites with industrial Rc ≥ 4.0 MPa-certified precast concrete.",
     },
     metaTitle: {
       fr: "Matériaux Béton à Kani | Livraison depuis Daloa — 2CGC",

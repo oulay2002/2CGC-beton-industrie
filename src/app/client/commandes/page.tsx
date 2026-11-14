@@ -99,7 +99,7 @@ function CommandesPageInner() {
         nom: a.nom,
         quantite: a.quantite,
         prix: a.prix,
-        specification: a.nom.includes('Pavé') ? 'Autobloquant haute compacité' : 'Bloc béton vibré B50/B60',
+        specification: a.nom.includes('Pavé') ? 'Autobloquant haute compacité' : 'Bloc béton vibré, Rc ≥ 4.0 MPa',
       })),
       recap: {
         totalHT,

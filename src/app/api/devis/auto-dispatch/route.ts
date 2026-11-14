@@ -84,7 +84,7 @@ function genererHTMLProforma(data: DevisAutoDispatchPayload): string {
       (l, idx) => `
     <tr style="background:${idx % 2 === 0 ? '#FFFFFF' : '#F9FAFB'};border-bottom:1px solid #E5E7EB">
       <td style="padding:12px 14px;color:#111827;font-weight:600;font-size:13px">${e(l.nom)}</td>
-      <td style="padding:12px 14px;color:#6B7280;font-size:12px">${e(l.specification || 'Certifié B50/B60')}</td>
+      <td style="padding:12px 14px;color:#6B7280;font-size:12px">${e(l.specification || 'Rc ≥ 4.0 MPa (normes UEMOA)')}</td>
       <td style="padding:12px 14px;color:#111827;text-align:center;font-weight:600;font-size:13px">${l.quantite.toLocaleString('fr-FR')}</td>
       <td style="padding:12px 14px;color:#374151;text-align:right;font-size:13px">${Math.round(l.prix).toLocaleString('fr-FR')} FCFA</td>
       <td style="padding:12px 14px;color:#002B5B;text-align:right;font-weight:bold;font-size:13px">${Math.round(l.quantite * l.prix).toLocaleString('fr-FR')} FCFA</td>

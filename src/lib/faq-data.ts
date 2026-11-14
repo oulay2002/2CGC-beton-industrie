@@ -37,8 +37,8 @@ export const FAQ_ITEMS: FaqItem[] = [
       en: "What is the mechanical strength of 2CGC concrete blocks?",
     },
     a: {
-      fr: "Nos briques pleines 20x20x50 et 15x20x50 bénéficient d'une résistance à la compression certifiée B60 (60 bars), convenant parfaitement aux murs porteurs et structures R+1, R+2 et plus. Nos briques creuses sont testées à la norme B50 pour les cloisons et élévations standard.",
-      en: "Our solid 20x20x50 and 15x20x50 blocks feature certified B60 (60 bar) compressive strength, perfectly suited for load-bearing walls and multi-story buildings. Our hollow blocks are tested to the B50 standard for partitions and standard wall elevation.",
+      fr: "Nos briques pleines 20x20x50 et 15x20x50 bénéficient d'une résistance à la compression certifiée Rc ≥ 4.0 MPa (60 bars), convenant parfaitement aux murs porteurs et structures R+1, R+2 et plus. Nos briques creuses sont testées à la norme B50 pour les cloisons et élévations standard.",
+      en: "Our solid 20x20x50 and 15x20x50 blocks feature UEMOA-standard (60 bar) compressive strength, perfectly suited for load-bearing walls and multi-story buildings. Our hollow blocks are tested to the B50 standard for partitions and standard wall elevation.",
     },
   },
   {

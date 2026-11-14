@@ -31,11 +31,11 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
 
   const products = [
     {
-      name: isEn ? "Solid Blocks 20x20x50 B60" : "Briques Pleines 20x20x50 B60",
+      name: isEn ? "Solid Blocks 20x20x50 Rc ≥ 4.0 MPa" : "Briques Pleines 20x20x50 Rc ≥ 4.0 MPa",
       desc: isEn
         ? "Heavy-duty load-bearing walls for multi-story buildings and civil foundations."
         : "Murs porteurs haute résistance pour immeubles R+1 à R+4 et fondations génie civil.",
-      tag: "B60 Certifié",
+      tag: "Rc ≥ 4.0 MPa Certifié",
       price: "570 FCFA",
     },
     {
@@ -193,7 +193,7 @@ export default function ZoneClient({ zone, lang }: ZoneClientProps) {
             </div>
             <div>
               <div className="text-xl sm:text-2xl font-black text-[#002B5B]">
-                B60 Certifié
+                Rc ≥ 4.0 MPa Certifié
               </div>
               <div className="text-xs text-gray-500 font-medium">
                 {isEn ? "60 bars compression" : "60 bars résistance"}

@@ -153,7 +153,7 @@ export function genererBonCommande(data: BonData) {
   const tableData = data.articles.map((a, idx) => [
     (idx + 1).toString().padStart(2, '0'),
     a.nom,
-    a.specification || 'Béton haute performance B50/B60',
+    a.specification || 'Béton haute performance Rc ≥ 4.0 MPa',
     a.quantite.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '),
     a.prix ? formatFCFA(a.prix) : 'Inclus',
     a.prix ? formatFCFA(a.quantite * a.prix) : '-'
@@ -359,7 +359,7 @@ export function genererBonLivraison(data: BonData) {
   doc.text('RCCM : CI DAL 2013 B. 20779 • Compte Contribuables CC N° : 8104005 C', 38, 24);
   doc.text('Usine & Parc à Béton : Daloa Quartier Commerce non loin de la Pharmacie Appaul', 38, 29);
   doc.text('Tél : +225 07 07 62 17 99 / 07 07 85 76 29 • Flotte de Camions-Grues 15 Tonnes', 38, 34);
-  doc.text('Email : cheicknaconstruction@gmail.com • Contrôle qualité continu B50/B60', 38, 39);
+  doc.text('Email : cheicknaconstruction@gmail.com • Contrôle qualité continu Rc ≥ 4.0 MPa', 38, 39);
 
   // =============================================
   // 2. BLOC DOCUMENT & DESTINATAIRE / LOGISTIQUE

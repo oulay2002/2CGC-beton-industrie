@@ -228,7 +228,7 @@ export function genererPDF(data: DevisData) {
   const tableData = data.lignes.map((l, index) => [
     (index + 1).toString().padStart(2, '0'),
     l.nom,
-    l.specification || 'Norme B50/B60 - Vibré haute densité',
+    l.specification || 'Norme Rc ≥ 4.0 MPa - Vibré haute densité',
     l.quantite.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '),
     formatFCFA(l.prix),
     formatFCFA(l.quantite * l.prix),

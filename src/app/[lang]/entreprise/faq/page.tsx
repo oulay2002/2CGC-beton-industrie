@@ -17,8 +17,8 @@ export async function generateMetadata({
     ? "FAQ Béton & Construction | Questions Fréquentes — 2CGC Daloa"
     : "Concrete & Construction FAQ | Frequently Asked Questions — 2CGC Daloa";
   const description = isFr
-    ? "Toutes les réponses à vos questions techniques sur les préfabriqués béton 2CGC : délais de livraison, résistance B60, paiement B2B, devis proforma et TVA 18%."
-    : "All answers to your technical questions on 2CGC precast concrete: delivery times, B60 strength, B2B payment terms, proforma quotes and 18% VAT.";
+    ? "Toutes les réponses à vos questions techniques sur les préfabriqués béton 2CGC : délais de livraison, résistance Rc ≥ 4.0 MPa, paiement B2B, devis proforma et TVA 18%."
+    : "All answers to your technical questions on 2CGC precast concrete: delivery times, Rc ≥ 4.0 MPa strength, B2B payment terms, proforma quotes and 18% VAT.";
 
   return {
     title,

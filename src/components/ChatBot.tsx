@@ -74,7 +74,7 @@ const CONNAISSANCES: { motsCles: string[]; reponse: string }[] = [
 
   {
     motsCles: ['qualité', 'norme', 'certification', 'iso'],
-    reponse: "**Nos certifications et garanties :**\n\n• **ISO 9001** - Management de la qualité\n• **NF** - Normes françaises appliquées\n• **CE** - Conformité européenne\n• **Résistance B60** pour nos agglos porteurs\n\n **Traçabilité complète :**\n• Fiches techniques disponibles\n• Tests de résistance réguliers\n• Contrôle qualité à chaque étape\n\n Fabrication locale depuis 2010",
+    reponse: "**Nos garanties :**\n\n• **Normes UEMOA** - résistance minimale Rc ≥ 4.0 MPa\n• **Dosage contrôlé** - pesage électronique du ciment et des agrégats\n• **Fiches techniques** sur demande pour chaque référence\n\n **Traçabilité :**\n• Contrôle qualité à chaque étape\n• Bordereau officiel à chaque livraison\n\n Usine implantée à Daloa depuis 2013 (RCCM CI DAL 2013 B. 20779)",
   },
   {
     motsCles: ['merci', 'thanks', 'super', 'parfait', 'génial'],
