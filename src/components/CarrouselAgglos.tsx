@@ -42,14 +42,23 @@ const ARRIVEE_DEG = 0.45;
 const PERSPECTIVE = 1400;
 
 const DEG = Math.PI / 180;
-const PRODUITS = AGGLOS_3D;
+/**
+ * References dont la photo du catalogue n'est pas montrable. L'agglo 20
+ * creux (2) est photographie surexpose, arete ebrechee : retire a la demande
+ * du client le 14/11/2026. Il reste au catalogue et au calculateur ; seul
+ * l'anneau s'en passe, en attendant une nouvelle prise de vue.
+ */
+const SANS_PHOTO = new Set(["2"]);
+const PRODUITS = AGGLOS_3D.filter((a) => !SANS_PHOTO.has(a.id));
 const PAS = 360 / PRODUITS.length;
 const TYPES: TypeAgglo[] = ["creux", "plein", "double"];
 const EPAISSEURS = [...new Set(PRODUITS.map((a) => a.epaisseurCm))].sort((a, b) => b - a);
 
+// On ouvre sur le double alveoles de 20 : la photo la plus nette, et le
+// produit le plus recent.
 const indexParDefaut = Math.max(
   0,
-  PRODUITS.findIndex((a) => a.epaisseurCm === 20 && a.type === "creux"),
+  PRODUITS.findIndex((a) => a.epaisseurCm === 20 && a.type === "double"),
 );
 
 /** Ecart angulaire signe, ramene dans [-180, 180[. */
@@ -375,7 +384,7 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
                       // On garde le type si la reference existe, sinon le
                       // creux, qui existe dans toutes les epaisseurs.
                       const i = indexDe(cm, format.type);
-                      amener(i >= 0 ? i : indexDe(cm, "creux"));
+                      amener(i >= 0 ? i : PRODUITS.findIndex((a) => a.epaisseurCm === cm));
                     }}
                     aria-pressed={actif}
                     className={`min-w-[40px] cursor-pointer rounded-lg px-1.5 py-1.5 font-mono text-xs font-bold transition-colors duration-200 ${

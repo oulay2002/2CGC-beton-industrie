@@ -27,7 +27,8 @@ CIBLE.mkdir(parents=True, exist_ok=True)
 # ou elle est deja verifiee : identifiant de reference -> photo.
 PHOTOS = {
     "1": "page_0_img_12.jpeg",
-    "2": "page_0_img_13.jpeg",
+    # "2" (20 creux) : photo surexposee, arete ebrechee. Retiree de l'anneau
+    # le 14/11/2026 a la demande du client, en attendant une nouvelle prise.
     "3": "page_0_img_14.jpeg",
     "4": "page_0_img_15.jpeg",
     "5": "page_1_img_12.jpeg",
