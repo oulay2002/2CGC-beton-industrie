@@ -41,20 +41,6 @@
     }
   },
   "home": {
-    "heroStats": [
-      {
-        "val": "2013",
-        "label": "Usine à Daloa · RCCM"
-      },
-      {
-        "val": "27",
-        "label": "Références au catalogue"
-      },
-      {
-        "val": "10",
-        "label": "Agglos par m² de mur"
-      }
-    ],
     "heroH1Line1": "Fabriqués à Daloa,",
     "heroH1Line2": "livrés sur votre chantier",
     "heroH1Line3": "Briques · Hourdis · Pavés · Électrification · Forage",
@@ -224,29 +210,9 @@
     "ctaDevis": "Créer mon devis maintenant",
     "ctaCatalogue": "Parcourir le catalogue",
     "hero360": {
-      "longueur": "longueur",
-      "hauteur": "hauteur",
-      "epaisseur": "épaisseur",
-      "poids": "Poids unitaire",
       "prixUnite": "F CFA / unité",
-      "choisirEpaisseur": "Épaisseur",
       "indice": "Glissez pour tourner",
-      "alveoles": "alvéoles traversantes",
-      "manipuler": "Utilisez les flèches gauche et droite pour faire tourner.",
-      "choisirType": "Type",
-      "typeCreux": "Creux",
-      "typePlein": "Plein",
-      "typeDouble": "Double alvéoles",
-      "vueBloc": "Bloc",
-      "vueMur": "Mur",
-      "choisirVue": "Vue",
-      "murNom": "Mur en",
-      "murRangs": "rangs à joints croisés, joint 15 mm",
-      "murAgglos": "agglos",
-      "murParM2": "agglos / m²",
-      "murSurface": "de mur",
-      "prixM2": "F CFA / m² d’agglos",
-      "pleinSansAlveole": "bloc plein"
+      "manipuler": "Utilisez les flèches gauche et droite pour faire tourner."
     },
     "heroTag": "Usine industrielle · Daloa"
   },

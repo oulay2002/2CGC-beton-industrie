@@ -167,7 +167,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
             </p>
 
             {/* Action Buttons - alignés sur une seule ligne */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:flex-nowrap gap-3 mb-12">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:flex-nowrap gap-3">
               <Link
                 href={`/${lang}/devis`}
                 className="group relative bg-brand-gold text-[#002B5B] px-5 sm:px-6 py-3.5 rounded-2xl font-black text-sm sm:text-base hover:shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden min-h-[50px] whitespace-nowrap shrink-0"
@@ -188,19 +188,6 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
 
             </div>
 
-            {/* Métriques Hero */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-7 border-t border-white/15">
-              {dict.heroStats.map((s, i) => (
-                <div key={i} className="text-left">
-                  <div className="text-2xl sm:text-4xl font-black text-[#FFD700] font-mono">
-                    {s.val}
-                  </div>
-                  <div className="text-[11px] text-white/60 uppercase tracking-wider mt-1 leading-tight font-medium">
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
             </div>
 
             <CarrouselAgglos lang={lang} labels={dict.hero360} />

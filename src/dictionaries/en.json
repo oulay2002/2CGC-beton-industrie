@@ -41,20 +41,6 @@
     }
   },
   "home": {
-    "heroStats": [
-      {
-        "val": "2013",
-        "label": "Daloa plant · trade register"
-      },
-      {
-        "val": "27",
-        "label": "Catalogue references"
-      },
-      {
-        "val": "10",
-        "label": "Blocks per m² of wall"
-      }
-    ],
     "heroH1Line1": "Made in Daloa,",
     "heroH1Line2": "delivered to your site",
     "heroH1Line3": "Blocks · Floor beams · Paving · Electrification · Drilling",
@@ -224,29 +210,9 @@
     "ctaDevis": "Create my quote now",
     "ctaCatalogue": "Browse catalogue",
     "hero360": {
-      "longueur": "length",
-      "hauteur": "height",
-      "epaisseur": "thickness",
-      "poids": "Unit weight",
       "prixUnite": "F CFA / unit",
-      "choisirEpaisseur": "Thickness",
       "indice": "Drag to rotate",
-      "alveoles": "through cells",
-      "manipuler": "Use the left and right arrow keys to rotate.",
-      "choisirType": "Type",
-      "typeCreux": "Hollow",
-      "typePlein": "Solid",
-      "typeDouble": "Double cell",
-      "vueBloc": "Block",
-      "vueMur": "Wall",
-      "choisirVue": "View",
-      "murNom": "Wall in",
-      "murRangs": "courses, running bond, 15 mm joint",
-      "murAgglos": "blocks",
-      "murParM2": "blocks / m²",
-      "murSurface": "of wall",
-      "prixM2": "F CFA / m² of blocks",
-      "pleinSansAlveole": "solid block"
+      "manipuler": "Use the left and right arrow keys to rotate."
     },
     "heroTag": "Industrial plant · Daloa"
   },

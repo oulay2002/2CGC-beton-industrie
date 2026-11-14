@@ -16,13 +16,11 @@
 // Tout ce qu'on voit est photographie a l'usine. Les donnees viennent du
 // catalogue (`catalogue-agglos`), comme le reste du site.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Hand, Weight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Hand } from "lucide-react";
 import {
   AGGLOS_3D,
-  agglosParM2,
   type GeometrieAgglo,
-  type TypeAgglo,
 } from "@/lib/catalogue-agglos";
 import type { Locale } from "@/lib/dictionaries";
 
@@ -51,8 +49,6 @@ const DEG = Math.PI / 180;
 const SANS_PHOTO = new Set(["2"]);
 const PRODUITS = AGGLOS_3D.filter((a) => !SANS_PHOTO.has(a.id));
 const PAS = 360 / PRODUITS.length;
-const TYPES: TypeAgglo[] = ["creux", "plein", "double"];
-const EPAISSEURS = [...new Set(PRODUITS.map((a) => a.epaisseurCm))].sort((a, b) => b - a);
 
 // On ouvre sur le double alveoles de 20 : la photo la plus nette, et le
 // produit le plus recent.
@@ -67,18 +63,9 @@ const ecartAngulaire = (a: number, b: number) => ((((a - b) % 360) + 540) % 360)
 interface CarrouselAgglosProps {
   lang: Locale;
   labels: {
-    poids: string;
     prixUnite: string;
-    choisirEpaisseur: string;
-    choisirType: string;
-    typeCreux: string;
-    typePlein: string;
-    typeDouble: string;
     indice: string;
     manipuler: string;
-    alveoles: string;
-    pleinSansAlveole: string;
-    murParM2: string;
   };
 }
 
@@ -107,7 +94,6 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
   const courantRef = useRef(courant);
 
   const format: GeometrieAgglo = PRODUITS[courant];
-  const parM2 = useMemo(() => Math.round(agglosParM2(format) * 10) / 10, [format]);
 
   // ── Preferences et visibilite ──────────────────────────────────────────────
 
@@ -271,17 +257,7 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
   // ── Rendu ──────────────────────────────────────────────────────────────────
 
   const nom = lang === "fr" ? format.nom : format.nomEn;
-  const usage = lang === "fr" ? format.usage : format.usageEn;
   const langue = lang === "fr" ? "fr-FR" : "en-US";
-  const nomType: Record<TypeAgglo, string> = {
-    creux: labels.typeCreux,
-    plein: labels.typePlein,
-    double: labels.typeDouble,
-  };
-
-  const indexDe = (epaisseurCm: number, type: TypeAgglo) =>
-    PRODUITS.findIndex((a) => a.epaisseurCm === epaisseurCm && a.type === type);
-
   return (
     <figure className="anneau m-0 mx-auto w-full max-w-[340px] sm:max-w-[400px] lg:mx-0 xl:max-w-[460px]">
       <div
@@ -344,103 +320,20 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
         </span>
       </div>
 
-      <figcaption className="mt-5">
-        <div className="flex items-end justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-base font-black leading-tight text-white">{nom}</p>
-            <p className="mt-0.5 truncate text-xs text-white/50">{usage}</p>
-            <p className="mt-1.5 font-mono text-[11px] text-white/40">
-              {format.longueurMm} × {format.hauteurMm} × {format.epaisseurMm} mm
-              <span className="mx-1.5 text-white/25">·</span>
-              {format.alveoles === 0
-                ? labels.pleinSansAlveole
-                : `${format.alveoles * format.rangees} ${labels.alveoles}`}
-              <span className="mx-1.5 text-white/25">·</span>
-              {parM2.toLocaleString(langue)} {labels.murParM2}
-            </p>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="flex items-baseline justify-end gap-1 text-[#FFD700]">
-              <Weight className="mr-0.5 h-4 w-4 self-center opacity-70" aria-hidden="true" />
-              <span className="font-mono text-3xl font-black leading-none">{format.poidsKg}</span>
-              <span className="text-sm font-bold">kg</span>
-            </div>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-white/45">
-              {labels.poids}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-4 space-y-2 border-t border-white/10 pt-3.5">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div role="group" aria-label={labels.choisirEpaisseur} className="flex items-center gap-1.5">
-              <span className="w-[58px] shrink-0 text-[10px] uppercase leading-tight tracking-[0.12em] text-white/45">
-                {labels.choisirEpaisseur}
-              </span>
-              {EPAISSEURS.map((cm) => {
-                const actif = cm === format.epaisseurCm;
-                return (
-                  <button
-                    key={cm}
-                    type="button"
-                    onClick={() => {
-                      // On garde le type si la reference existe, sinon le
-                      // creux, qui existe dans toutes les epaisseurs.
-                      const i = indexDe(cm, format.type);
-                      amener(i >= 0 ? i : PRODUITS.findIndex((a) => a.epaisseurCm === cm));
-                    }}
-                    aria-pressed={actif}
-                    className={`min-w-[40px] cursor-pointer rounded-lg px-1.5 py-1.5 font-mono text-xs font-bold transition-colors duration-200 ${
-                      actif
-                        ? "bg-[#FFD700] text-[#002B5B]"
-                        : "border border-white/15 text-white/65 hover:border-white/40 hover:text-white"
-                    }`}
-                  >
-                    {cm}
-                    <span className="ml-0.5 text-[9px] font-semibold opacity-70">cm</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <p className="ml-auto shrink-0 whitespace-nowrap text-right font-mono text-sm font-bold text-white/80">
-              {format.prixFcfa.toLocaleString(langue)}
-              <span className="ml-1 text-[10px] font-semibold text-white/45">{labels.prixUnite}</span>
-            </p>
-          </div>
-
-          {/* Vocabulaire de catalogue : sur un telephone, l'accueil n'en a pas
-              besoin, et chaque rangee de moins est un ecran de moins. */}
-          <div role="group" aria-label={labels.choisirType} className="hidden sm:flex items-center gap-1.5">
-            <span className="w-[58px] shrink-0 text-[10px] uppercase leading-tight tracking-[0.12em] text-white/45">
-              {labels.choisirType}
-            </span>
-            {TYPES.map((t) => {
-              const i = indexDe(format.epaisseurCm, t);
-              const existe = i >= 0;
-              const actif = t === format.type;
-              return (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => existe && amener(i)}
-                  disabled={!existe}
-                  aria-pressed={actif}
-                  className={`rounded-lg px-2 py-1.5 text-[11px] font-bold transition-colors duration-200 ${
-                    actif
-                      ? "cursor-pointer bg-[#FFD700] text-[#002B5B]"
-                      : existe
-                        ? "cursor-pointer border border-white/15 text-white/65 hover:border-white/40 hover:text-white"
-                        : "cursor-not-allowed border border-white/5 text-white/20"
-                  }`}
-                >
-                  {nomType[t]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {/* Une seule ligne, pas un panneau : le hero est un ecran, pas trois.
+          Les reglages d'epaisseur et de type vivent au catalogue ; ici le
+          plateau tourne, et la ligne dit ce qu'il montre. */}
+      <figcaption className="mt-4 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 text-center lg:justify-start lg:text-left">
+        <span className="text-base font-black leading-tight text-white">{nom}</span>
+        <span className="font-mono text-[12px] text-white/55">
+          {format.longueurMm} × {format.hauteurMm} × {format.epaisseurMm} mm
+        </span>
+        <span className="font-mono text-[12px] font-bold text-[#FFD700]">
+          {format.poidsKg} kg
+        </span>
+        <span className="font-mono text-[12px] text-white/55">
+          {format.prixFcfa.toLocaleString(langue)} {labels.prixUnite}
+        </span>
       </figcaption>
     </figure>
   );
