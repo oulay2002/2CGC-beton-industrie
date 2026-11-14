@@ -145,283 +145,58 @@ button, a, input, select, textarea {
 }
 
 /* ==========================================
-   LE HERO EN VOLUME — un agglo, puis un mur, a leurs cotes reelles
+   LE HERO EN ANNEAU — les dix agglos du catalogue, photographies
    ==========================================
-   La geometrie vient des millimetres du catalogue. `--l`, `--h`, `--e` et
-   l'echelle `--ech` sont poses image par image par Produit360, qui ajuste
-   l'echelle pour que l'objet montre — un bloc, ou un panneau de dix agglos —
-   tienne dans la scene avec ses lignes de cote. */
+   Chaque carte porte une photo detouree et reste face au visiteur ; c'est
+   sa place sur l'anneau qui tourne. Les transformations sont posees image
+   par image par CarrouselAgglos. `--carte` est la largeur d'une carte,
+   deduite de celle de la scene. */
 
-.b3d {
-  /* Deux bruits superposes, pas un seul : le fin donne le sable, le large
-     donne les nuances de coulee. Un seul grain se lit comme une texture
-     plaquee, et des pastilles regulieres comme de l'eponge. */
-  /* Le granulat se lit comme des points sombres sur une matrice claire :
-     un bruit pousse vers le blanc par une gamma, puis multiplie. En
-     `overlay`, le meme bruit s'eteint sur un fond deja clair — le bloc
-     prenait alors des airs de polystyrene. */
-  --grain-fin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='gamma' exponent='0.3'/%3E%3CfeFuncG type='gamma' exponent='0.3'/%3E%3CfeFuncB type='gamma' exponent='0.3'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23s)'/%3E%3C/svg%3E");
-  --grain-large: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.22' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23l)' opacity='0.72'/%3E%3C/svg%3E");
-}
-
-.b3d-scene {
-  perspective: 1400px;
-  perspective-origin: 50% 50%;
-
-  /* L'agglo 20, au cas ou le script ne tourne pas : sans JavaScript le bloc
-     ne pivote pas, mais il existe, et a la bonne taille. `--ech` est
-     l'echelle en pixels par millimetre, que le composant recalcule a chaque
-     image pour que l'objet tienne dans la scene. */
-  --ech: 0.5;
-  --l: calc(450 * var(--ech) * 1px);
-  --h: calc(200 * var(--ech) * 1px);
-  --e: calc(200 * var(--ech) * 1px);
-}
-
-/* Une lumiere d'atelier, fixe a l'ecran : elle ne tourne pas avec le bloc.
-   Le beton est mat, un halo doux suffit a donner le relief. */
-.b3d-scene::before {
-  content: '';
+.anneau-bague {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(60% 55% at 34% 24%, rgba(255, 245, 215, 0.14), transparent 70%);
+  left: 50%;
+  top: 54%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.anneau-carte {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--carte, 180px);
+  height: calc(var(--carte, 180px) * 0.74);
+  margin-left: calc(var(--carte, 180px) / -2);
+  margin-top: calc(var(--carte, 180px) * -0.37);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  will-change: transform, opacity;
   pointer-events: none;
 }
 
-.b3d-sol {
+.anneau-carte img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 24px rgba(0, 6, 18, 0.62));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Le plateau : une ombre elliptique sous l'anneau, qui le pose au sol. */
+.anneau-sol {
   position: absolute;
   left: 50%;
-  top: calc(50% + var(--h, 100px) * 0.48 + var(--e, 100px) * 0.14 + 17px);
-  width: var(--l, 250px);
-  height: calc(var(--l, 250px) * 0.13);
+  top: 68%;
+  width: 92%;
+  height: 26%;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0, 7, 18, 0.85) 0%, rgba(0, 7, 18, 0.45) 44%, transparent 72%);
-  filter: blur(8px);
-  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(0, 7, 18, 0.72) 0%, rgba(0, 7, 18, 0.34) 46%, transparent 72%);
+  filter: blur(14px);
   pointer-events: none;
-}
-
-.b3d-bloc {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
-  transform-style: preserve-3d;
-  transform: rotateX(-16deg) rotateY(var(--rot, -34deg));
-}
-
-.b3d-face {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform-origin: 0 0;
-  backface-visibility: hidden;
-  border-radius: 2px;
-  background-color: var(--face);
-  background-image: var(--grain-fin), var(--grain-large), var(--face-voile);
-  background-size: 90px 90px, 220px 220px, 100% 100%;
-  background-blend-mode: multiply, soft-light, normal;
-  /* Arete vive en haut, matiere qui s'assombrit en bas : le bloc est coule,
-     pas moule dans du plastique. */
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    inset 0 0 0 1px rgba(120, 114, 102, 0.22),
-    inset 0 -14px 22px -14px rgba(52, 48, 40, 0.55);
-}
-
-.b3d-avant,
-.b3d-arriere {
-  width: var(--l);
-  height: var(--h);
-  --face: var(--beton-avant, #c9c5b8);
-  --face-voile: linear-gradient(168deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.03) 36%, rgba(74, 70, 60, 0.26) 100%);
-}
-
-.b3d-gauche,
-.b3d-droite {
-  width: var(--e);
-  height: var(--h);
-  --face: var(--beton-cote, #aeaa9d);
-  --face-voile: linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.01) 34%, rgba(62, 58, 50, 0.32) 100%);
-}
-
-.b3d-dessus {
-  width: var(--l);
-  height: var(--e);
-  --face: var(--beton-dessus, #dcd8cb);
-  --face-voile: linear-gradient(160deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(92, 88, 78, 0.16) 100%);
-}
-
-.b3d-dessous {
-  width: var(--l);
-  height: var(--e);
-  --face: #7e7b72;
-  --face-voile: linear-gradient(170deg, rgba(36, 34, 29, 0.34), rgba(36, 34, 29, 0.14));
-}
-
-.b3d-avant { transform: translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
-.b3d-arriere { transform: rotateY(180deg) translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
-.b3d-droite { transform: rotateY(90deg) translateZ(calc(var(--l) / 2)) translate(-50%, -50%); }
-.b3d-gauche { transform: rotateY(-90deg) translateZ(calc(var(--l) / 2)) translate(-50%, -50%); }
-.b3d-dessus {
-  transform: rotateX(90deg) translateZ(calc(var(--h) / 2)) translate(-50%, -50%);
-}
-.b3d-dessous {
-  transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)) translate(-50%, -50%);
-}
-
-/* Les alveoles se posent en rangees : une pour un agglo creux, deux pour un
-   double alveoles. Les parois gardent leurs 24 mm reels quelle que soit
-   l'epaisseur du bloc, donc les alveoles d'un 12 sont plus etroites que
-   celles d'un 20 — exactement comme en production. */
-.b3d-dessus,
-.b3d-dessous {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--ech) * 24px);
-  padding: calc(var(--ech) * 24px) calc(var(--ech) * 27px);
-}
-
-.b3d-rangee {
-  flex: 1;
-  display: flex;
-  align-items: stretch;
-  gap: calc(var(--ech) * 26px);
-}
-
-/* Les alveoles traversent le bloc de part en part — mais on n'y voit pas
-   du noir. Sous seize degres d'elevation, le regard ne plonge pas dans le
-   creux : il bute sur la paroi du fond, a peine quarante millimetres plus
-   bas, et cette paroi est du beton eclaire.
-   Les valeurs sont relevees sur les photos de production : le point le plus
-   sombre d'un agglo y vaut #afb09d sur la planche claire, #6e716d sur la
-   sombre — soit deux tiers de la luminance du beton voisin, jamais un vide.
-   Profil releve a l'interieur meme d'une alveole : 180, 177, 176, 173 du
-   haut vers le bas sur la planche claire ; 125, 121, 121, 122 sur la sombre.
-   C'est donc presque uniforme. Ce qui creuse l'alveole n'est pas un degrade
-   — un degrade marque se lit comme une peinture — mais l'arete franche de
-   l'ouverture : ombre nette sous la levre du fond, levre sciee qui accroche
-   la lumiere cote proche. */
-.b3d-alveole {
-  flex: 1;
-  border-radius: 3px;
-  background: linear-gradient(to bottom, #918f86 0%, #8a887f 55%, #817f76 100%);
-  box-shadow:
-    /* L'arete de l'ouverture, franche sur tout son pourtour. */
-    inset 0 0 0 1px rgba(58, 55, 47, 0.5),
-    /* L'ombre portee par la levre du fond, juste sous le bord. */
-    inset 0 4px 5px -2px rgba(42, 39, 33, 0.72),
-    /* La levre sciee, cote proche, qui accroche la lumiere. */
-    0 1px 0 rgba(255, 255, 255, 0.6),
-    /* Occlusion : le beton s'assombrit au bord de l'ouverture. */
-    0 0 6px 1px rgba(74, 70, 60, 0.3);
-}
-
-/* Par-dessous, aucune lumiere n'entre : la meme alveole s'y assombrit
-   franchement, sans virer au noir pour autant. */
-.b3d-alveole-fond {
-  background: linear-gradient(to bottom, #55534c 0%, #4a4842 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(26, 24, 21, 0.5),
-    inset 0 3px 5px -1px rgba(0, 0, 0, 0.5),
-    0 1px 0 rgba(255, 255, 255, 0.14);
-}
-
-/* ── Le pan de mur ──────────────────────────────────────────────────────────
-   Chaque piece est un petit repere pose dans le panneau ; ses faces y
-   reprennent les memes transformations que le bloc seul. Seules les faces
-   qu'on peut voir sont dessinees : les flancs interieurs sont caches par le
-   bloc voisin, et le dessous d'un mur ne se voit jamais. */
-
-.b3d-piece {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  transform-style: preserve-3d;
-  transform: translate3d(var(--cx), var(--cy), 0);
-}
-
-.b3d-p-avant,
-.b3d-p-arriere {
-  width: var(--pl);
-  height: var(--bh);
-}
-
-.b3d-p-gauche,
-.b3d-p-droite {
-  width: var(--e);
-  height: var(--bh);
-}
-
-.b3d-p-dessus {
-  width: var(--pl);
-  height: var(--e);
-}
-
-.b3d-p-avant { transform: translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
-.b3d-p-arriere { transform: rotateY(180deg) translateZ(calc(var(--e) / 2)) translate(-50%, -50%); }
-.b3d-p-droite { transform: rotateY(90deg) translateZ(calc(var(--pl) / 2)) translate(-50%, -50%); }
-.b3d-p-gauche { transform: rotateY(-90deg) translateZ(calc(var(--pl) / 2)) translate(-50%, -50%); }
-.b3d-p-dessus { transform: rotateX(90deg) translateZ(calc(var(--bh) / 2)) translate(-50%, -50%); }
-
-/* Le mortier : un plan au coeur du mur, que l'on apercoit au fond de chaque
-   joint. Il se voit des deux cotes, donc il garde sa face arriere. */
-.b3d-mortier {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--l);
-  height: var(--h);
-  transform: translate(-50%, -50%);
-  border-radius: 2px;
-  background: linear-gradient(170deg, #4a4740 0%, #332f29 100%);
-}
-
-/* ── Les cotes ──────────────────────────────────────────────────────────── */
-
-.b3d-cotes {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.b3d-ligne {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 1px;
-  transform-origin: 0 50%;
-  opacity: 0;
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.75), rgba(255, 215, 0, 0.75));
-}
-
-/* Les deux traits d'extremite, comme sur un plan. */
-.b3d-ligne::before,
-.b3d-ligne::after {
-  content: '';
-  position: absolute;
-  top: -4px;
-  width: 1px;
-  height: 9px;
-  background: rgba(255, 215, 0, 0.75);
-}
-.b3d-ligne::before { left: 0; }
-.b3d-ligne::after { right: 0; }
-
-.b3d-etiquette {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  text-align: center;
-  white-space: nowrap;
-  text-shadow: 0 1px 6px rgba(0, 16, 36, 0.9);
 }
 
 /* ==========================================

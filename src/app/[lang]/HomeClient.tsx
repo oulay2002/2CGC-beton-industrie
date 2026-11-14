@@ -27,7 +27,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { ZONES } from "@/lib/zones-data";
-import Produit360 from "@/components/Produit360";
+import CarrouselAgglos from "@/components/CarrouselAgglos";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -234,7 +234,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
             </div>
             </div>
 
-            <Produit360 lang={lang} labels={dict.hero360} />
+            <CarrouselAgglos lang={lang} labels={dict.hero360} />
           </div>
         </div>
 
