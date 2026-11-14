@@ -163,7 +163,8 @@ button, a, input, select, textarea {
 .anneau-bague {
   position: absolute;
   left: 50%;
-  top: 54%;
+  /* La ligne de sol de la cour, dans la photo en filigrane. */
+  top: 79%;
   width: 0;
   height: 0;
   transform-style: preserve-3d;
@@ -176,7 +177,8 @@ button, a, input, select, textarea {
   width: var(--carte, 180px);
   height: calc(var(--carte, 180px) * 0.74);
   margin-left: calc(var(--carte, 180px) / -2);
-  margin-top: calc(var(--carte, 180px) * -0.37);
+  /* Le bord bas de la carte sur la ligne de sol : le bloc est pose, pas suspendu. */
+  margin-top: calc(var(--carte, 180px) * -0.74);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -197,9 +199,9 @@ button, a, input, select, textarea {
 .anneau-sol {
   position: absolute;
   left: 50%;
-  top: 68%;
-  width: 92%;
-  height: 26%;
+  top: 80%;
+  width: 70%;
+  height: 16%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(0, 7, 18, 0.72) 0%, rgba(0, 7, 18, 0.34) 46%, transparent 72%);

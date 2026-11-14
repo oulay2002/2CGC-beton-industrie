@@ -142,10 +142,11 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
       // bouge. Les cartes du fond montent un peu, comme sur un plateau
       // tournant vu de haut.
       const avant = (profondeur + 1) * 0.5; // 0 au fond, 1 devant
-      // La carte de devant est pleine taille ; celles du fond rapetissent,
-      // s'eloignent et s'eteignent. L'oeil n'en lit qu'une a la fois.
+      // La carte de devant est pleine taille ; celles du fond rapetissent et
+      // s'eteignent. Posees au sol, les plus eloignees remontent un peu dans
+      // le cadre — c'est la perspective d'une cour vue debout.
       const echelle = 0.48 + 0.52 * avant;
-      const montee = (1 - avant) * largeur * 0.1;
+      const montee = (1 - avant) * largeur * 0.13;
       carte.style.transform =
         `rotateY(${theta - a}deg) translateZ(${rayon.toFixed(1)}px) ` +
         `rotateY(${a - theta}deg) translateY(${(-montee).toFixed(1)}px) scale(${echelle.toFixed(3)})`;

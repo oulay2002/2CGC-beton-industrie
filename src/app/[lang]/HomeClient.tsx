@@ -120,8 +120,8 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
             calme, et l'usine reste la, en arriere-plan, sans parler plus
             fort que ce qu'elle fabrique. */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+          className="absolute inset-0 bg-cover bg-no-repeat opacity-25"
+          style={{ backgroundImage: "url('/images/hero-bg.jpg')", backgroundPosition: "center 62%" }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#001D3D] via-[#001D3D]/85 to-[#002B5B]/55" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#001D3D] via-transparent to-[#001D3D]/40" />
