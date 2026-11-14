@@ -152,6 +152,14 @@ button, a, input, select, textarea {
    par image par CarrouselAgglos. `--carte` est la largeur d'une carte,
    deduite de celle de la scene. */
 
+/* Les cartes qui sortent de la scene s'effacent au lieu d'etre tranchees. */
+.anneau-fenetre {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 11%, #000 89%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 11%, #000 89%, transparent 100%);
+}
+
 .anneau-bague {
   position: absolute;
   left: 50%;

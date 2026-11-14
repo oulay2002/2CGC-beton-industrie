@@ -304,9 +304,12 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
         className="anneau-scene relative h-[250px] w-full overflow-hidden cursor-grab touch-pan-y rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2 focus-visible:ring-offset-[#001D3D] active:cursor-grabbing sm:h-[290px] xl:h-[330px]"
         style={{ perspective: `${PERSPECTIVE}px` }}
       >
-        <div className="anneau-sol" aria-hidden="true" />
+        {/* La fenetre porte le fondu des bords : pose sur l'anneau lui-meme,
+            un masque aplatirait sa 3D, comme une opacite le ferait. */}
+        <div className="anneau-fenetre" aria-hidden="true">
+        <div className="anneau-sol" />
 
-        <div ref={anneau} className="anneau-bague" aria-hidden="true">
+        <div ref={anneau} className="anneau-bague">
           {PRODUITS.map((p, i) => (
             <div
               key={p.id}
@@ -327,6 +330,7 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
               />
             </div>
           ))}
+        </div>
         </div>
 
         <span
