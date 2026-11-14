@@ -130,7 +130,7 @@ export default function HomeClient({ lang, dict }: HomePageProps) {
           {/* Le discours tient la colonne de gauche ; le produit, celle de
               droite, ou il n'y avait jusqu'ici que du fond. Sous `lg`, le bloc
               passe sous les boutons : on lit d'abord, on examine ensuite. */}
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_460px] xl:gap-16">
+          <div className="grid items-center gap-12 lg:min-h-[calc(92vh-14rem)] lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_460px] xl:gap-16">
             <div className="max-w-3xl lg:max-w-none">
             {/* Trust Pill & Certification */}
             <div className="flex flex-wrap items-center gap-2.5 mb-7 animate-fade-in-up">

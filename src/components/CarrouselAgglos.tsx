@@ -259,8 +259,11 @@ export default function CarrouselAgglos({ lang, labels }: CarrouselAgglosProps) 
 
   const nom = lang === "fr" ? format.nom : format.nomEn;
   const langue = lang === "fr" ? "fr-FR" : "en-US";
+  // Sur grand ecran la figure se cale en bas de sa colonne, et non au
+  // centre : le sol de la cour, dans la photo en filigrane, est en bas du
+  // hero. Un plateau centre flotterait au-dessus, quel que soit son reglage.
   return (
-    <figure className="anneau m-0 mx-auto w-full max-w-[340px] sm:max-w-[400px] lg:mx-0 xl:max-w-[460px]">
+    <figure className="anneau m-0 mx-auto w-full max-w-[340px] sm:max-w-[400px] lg:mx-0 lg:self-end xl:max-w-[460px]">
       <div
         ref={scene}
         tabIndex={0}
